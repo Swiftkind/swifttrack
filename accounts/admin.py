@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import Account
+from .models import Account, Payroll
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
@@ -43,8 +43,6 @@ class CustomUserAdmin(UserAdmin):
     filter_horizontal = ('groups', 'user_permissions',)
     readonly_fields = ("date_joined",)
 
-admin.site.register(Account, CustomUserAdmin)
-
 class CustomUserCreationForm(UserCreationForm):
     """
     A form that creates a user, with no privileges, from the given email and
@@ -72,3 +70,6 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = Account
         fields = ("email",)
+
+admin.site.register(Account, CustomUserAdmin)
+admin.site.register(Payroll)
