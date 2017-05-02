@@ -77,3 +77,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+
+
+""" Payroll """
+class Payroll(models.Model):
+    date = models.DateTimeField()
+    description = models.TextField()
+    employee_id = models.ForeignKey(Account)
