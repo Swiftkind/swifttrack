@@ -1,0 +1,93 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        <a href="http://placehold.it"><img src="http://placehold.it/250x250"></a>
+    </div>
+    <div class="col-md-4">
+        <h3>{{ user.get_full_name }}</h3>
+        <p>Email address: {{user.email}}</p>
+        <p>Address: {{user.address}}</p>
+        <p>Contact Number: {{user.contact_number}}</p>
+        <p>About me: {{user.about_me}}</p>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#projects" data-toggle="tab">Projects</a></li>
+            <li><a href="#payroll" data-toggle="tab">Payroll</a></li>
+            <li><a href="#contact" data-toggle="tab">Contact</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="projects">
+
+                <div class="table-striped">
+                    <table class="table table-striped" id="product-table">
+                      <thead>
+                        <tr>
+                            <th>ID #</th>
+                            <th>Project Name</th>
+                            <th>Hours</th>
+                            <th>Action</th>
+                        </tr>
+                      </thead>
+                      {% for project in projects %}
+                      <tbody>
+                        <tr>
+                          <td>{{ project.id }}</td>
+                          <td>{{ project.project_name }}</td>
+                          <td>{{ project.hour }}</td>
+                          <td>WORK DIARY</td>
+                        </tr>
+                      {% empty %}
+                          <tr>
+                            <td colspan="8" class="text-center bg-warning">No Projects</td>
+                          </tr>
+                      </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="payroll">
+
+                <div class="table-striped">
+                    <table class="table table-striped" id="product-table">
+                      <thead>
+                        <tr>
+                            <th>ID #</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                      </thead>
+                        {% for pay in payroll %}
+                      <tbody>
+                        <tr>
+                          <td>{{ pay.id }}</td>
+                          <td>{{ pay.date }}</td>
+                          <td>{{ pay.description }}</td>
+                          <td>
+                              <a href="">Download Invoice</a>
+                          </td>
+                        </tr>
+                      {% empty %}
+                          <tr>
+                            <td colspan="8" class="text-center bg-warning">No Payroll</td>
+                          </tr>
+                      </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="contact">Contact</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
