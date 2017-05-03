@@ -83,7 +83,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
 class Payroll(models.Model):
     date = models.DateTimeField()
     description = models.TextField()
+<<<<<<< 72cab9fd4a260c0184bf194e5f30622277853e64
     employee_id = models.ForeignKey(Account)
   
     def __str__(self):
         return self.description+' to '+str(self.employee_id)
+=======
+    employee_id = models.ForeignKey(Account)
+>>>>>>> Fixed projects
