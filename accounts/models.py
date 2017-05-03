@@ -84,3 +84,6 @@ class Payroll(models.Model):
     date = models.DateTimeField()
     description = models.TextField()
     employee_id = models.ForeignKey(Account)
+  
+    def __str__(self):
+        return self.description+' to '+str(self.employee_id)

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.views.generic import TemplateView
-from .models import Account
+from .models import Account, Payroll
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from .forms import LoginForm
 from django.contrib.auth.decorators import login_required
@@ -88,4 +88,12 @@ class UpdatePasswordView(TemplateView):
             update_session_auth_hash(request, form.user)
             return redirect('account')
         return_data = {'form': form}
+        return render(request, self.template_name, return_data)
+
+#Payroll view
+class PayrollView(TemplateView):
+    template_name = 'accounts/payroll.html'
+    def get(self, request, *args, **kwargs):
+        payroll = Payroll.objects.filter(employee_id=request.user)
+        return_data = {'payroll':payroll}
         return render(request, self.template_name, return_data)

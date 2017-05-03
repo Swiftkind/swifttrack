@@ -1,0 +1,37 @@
+{% extends 'dashboard.html' %}
+{% block tabs %}
+	<div class="container">
+	<br><br>
+		<ul class="nav nav-tabs" role="tablist">
+		    <li role="presentation"><a href="{% url 'project' %}">Projects</a></li>
+		    <li role="presentation" class="active"><a href="{% url 'payroll' %}">Payroll</a></li>
+		    <li role="presentation"><a href="" aria-controls="messages">Contact</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+		    <div role="tabpanel" class="tab-pane" id="home"></div>
+		    <div role="tabpanel" class="tab-pane active" id="profile">
+		    	<table class="table">
+		    		<thead>
+		    			<tr>
+		    				<th>Date</th>
+		    				<th>Description</th>
+		    				<th>Action</th>
+		    			</tr>
+		    		</thead>
+		    		<tbody>
+		    			{% for pr in payroll %}
+		    				<tr>
+			    				<td>{{pr.date}}</td>
+			    				<td>{{pr.description}}</td>
+			    				<td><a href="" class="btn btn-primary btn-sm">Download invoice</a></td>
+			    			</tr>
+		    			{% endfor %}
+		    		</tbody>
+		    	</table>
+		    </div>
+		    <div role="tabpanel" class="tab-pane" id="messages"></div>
+		</div>
+	</div>
+{% endblock %}
