@@ -129,8 +129,8 @@ STATICFILES_DIRS = (
 )
 
 AUTH_USER_MODEL = 'accounts.Account'
-LOGIN_REDIRECT_URL = '/account'
-LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/project/'
+LOGIN_URL = '/project/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

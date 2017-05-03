@@ -2,6 +2,7 @@ from django.contrib import admin
 from . models import Projects, WorkDiary
 
 
+
 class ProjectsAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'date', 'hours', )
