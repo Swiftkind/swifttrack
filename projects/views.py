@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -51,3 +52,8 @@ class Reports(TemplateView):
     def get(self, request, *args, **kwargs):
         work = WorkDiary.objects.all().order_by('-date')
         return render(request, self.template_name, {'work': work})
+        work = WorkDiary.objects.all()
+        ctx_data = {
+            'works': work,
+        }
+        return render(self.request, self.template_name, ctx_data)
