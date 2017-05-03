@@ -1,5 +1,7 @@
 from django.contrib import admin
 from . models import Projects, WorkDiary
+from . models import Projects
+
 
 
 class ProjectsAdmin(admin.ModelAdmin):

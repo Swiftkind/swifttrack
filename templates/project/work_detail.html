@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="col-sm-6 col-sm-offset-3">
+    {% for work in work %}
+            <h3>
+                <strong>Description</strong>
+            </h3>
+            <p>{{ work.description|linebreaks }} </p><hr/>
+            <h4>
+                <strong>Hours </strong><small>  {{ work.hours }}</small>
+            </h4>
+            <hr/>
+    {% endfor %}
+    </div>
+{% endblock %}
