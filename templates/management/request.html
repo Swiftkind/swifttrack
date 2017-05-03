@@ -1,0 +1,34 @@
+{% extends 'dashboard.html' %}
+{% block tabs %}
+	<div class="container">
+	<br><br>
+		<ul class="nav nav-tabs" role="tablist">
+		    <li role="presentation"><a href="{% url 'project' %}">Projects</a></li>
+		    <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
+		    <li role="presentation" class="active"><a href="{% url 'request' %}">Contact</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+		    <div role="tabpanel" class="tab-pane" id="home"></div>
+		    <div role="tabpanel" class="tab-pane" id="profile">
+		    </div>
+		    <div role="tabpanel" class="tab-pane active" id="contact">
+		    	<div class="col-md-12">
+		    		<h3>Send a request</h3><br>
+			    	{% if success %}
+			    		<div class="alert alert-success alert-dismissable">
+			    			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			    			{{success}}
+			    		</div>
+			    	{% endif %}
+			    	<form action="{% url 'request' %}" method="post">
+			    		{% csrf_token %}
+			    		{{form.as_p}}
+			    		<button type="submit" class="btn btn-primary">Submit request</button>
+			    	</form>
+		    	</div>
+		    </div>
+		</div>
+	</div>
+{% endblock %}
