@@ -43,7 +43,7 @@ class LoginView(TemplateView):
             user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('account')
+                return redirect('project')
             else:
                 return_data = {'form': form, 'error': 'Can\'t login account. Invalid account credentials.'}
                 return render(request, self.template_name, return_data)
