@@ -28,7 +28,7 @@ class WorkDiaryView(TemplateView):
     template_name = 'project/work_diary.html'
 
     def get(self, request, *args, **kwargs):
-        form = WorkDiaryForm()
+        form = self.form_class
         work = WorkDiary.objects.all()
         ctx_data = {
             'works': work,
@@ -37,7 +37,7 @@ class WorkDiaryView(TemplateView):
         return render(self.request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
-        form = WorkDiaryForm()
+        form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/project/')
@@ -52,8 +52,3 @@ class Reports(TemplateView):
     def get(self, request, *args, **kwargs):
         work = WorkDiary.objects.all().order_by('-date')
         return render(request, self.template_name, {'work': work})
-        work = WorkDiary.objects.all()
-        ctx_data = {
-            'works': work,
-        }
-        return render(self.request, self.template_name, ctx_data)
