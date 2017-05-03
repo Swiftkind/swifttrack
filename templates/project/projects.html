@@ -2,7 +2,6 @@
 
 {% block tabs %}
 
-
 <div class="container">
   <br><br>
     <ul class="nav nav-tabs" role="tablist">
@@ -30,7 +29,9 @@
                 <td>{{ project.name }}</td>
                 <td>{{ project.hours }}</td>
                 <td>
-                  <a href="">Work Diary</a>
+                  <a href="{% url 'work_diary' %}">Work Diary</a>
+                  |
+                  <a href="{% url 'reports' %}">Reports</a>
                 </td>
               </tr>
             {% empty %}

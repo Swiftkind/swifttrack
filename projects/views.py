@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -27,7 +28,7 @@ class WorkDiaryView(TemplateView):
     template_name = 'project/work_diary.html'
 
     def get(self, request, *args, **kwargs):
-        form = WorkDiaryForm()
+        form = self.form_class
         work = WorkDiary.objects.all()
         ctx_data = {
             'works': work,
@@ -36,7 +37,7 @@ class WorkDiaryView(TemplateView):
         return render(self.request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
-        form = WorkDiaryForm()
+        form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/project/')
