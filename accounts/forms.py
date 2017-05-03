@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from .models import Account
 from django import forms
 
@@ -34,11 +34,26 @@ class CustomUserChangeForm(UserChangeForm):
         super(CustomUserChangeForm, self).__init__(*args, **kargs)
         #del self.fields['username']
         self.fields['email'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['first_name'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['address'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['contact_number'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['profile_pic'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['about_me'].widget.attrs.update({'class' : 'form-control'})
 
     class Meta:
         model = Account
-        fields = ('email',)
+        fields = ('email', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me', 'password')
 
+# class CustomPasswordChangeForm(PasswordChangeForm):
+#     def __init__(self, *args, **kwargs):
+#         super(CustomPasswordChangeForm, self).__init__(*args, **kwargs)
+#         self.fields['password'].widget.attrs.update({'class' : 'form-control'})
+#     class Meta:
+#         model = Account
+#         fields = ('password',)
+
+#Login form
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=100, label="Email address", widget=forms.TextInput(attrs={'class': 'form-control',}))
     password = forms.CharField(min_length=6, label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control',}))

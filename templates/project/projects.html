@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'dashboard.html' %}
 
-{% block content %}
+{% block tabs %}
 
 <div class="table-striped">
     <table class="table table-striped" id="product-table">
@@ -16,9 +16,11 @@
       <tbody>
         <tr>
           <td>{{ project.id }}</td>
-          <td>{{ project.project_name }}</td>
-          <td>{{ project.hour }}</td>
-          <td>WORK DIARY</td>
+          <td>{{ project.name }}</td>
+          <td>{{ project.hours }}</td>
+          <td>
+            <a href="">Work Diary</a>
+          </td>
         </tr>
       {% empty %}
           <tr>
