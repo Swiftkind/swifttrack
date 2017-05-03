@@ -35,10 +35,9 @@
                 </div>
             </nav><br><br><br><br>
         <!-- ____________________________NAVBAR__________________________________ -->
-        <div class="container">
-            {% block content %}
-            {% endblock %}
-        </div>
+        {% block content %}
+        
+        {% endblock %}
         <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
         <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
         {% block javascript %}

@@ -33,7 +33,6 @@ class CustomUserChangeForm(UserChangeForm):
     def __init__(self, *args, **kargs):
         super(CustomUserChangeForm, self).__init__(*args, **kargs)
         #del self.fields['username']
-        del self.fields['password']
         self.fields['email'].widget.attrs.update({'class' : 'form-control'})
         self.fields['first_name'].widget.attrs.update({'class' : 'form-control'})
         self.fields['last_name'].widget.attrs.update({'class' : 'form-control'})
@@ -44,7 +43,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = Account
-        fields = ('email', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me')
+        fields = ('email', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me', 'password')
 
 # class CustomPasswordChangeForm(PasswordChangeForm):
 #     def __init__(self, *args, **kwargs):

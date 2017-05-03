@@ -4,7 +4,9 @@ from django.views.generic import TemplateView
 from .models import Account
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from .forms import LoginForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 #Registration view
@@ -29,8 +31,7 @@ class LoginView(TemplateView):
     template_name = 'accounts/login.html'
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            form = LoginForm()
-            return render(request, self.template_name, {'form': form})
+            return redirect('account')
         else:
             form = LoginForm()
             return render(request, self.template_name, {'form': form})
@@ -54,8 +55,8 @@ class LogoutView(TemplateView):
         return redirect('/')
 
 #Account view
-class AccountView(TemplateView):
-    template_name = 'accounts/account.html'
+class AccountView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {})
 
@@ -70,7 +71,7 @@ class UpdateAccountView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            request.user.save()
+            form.save()
         return redirect('account')
 
 #Update password view
@@ -84,6 +85,7 @@ class UpdatePasswordView(TemplateView):
         form = PasswordChangeForm(data=request.POST, user=request.user)
         if form.is_valid():
             form.save()
+            update_session_auth_hash(request, form.user)
             return redirect('account')
-        return_data = {'error': 'Can\'t change password', 'form': form}
+        return_data = {'form': form}
         return render(request, self.template_name, return_data)
