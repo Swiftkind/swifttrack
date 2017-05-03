@@ -2,35 +2,48 @@
 
 {% block tabs %}
 
-<div class="table-striped">
-    <table class="table table-striped" id="product-table">
-      <thead>
-        <tr>
-            <th>ID #</th>
-            <th>Project Name</th>
-            <th>Hours</th>
-            <th>Action</th>
-        </tr>
-      </thead>
-      {% for project in projects %}
-      <tbody>
-        <tr>
-          <td>{{ project.id }}</td>
-          <td>{{ project.name }}</td>
-          <td>{{ project.hours }}</td>
-          <td>
-            <a href="{% url 'work_diary' %}">Work diary</a>
-            |
-            <a href="{% url 'reports' %}">Reports</a>
-          </td>
-        </tr>
-      {% empty %}
-          <tr>
-            <td colspan="8" class="text-center bg-warning">No Projects</td>
-          </tr>
-      </tbody>
-        {% endfor %}
-    </table>
-</div>
+
+<div class="container">
+  <br><br>
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'project' %}">Projects</a></li>
+        <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
+        <li role="presentation"><a href="{% url 'request' %}">Contact</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="home">
+          <table class="table table-striped" id="product-table">
+            <thead>
+              <tr>
+                  <th>ID #</th>
+                  <th>Project Name</th>
+                  <th>Hours</th>
+                  <th>Action</th>
+              </tr>
+            </thead>
+            {% for project in projects %}
+            <tbody>
+              <tr>
+                <td>{{ project.id }}</td>
+                <td>{{ project.name }}</td>
+                <td>{{ project.hours }}</td>
+                <td>
+                  <a href="">Work Diary</a>
+                </td>
+              </tr>
+            {% empty %}
+                <tr>
+                  <td colspan="8" class="text-center bg-warning">No Projects</td>
+                </tr>
+            </tbody>
+              {% endfor %}
+          </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="profile"></div>
+        <div role="tabpanel" class="tab-pane" id="messages"></div>
+    </div>
+  </div>
 
 {%  endblock %}
