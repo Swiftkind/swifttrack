@@ -10,7 +10,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
     template_name = 'project/projects.html'
 
     def get(self, request, *args, **kwargs):
-        project = Projects.objects.all().order_by('-date')
+        project = Projects.objects.filter(user=self.request.user).order_by('-date')
         context = {
             'projects': project,
         }
