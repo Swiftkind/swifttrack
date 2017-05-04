@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . models import Projects, WorkDiary
 from . forms import WorkDiaryForm
+from django.db.models import F
 
 
 class ProjectView(LoginRequiredMixin, TemplateView):
@@ -24,7 +25,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
 class WorkDiaryView(TemplateView):
 
     form_class = WorkDiaryForm
-    model = WorkDiary
+    model = WorkDiary, Projects
     template_name = 'project/work_diary.html'
 
     def get(self, request, *args, **kwargs):
@@ -40,6 +41,9 @@ class WorkDiaryView(TemplateView):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
+            hs = request.POST['hours']
+            p = request.POST['project_id']
+            Projects.objects.filter(id=p).update(hours_spent=F('hours_spent')+hs)
             return redirect('/project/')
         form = self.form_class()
         return render(self.request, self.template_name, {'form': form})

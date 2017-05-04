@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^account/update-account$', views.UpdateAccountView.as_view(), name='update_account'),
     url(r'^account/update-password$', views.UpdatePasswordView.as_view(), name='update_password'),
     url(r'^account/payroll$', views.PayrollView.as_view(), name='payroll'),
+    url(r'^account/payroll/add', views.AddPayrollView.as_view(), name='add-payroll')
 ]

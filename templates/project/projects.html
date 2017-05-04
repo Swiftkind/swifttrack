@@ -19,6 +19,7 @@
                   <th>ID #</th>
                   <th>Project Name</th>
                   <th>Hours</th>
+                   <th>Hours spent</th>
                   <th>Action</th>
               </tr>
             </thead>
@@ -28,6 +29,7 @@
                 <td>{{ project.id }}</td>
                 <td>{{ project.name }}</td>
                 <td>{{ project.hours }}</td>
+                <td>{{ project.hours_spent }}</td>
                 <td>
                   <a href="{% url 'work_diary' %}">Work Diary</a>
                   |

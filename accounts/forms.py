@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
-from .models import Account
+from .models import Account, Payroll
 from django import forms
+from django.forms import ModelForm, widgets
 
 class CustomUserCreationForm(UserCreationForm):
     """
@@ -57,3 +58,17 @@ class CustomUserChangeForm(UserChangeForm):
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=100, label="Email address", widget=forms.TextInput(attrs={'class': 'form-control',}))
     password = forms.CharField(min_length=6, label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control',}))
+
+#Add payroll form
+class AddPayrollForm(ModelForm):
+    class Meta:
+        model = Payroll
+        fields = ['employee_id', 'date', 'description']
+        widgets = {
+            'date': widgets.DateTimeInput(attrs={'type': 'date', 'class':'form-control'}),
+        }
+
+    def __init__(self, *args, **kargs):
+        super(AddPayrollForm, self).__init__(*args, **kargs)
+        self.fields['description'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['employee_id'].widget.attrs.update({'class' : 'form-control'})
