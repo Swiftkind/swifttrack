@@ -10,5 +10,5 @@ class WorkDiaryForm(forms.ModelForm):
             'user',
             'description',
             'hours',
-            'project_id'
+            'project',
         ]
