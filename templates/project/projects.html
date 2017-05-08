@@ -31,9 +31,8 @@
                 <td>{{ project.hours }}</td>
                 <td>{{ project.hours_spent }}</td>
                 <td>
-                  <a href="{% url 'work_diary' %}">Work Diary</a>
-                  |
-                  <a href="{% url 'reports' %}">Reports</a>
+                  <a href="{% url 'work-diary' %}" class="btn btn-primary btn-sm">Work Diary</a>
+                  <a href="{% url 'reports' %}" class="btn btn-default btn-sm">Reports</a>
                 </td>
               </tr>
             {% empty %}

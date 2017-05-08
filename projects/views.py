@@ -15,7 +15,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
     template_name = 'project/projects.html'
 
     def get(self, request, *args, **kwargs):
-        project = Projects.objects.all().order_by('-date')
+        project = Projects.objects.filter(user=request.user)
         ctx_data = {
             'projects': project,
         }
@@ -29,11 +29,11 @@ class WorkDiaryView(TemplateView):
     template_name = 'project/work_diary.html'
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class
-        work = WorkDiary.objects.all()
+        form = self.form_class(initial={'user': request.user.id})
+        work = WorkDiary.objects.filter(user=request.user.id)
         ctx_data = {
-            'works': work,
             'form': form,
+            'work': work,
         }
         return render(self.request, self.template_name, ctx_data)
 
@@ -42,17 +42,17 @@ class WorkDiaryView(TemplateView):
         if form.is_valid():
             form.save()
             hs = request.POST['hours']
-            p = request.POST['project_id']
+            p = request.POST['project']
             Projects.objects.filter(id=p).update(hours_spent=F('hours_spent')+hs)
             return redirect('/project/')
         form = self.form_class()
         return render(self.request, self.template_name, {'form': form})
 
 
-class Reports(TemplateView):
+class WorkReportView(TemplateView):
 
     template_name = 'project/work_detail.html'
 
     def get(self, request, *args, **kwargs):
-        work = WorkDiary.objects.all().order_by('-date')
+        work = WorkDiary.objects.filter(user=request.user).order_by('-date')
         return render(request, self.template_name, {'work': work})

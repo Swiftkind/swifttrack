@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<div class="container">
 <h1>Work Diary</h1>
 
-    <form role="form" method="post" action="">
+    <form role="form" method="post" action="{% url 'work-diary' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Save</button>
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        <a href="{% url 'project' %}" class="btn btn-default btn-sm">Cancel</a>
     </form>
     {{project.name}}
-
+</div>
 {% endblock %}
