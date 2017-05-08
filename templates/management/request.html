@@ -30,6 +30,7 @@
 			    					<th>Subject</th>
 			    					<th>Date of leave</th>
 			    					<th>Content</th>
+			    					<th>Status</th>
 			    				</tr>
 			    			</thead>
 			    			<tbody>
@@ -37,9 +38,21 @@
 				    				<tr>
 				    					<td>{{request.employee.get_full_name}}</td>
 				    					<td>{{request.date_requested}}</td>
-				    					<td>{{request.subject}}</td>
+				    					<td>{{request.get_subject_display}}</td>
 				    					<td>{{request.date_of_leave}}</td>
 				    					<td>{{request.content}}</td>
+				    					<td>
+				    						{% if request.confirmed is True %}
+				    							Confirmed
+				    						{% else %}
+				    							<form action="{% url 'update_request' %}" method="post">
+					    							{% csrf_token %}
+					    							<input type="hidden" value="{{request.id}}" name="id">
+					    							<input type="checkbox" name="status" {% if request.confirmed %}checked=""{% endif %}"">
+					    							<button type="submit" class="btn btn-sm btn-default">Confirm</button>
+					    						</form>
+				    						{% endif %}
+				    					</td>
 				    				</tr>
 					    		{% empty %}
 					    			No requests
@@ -47,12 +60,49 @@
 			    			</tbody>
 				    	</table>
 			    	{% else %}
-			    		<h3>Send a request</h3><br>
-			    		<form action="{% url 'request' %}" method="post">
-				    		{% csrf_token %}
-				    		{{form.as_p}}
-			    		<button type="submit" class="btn btn-primary">Submit request</button>
-			    	</form>
+			    		<div class="col-md-5">
+			    			<h3>Send a request</h3><br>
+				    		<form action="{% url 'request' %}" method="post">
+					    		{% csrf_token %}
+					    		{{form.as_p}}
+				    			<button type="submit" class="btn btn-primary">Submit request</button>
+				    		</form>
+			    		</div>
+			    		<div class="col-md-7">
+			    		<br>
+			    			<div class="well">
+					    		<table class="table table-striped">
+					    			<thead>
+					    				<tr>
+					    					<th>Date requested</th>
+					    					<th>Subject</th>
+					    					<th>Date of leave</th>
+					    					<th>Content</th>
+					    					<th>Status</th>
+					    				</tr>
+					    			</thead>
+					    			<tbody>
+					    				{% for request in requests_by_user %}
+						    				<tr>
+						    					<td>{{request.date_requested}}</td>
+						    					<td>{{request.get_subject_display}}</td>
+						    					<td>{{request.date_of_leave}}</td>
+						    					<td>{{request.content | truncatechars:200 }}</td>
+						    					<td>
+						    						{% if request.confirmed is True %}
+						    							Confirmed
+						    						{% else %}
+						    							Not confirmed
+						    						{% endif %}
+						    					</td>
+						    				</tr>
+							    		{% empty %}
+							    			No requests
+							    		{% endfor %}
+					    			</tbody>
+						    	</table>
+						    </div>
+			    		</div>
 			    	{% endif %}
 		    	</div>
 		    </div>

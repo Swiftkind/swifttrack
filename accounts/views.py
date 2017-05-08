@@ -72,7 +72,7 @@ class UpdateAccountView(TemplateView):
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-        return redirect('account')
+        return redirect('project')
 
 #Update password view
 class UpdatePasswordView(TemplateView):
