@@ -20,6 +20,7 @@
 		    		<thead>
 		    			<tr>
 		    				<th>Date</th>
+		    				<th>Amount</th>
 		    				<th>Description</th>
 		    				<th>Action</th>
 		    			</tr>
@@ -28,6 +29,7 @@
 		    			{% for pr in payroll %}
 		    				<tr>
 			    				<td>{{pr.date}}</td>
+			    				<td>P{{pr.amount}}</td>
 			    				<td>{{pr.description}}</td>
 			    				<td><a href="" class="btn btn-primary btn-sm">Download invoice</a></td>
 			    			</tr>

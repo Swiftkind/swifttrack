@@ -15,6 +15,7 @@ class Requests(models.Model):
 	date_requested = models.DateTimeField(auto_now=True)
 	date_of_leave = models.DateTimeField(blank=True)
 	content = models.TextField()
+	confirmed = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.subject+' : '+str(self.employee)

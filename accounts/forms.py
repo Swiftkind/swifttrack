@@ -63,7 +63,7 @@ class LoginForm(forms.Form):
 class AddPayrollForm(ModelForm):
     class Meta:
         model = Payroll
-        fields = ['employee_id', 'date', 'description']
+        fields = ['employee_id', 'date', 'amount', 'description']
         widgets = {
             'date': widgets.DateTimeInput(attrs={'type': 'date', 'class':'form-control'}),
         }
@@ -71,4 +71,5 @@ class AddPayrollForm(ModelForm):
     def __init__(self, *args, **kargs):
         super(AddPayrollForm, self).__init__(*args, **kargs)
         self.fields['description'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['amount'].widget.attrs.update({'class' : 'form-control'})
         self.fields['employee_id'].widget.attrs.update({'class' : 'form-control'})

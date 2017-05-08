@@ -7,12 +7,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from . models import Projects, WorkDiary
 from . forms import WorkDiaryForm
 from django.db.models import F
+from django.views.generic.dates import YearArchiveView, MonthArchiveView, WeekArchiveView
 
 
 class ProjectView(LoginRequiredMixin, TemplateView):
 
     model = Projects
-    template_name = 'project/projects.html'
+    template_name = 'projects/projects.html'
 
     def get(self, request, *args, **kwargs):
         project = Projects.objects.filter(user=request.user)
@@ -26,7 +27,7 @@ class WorkDiaryView(TemplateView):
 
     form_class = WorkDiaryForm
     model = WorkDiary, Projects
-    template_name = 'project/work_diary.html'
+    template_name = 'projects/work_diary.html'
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial={'user': request.user.id})
@@ -45,14 +46,18 @@ class WorkDiaryView(TemplateView):
             p = request.POST['project']
             Projects.objects.filter(id=p).update(hours_spent=F('hours_spent')+hs)
             return redirect('/project/')
-        form = self.form_class()
-        return render(self.request, self.template_name, {'form': form})
+        # form = self.form_class()
+        # return render(self.request, self.template_name, return_data)
 
+class ReportsYearArchiveView(YearArchiveView):
+    queryset = WorkDiary.objects.all()
+    date_field = "date"
+    make_object_list = True
+    allow_future = True
 
-class WorkReportView(TemplateView):
-
-    template_name = 'project/work_detail.html'
-
-    def get(self, request, *args, **kwargs):
-        work = WorkDiary.objects.filter(user=request.user).order_by('-date')
-        return render(request, self.template_name, {'work': work})
+class ReportsWeekArchiveView(WeekArchiveView):
+    queryset = WorkDiary.objects.all()
+    date_field = "date"
+    week_format = "%W"
+    allow_future = True
+    isTrue = 'True'

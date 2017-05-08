@@ -1,6 +1,5 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, widgets
 from .models import Requests
-from django.forms import widgets
 
 class RequestForm(ModelForm):
 	class Meta:
@@ -13,6 +12,5 @@ class RequestForm(ModelForm):
 
 	def __init__(self, *args, **kargs):
 	    super(RequestForm, self).__init__(*args, **kargs)
-	    self.fields['employee'].widget.attrs.update({'class' : 'form-control'})
 	    self.fields['subject'].widget.attrs.update({'class' : 'form-control'})
 	    self.fields['content'].widget.attrs.update({'class' : 'form-control'})
