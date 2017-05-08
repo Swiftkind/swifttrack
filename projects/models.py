@@ -1,3 +1,4 @@
+
 from django.db import models
 from accounts.models import Account
 
@@ -8,6 +9,7 @@ class Projects(models.Model):
     name = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now=True)
     hours = models.FloatField()
+    hours_spent = models.FloatField(default=0)
 
 
     class Meta:
@@ -24,7 +26,7 @@ class WorkDiary(models.Model):
     description = models.TextField()
     date = models.DateTimeField(auto_now=True)
     hours = models.FloatField()
-    project_id = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
 
 
     class Meta:

@@ -15,18 +15,45 @@
 		    </div>
 		    <div role="tabpanel" class="tab-pane active" id="contact">
 		    	<div class="col-md-12">
-		    		<h3>Send a request</h3><br>
 			    	{% if success %}
 			    		<div class="alert alert-success alert-dismissable">
 			    			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 			    			{{success}}
 			    		</div>
 			    	{% endif %}
-			    	<form action="{% url 'request' %}" method="post">
-			    		{% csrf_token %}
-			    		{{form.as_p}}
+			    	{% if user.is_staff %}
+			    		<table class="table table-striped">
+			    			<thead>
+			    				<tr>
+			    					<th>Employee</th>
+			    					<th>Date requested</th>
+			    					<th>Subject</th>
+			    					<th>Date of leave</th>
+			    					<th>Content</th>
+			    				</tr>
+			    			</thead>
+			    			<tbody>
+			    				{% for request in requests %}
+				    				<tr>
+				    					<td>{{request.employee.get_full_name}}</td>
+				    					<td>{{request.date_requested}}</td>
+				    					<td>{{request.subject}}</td>
+				    					<td>{{request.date_of_leave}}</td>
+				    					<td>{{request.content}}</td>
+				    				</tr>
+					    		{% empty %}
+					    			No requests
+					    		{% endfor %}
+			    			</tbody>
+				    	</table>
+			    	{% else %}
+			    		<h3>Send a request</h3><br>
+			    		<form action="{% url 'request' %}" method="post">
+				    		{% csrf_token %}
+				    		{{form.as_p}}
 			    		<button type="submit" class="btn btn-primary">Submit request</button>
 			    	</form>
+			    	{% endif %}
 		    	</div>
 		    </div>
 		</div>

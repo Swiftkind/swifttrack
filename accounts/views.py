@@ -3,7 +3,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.views.generic import TemplateView
 from .models import Account, Payroll
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from .forms import LoginForm
+from .forms import LoginForm, AddPayrollForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -96,4 +96,19 @@ class PayrollView(TemplateView):
     def get(self, request, *args, **kwargs):
         payroll = Payroll.objects.filter(employee_id=request.user)
         return_data = {'payroll':payroll}
+        return render(request, self.template_name, return_data)
+
+#Add payroll view
+class AddPayrollView(TemplateView):
+    template_name = 'accounts/add-payroll.html'
+    def get(self, request, *args, **kwargs):
+        form = AddPayrollForm()
+        return_data ={'form': form}
+        return render(request, self.template_name, return_data)
+    def post(self, request, *args, **kwargs):
+        form = AddPayrollForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('payroll')
+        return_data ={'form': form, 'error': 'Can\'t add payroll'}
         return render(request, self.template_name, return_data)
