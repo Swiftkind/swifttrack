@@ -13,13 +13,13 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="home">
-          <table class="table table-striped" id="product-table">
+          <table class="table table-striped" id="product-table"><br />
+          <a class="btn btn-info" href="{% url 'add-project' %}">Add project</a>
             <thead>
               <tr>
                   <th>ID #</th>
                   <th>Project Name</th>
-                  <th>Hours per week</th>
-                   <th>Total hours spent</th>
+                  <th>Hours</th>
                   <th>Action</th>
               </tr>
             </thead>
@@ -29,9 +29,9 @@
                 <td>{{ project.id }}</td>
                 <td>{{ project.name }}</td>
                 <td>{{ project.hours }}</td>
-                <td>{{ project.hours_spent }}</td>
                 <td>
-                  <a href="{% url 'work-diary' %}" class="btn btn-primary btn-sm">Work Diary</a>
+                    {{ project.hours_spent }} / {{ project.hours }} |
+                  <a href="{% url 'work-diary' project.id %}" class="btn btn-primary btn-sm">Work Diary</a>
                   <a href="{% url 'reports_archive'  %}" class="btn btn-default btn-sm">Reports</a>
                 </td>
               </tr>

@@ -1,12 +1,13 @@
 from django.conf.urls import url
-from .views import ProjectView, WorkDiaryView, ReportsYearArchiveView, ReportsWeekArchiveView
+from .views import ProjectView, AddProjectView, WorkDiaryView, ReportsYearArchiveView, ReportsWeekArchiveView
 from django.views.generic.dates import ArchiveIndexView
 from .models import WorkDiary
 from . import views
 
 urlpatterns = [
     url(r'^$', ProjectView.as_view(), name='project'),
-    url(r'^work_diary/$', WorkDiaryView.as_view(), name='work-diary'),
+    url(r'^add-project$', AddProjectView.as_view(), name='add-project'),
+    url(r'^work_diary/(?P<id>[0-9]+)/$', WorkDiaryView.as_view(), name='work-diary'),
     url(r'^reports/$',
         ArchiveIndexView.as_view(model=WorkDiary, date_field="date"),
         name="reports_archive"),

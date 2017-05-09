@@ -10,7 +10,7 @@ class WorkDiaryForm(ModelForm):
             'user',
             'description',
             'hours',
-            'project',
+            # 'project',
         ]
         widgets = {
             'user': widgets.TextInput(attrs={'type': 'hidden'}),
@@ -19,3 +19,16 @@ class WorkDiaryForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(WorkDiaryForm, self).__init__(*args, **kwargs)
         self.fields['description'].widget.attrs.update({'class': 'form-control'})
+
+class AddProjectForm(ModelForm):
+
+    class Meta:
+        model = Projects
+        fields = ['user', 'name', 'hours', 'hours_spent']
+        widgets = {
+            'user': widgets.TextInput(attrs={'type': 'hidden'}),
+        }
+
+    def __init__(self, *args, **kargs):
+        super(AddProjectForm, self).__init__(*args, **kargs)
+        self.fields['name'].widget.attrs.update({'class' : 'form-control'})
