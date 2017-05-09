@@ -14,7 +14,9 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="home">
           <table class="table table-striped" id="product-table"><br />
+          {% if user.is_staff %}
           <a class="btn btn-info" href="{% url 'add-project' %}">Add project</a>
+          {% endif %}
             <thead>
               <tr>
                   <th>ID #</th>
