@@ -59,7 +59,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(_('active'), default=True,
+    is_active = models.BooleanField(_('active'), default=False,
         help_text=_('Designates whether this user should be treated as '
                     'active. Unselect this instead of deleting accounts.'))
 
@@ -82,8 +82,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
 """ Payroll """
 class Payroll(models.Model):
     date = models.DateTimeField()
+    employee = models.ForeignKey(Account)
+    amount_before_deductions = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     description = models.TextField()
-    employee_id = models.ForeignKey(Account)
+    date_generated = models.DateTimeField(auto_now_add=True)
+    paid = models.BooleanField(default=False)
+    date_paid = models.DateTimeField(blank=True, null=True)
   
     def __str__(self):
         return self.description+' to '+str(self.employee_id)
