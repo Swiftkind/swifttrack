@@ -4,7 +4,7 @@
 <div class="container">
 <h1>Work Diary</h1>
 
-    <form role="form" method="post" action="{% url 'work-diary' %}">
+    <form role="form" method="post" action="{% url 'work-diary' id %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary btn-sm">Save</button>

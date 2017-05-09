@@ -4,7 +4,7 @@ from . models import Projects, WorkDiary
 
 class ProjectsAdmin(admin.ModelAdmin):
 
-    list_display = ('name', 'date', 'hours', 'hours_spent',)
+    list_display = ('name', 'date', 'hours',)
     list_filter = ['date', 'hours']
 
 
