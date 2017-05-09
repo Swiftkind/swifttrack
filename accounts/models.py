@@ -82,7 +82,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
 """ Payroll """
 class Payroll(models.Model):
     date = models.DateTimeField()
-    amount = models.DecimalField(max_digits=20, decimal_places=2)
     description = models.TextField()
     employee_id = models.ForeignKey(Account)
   
