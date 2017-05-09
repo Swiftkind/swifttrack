@@ -52,7 +52,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     about_me = models.TextField(blank=True)
     address = models.CharField(max_length=255, blank=True)
     contact_number = models.CharField(max_length=13, blank=True)
-    profile_pic = models.ImageField('Profile picture', upload_to='profiles', blank=True)
+    profile_pic = models.ImageField('Profile picture', upload_to='profiles', default='img/default-profile.png')
 
     date_joined = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

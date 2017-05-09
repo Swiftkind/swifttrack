@@ -13,17 +13,11 @@ class CustomUserCreationForm(UserCreationForm):
         super(CustomUserCreationForm, self).__init__(*args, **kargs)
         #del self.fields['username']
         self.fields['email'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['first_name'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['last_name'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['address'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['contact_number'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['profile_pic'].widget.attrs.update({'class': 'form-control'})
-        self.fields['about_me'].widget.attrs.update({'class' : 'form-control'})
         self.fields['password1'].widget.attrs.update({'class' : 'form-control'})
         self.fields['password2'].widget.attrs.update({'class' : 'form-control'})
     class Meta:
         model = Account
-        fields = ('email', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me', 'password1', 'password2')
+        fields = ('email', 'password1', 'password2')
 
 class CustomUserChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on

@@ -19,8 +19,6 @@ class RegistrationView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            contact_number = form.cleaned_data['contact_number']
-            
             form.save()
             return redirect('login')
         else:
@@ -42,10 +40,13 @@ class LoginView(TemplateView):
             password = form.cleaned_data['password']
             user = authenticate(email=email, password=password)
             if user is not None:
+                if user.is_staff is True:
+                    login(request, user)
+                    return redirect('admin')
                 login(request, user)
                 return redirect('project')
             else:
-                return_data = {'form': form, 'error': 'Can\'t login account. Invalid account credentials.'}
+                return_data = {'form': form, 'error': 'Can\'t login account. Reasons: (1) Your account is not yet confirmed by the administrator. (2) You have entered invalid credentials.'}
                 return render(request, self.template_name, return_data)
 
 #Logout view
