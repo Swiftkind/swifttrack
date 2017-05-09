@@ -48,8 +48,8 @@
 				    							<form action="{% url 'update_request' %}" method="post">
 					    							{% csrf_token %}
 					    							<input type="hidden" value="{{request.id}}" name="id">
-					    							<input type="checkbox" name="status" {% if request.confirmed %}checked=""{% endif %}"">
-					    							<button type="submit" class="btn btn-sm btn-default">Confirm</button>
+													<input type="hidden" name="status" value="{% if not request.confirmed %}True{% endif %}">
+					    							<button type="submit" class="btn btn-sm btn-info">Confirm</button>
 					    						</form>
 				    						{% endif %}
 				    					</td>
