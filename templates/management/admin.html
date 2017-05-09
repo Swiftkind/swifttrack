@@ -1,0 +1,80 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h3>Administration</h3>
+			<hr>
+			<div class="col-md-3">
+				<ul class="nav nav-pills nav-stacked">
+				  <li class="active"><a href="{% url 'admin' %}">Employees</a></li>
+				</ul>
+			</div>
+			<div class="col-md-9">
+				<ul class="nav nav-tabs">
+				  <li class="active"><a href="#allemployees" data-toggle="tab">Active employee accounts</a></li>
+				  <li><a href="#confirmations" data-toggle="tab">Account confirmations</a></li>
+				</ul>
+				<div id="myTabContent" class="tab-content">
+				  <div class="tab-pane fade active in" id="allemployees">
+				    <table class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Email address</th>
+								<th>Contact number</th>
+								<th>Address</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for employee in all_employees %}
+								<tr>
+									<td>
+										{{employee.get_full_name}}
+									</td>
+									<td>{{employee.email}}</td>
+									<td>{{employee.contact_number}}</td>
+									<td>{{employee.address}}</td>
+									<td>
+										<form action="{% url 'deactivate_account' %}" method="post">
+											{% csrf_token %}
+											<input type="hidden" name="id" value="{{employee.id}}">
+											<button type="submit" name="deactivate" class="btn btn-sm btn-danger">Deactivate</button>
+										</form>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				  </div>
+				  <div class="tab-pane fade" id="confirmations">
+				  	<table class="table">
+						<thead>
+							<tr>
+								<th>Email address</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for employee in accounts_to_confirm %}
+								<tr>
+									<td>{{employee.email}}</td>
+									<td>
+										<form action="{% url 'confirm_account' %}" method="post">
+											{% csrf_token %}
+											<input type="hidden" name="id" value="{{employee.id}}">
+											<button type="submit" name="confirm" class="btn btn-sm btn-success">Confirm</button>
+											<button type="submit" name="decline" class="btn btn-sm btn-warning">Decline</button>
+										</form>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
