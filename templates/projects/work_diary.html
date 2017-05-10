@@ -1,15 +1,70 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="container">
-<h1>Work Diary</h1>
+{% load widget_tweaks %}
 
-    <form role="form" method="post" action="{% url 'work-diary' id %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary btn-sm">Save</button>
-        <a href="{% url 'project' %}" class="btn btn-default btn-sm">Cancel</a>
-    </form>
-    {{project.name}}
+{% block content %}
+
+<div class="container">
+
+<div>
+<div class="pull-right">
+    <a href="{% url 'project' %}" class="btn btn-default btn-md">Back</a>
 </div>
+    <h1>Work Diary</h1>
+</div>
+
+<div id="accordion" role="tablist" aria-multiselectable="true">
+<div  class="pull-right">
+    <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
+</div>
+<div class="card">
+    <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="card-block">
+      <h2>Project name: {{ project.name }}</h2>
+            <form role="form" method="post" action="">
+                {% csrf_token %}
+                {% for field in form %}
+                  <div class="form-group{% if field.errors %} has-error{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% render_field field class="form-control" %}
+                    {% for error in field.errors %}
+                      <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+            </form>
+      </div>
+    </div>
+</div>
+</div>
+<br />
+<div>
+<table class="table table-striped" id="product-table"><br />
+    <thead>
+          <tr>
+                <th>DATE</th>
+                <th>TODAY</th>
+                <th>TO-DO</th>
+                <th>ISSUES</th>
+          </tr>
+    </thead>
+    {% for work in work %}
+    <tbody>
+          <tr>
+                <td>{{ work.date }}</td>
+                <td>{{ work.finished_task }}</td>
+                <td>{{ work.todo_task }}</td>
+                <td>{{ work.issues }}</td>
+          </tr>
+    {% empty %}
+            <tr>
+                <td colspan="8" class="text-center bg-warning">No Projects</td>
+            </tr>
+    </tbody>
+      {% endfor %}
+</table>
+</div>
+</div>
+
 {% endblock %}

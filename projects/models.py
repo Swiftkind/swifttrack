@@ -3,13 +3,11 @@ from django.db import models
 from accounts.models import Account
 
 
-class Projects(models.Model):
+class Project(models.Model):
 
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    date = models.DateTimeField(auto_now=True)
-    hours = models.FloatField()
-    hours_spent = models.FloatField()
+    date_created = models.DateTimeField(auto_now_add=True)
 
 
     class Meta:
@@ -20,13 +18,24 @@ class Projects(models.Model):
         return self.name
 
 
+class ProjectAssignment(models.Model):
+
+    employee = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
+    weekly_hours = models.FloatField()
+
+    class Meta:
+        verbose_name_plural = "project-assignment"
+
+
 class WorkDiary(models.Model):
 
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    description = models.TextField()
+    project_assignment = models.ForeignKey(ProjectAssignment, null=True, on_delete=models.CASCADE)
+    finished_task = models.TextField()
+    todo_task = models.TextField()
+    issues = models.TextField()
     date = models.DateTimeField(auto_now=True)
     hours = models.FloatField()
-    project = models.ForeignKey(Projects, null=True, on_delete=models.CASCADE)
 
 
     class Meta:
@@ -34,4 +43,4 @@ class WorkDiary(models.Model):
 
 
     def __str__(self):
-        return self.description
+        return self.finished_task
