@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from . models import Projects, WorkDiary
+from . models import Project, WorkDiary
 from . forms import WorkDiaryForm, AddProjectForm
 from django.db.models import F
 from django.views.generic.dates import YearArchiveView, MonthArchiveView, WeekArchiveView
@@ -12,13 +12,13 @@ from django.views.generic.dates import YearArchiveView, MonthArchiveView, WeekAr
 
 class ProjectView(LoginRequiredMixin, TemplateView):
 
-    model = Projects
+    model = Project
     template_name = 'projects/projects.html'
 
     def get(self, request, *args, **kwargs):
-        project = Projects.objects.filter(user=request.user)
+        project = Project.objects.filter(user=request.user)
         ctx_data = {
-            'projects': project,
+            'project': project,
         }
         return render(self.request, self.template_name, ctx_data)
 
@@ -43,12 +43,12 @@ class AddProjectView(TemplateView):
 class WorkDiaryView(TemplateView):
 
     form_class = WorkDiaryForm
-    model = WorkDiary, Projects
+    model = WorkDiary, Project
     template_name = 'projects/work_diary.html'
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial={'user': request.user.id})
-        work = WorkDiary.objects.filter(user=request.user.id)
+        work = WorkDiary.objects.all()
         ctx_data = {
             'form': form,
             'work': work,
@@ -60,9 +60,9 @@ class WorkDiaryView(TemplateView):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
-            hs = request.POST['hours']
-            p = kwargs['id']
-            Projects.objects.filter(id=p).update(hours_spent=F('hours_spent')+hs)
+            # hs = request.POST['hours']
+            # p = kwargs['id']
+            # Project.objects.filter(id=p).update(hours_spent=F('hours_spent')+hs)
             return redirect('/project/')
         ctx_data = {
             'form': form,

@@ -14,27 +14,20 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="home">
           <table class="table table-striped" id="product-table"><br />
-          {% if user.is_staff %}
-          <a class="btn btn-info" href="{% url 'add-project' %}">Add project</a>
-          {% endif %}
             <thead>
               <tr>
-                  <th>ID #</th>
-                  <th>Project Name</th>
-                  <th>Hours</th>
-                  <th>Action</th>
+                  <th>PROJECT NAME</th>
+                  <th>HOURS</th>
+                  <th>ACTION</th>
               </tr>
             </thead>
-            {% for project in projects %}
+            {% for project in project %}
             <tbody>
               <tr>
-                <td>{{ project.id }}</td>
                 <td>{{ project.name }}</td>
-                <td>{{ project.hours }}</td>
+                <td>{{ temporary }}</td>
                 <td>
-                    {{ project.hours_spent }} / {{ project.hours }} |
                   <a href="{% url 'work-diary' project.id %}" class="btn btn-primary btn-sm">Work Diary</a>
-                  <a href="{% url 'reports_archive'  %}" class="btn btn-default btn-sm">Reports</a>
                 </td>
               </tr>
             {% empty %}

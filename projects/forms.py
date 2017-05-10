@@ -1,33 +1,33 @@
 from django import forms
-from projects.models import Projects, WorkDiary
+from projects.models import Project, WorkDiary
 from django.forms import widgets, ModelForm
 
-class WorkDiaryForm(ModelForm):
+class WorkDiaryForm(forms.ModelForm):
 
     class Meta:
         model =  WorkDiary
         fields = [
-            'user',
-            'description',
+            # 'project_assignment',
+            'finished_task',
+            'todo_task',
+            'issues',
             'hours',
-            # 'project',
         ]
-        widgets = {
-            'user': widgets.TextInput(attrs={'type': 'hidden'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super(WorkDiaryForm, self).__init__(*args, **kwargs)
-        self.fields['description'].widget.attrs.update({'class': 'form-control'})
+        self.fields['finished_task'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
+        self.fields['todo_task'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
+        self.fields['issues'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
 
-class AddProjectForm(ModelForm):
+class AddProjectForm(forms.ModelForm):
 
     class Meta:
-        model = Projects
-        fields = ['user', 'name', 'hours', 'hours_spent']
-        widgets = {
-            'user': widgets.TextInput(attrs={'type': 'hidden'}),
-        }
+        model = Project
+        fields = [
+            'user', 
+            'name',
+        ]
 
     def __init__(self, *args, **kargs):
         super(AddProjectForm, self).__init__(*args, **kargs)
