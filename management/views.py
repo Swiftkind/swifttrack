@@ -15,8 +15,7 @@ class RequestView(TemplateView):
 	def get(self, request, *args, **kwargs):
 		form = RequestForm(initial={'employee': request.user.id})
 		requests_by_user = Requests.objects.filter(employee=request.user.id).order_by('-date_requested')
-		requests = Requests.objects.all().order_by('-date_requested')
-		return_data = {'form':form, 'requests':requests, 'requests_by_user': requests_by_user}
+		return_data = {'form':form, 'requests_by_user': requests_by_user}
 		return render(request, self.template_name, return_data)
 	def post(self, request, *args, **kwargs):
 		form = RequestForm(request.POST)
