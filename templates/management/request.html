@@ -1,4 +1,5 @@
 {% extends 'dashboard.html' %}
+{% load static %}
 {% block tabs %}
 	<div class="container">
 	<br><br>
@@ -60,7 +61,7 @@
 			    			</tbody>
 				    	</table>
 			    	{% else %}
-			    		<div class="col-md-5">
+			    		<div class="col-md-12">
 			    			<h3>Send a request</h3><br>
 				    		<form action="{% url 'request' %}" method="post">
 					    		{% csrf_token %}
@@ -68,7 +69,7 @@
 				    			<button type="submit" class="btn btn-primary">Submit request</button>
 				    		</form>
 			    		</div>
-			    		<div class="col-md-7">
+			    		<div class="col-md-12">
 			    		<br>
 			    			<div class="well">
 					    		<table class="table table-striped">
@@ -77,6 +78,7 @@
 					    					<th>Date requested</th>
 					    					<th>Subject</th>
 					    					<th>Date of leave</th>
+					    					<th>Date of return</th>
 					    					<th>Content</th>
 					    					<th>Status</th>
 					    				</tr>
@@ -87,6 +89,7 @@
 						    					<td>{{request.date_requested}}</td>
 						    					<td>{{request.get_subject_display}}</td>
 						    					<td>{{request.date_of_leave}}</td>
+						    					<td>{{request.date_of_return}}</td>
 						    					<td>{{request.content | truncatechars:200 }}</td>
 						    					<td>
 						    						{% if request.confirmed is True %}
@@ -108,4 +111,31 @@
 		    </div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/moment.js' %}"></script>
+<script src="{% static 'js/daterange-picker.js' %}"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('input[name="date_of_leave"]').daterangepicker({
+				singleDatePicker: true,
+				showDropdowns: true,
+				timePicker: true,
+			});
+			$('input[name="date_of_return"]').daterangepicker({
+				singleDatePicker: true,
+				showDropdowns: true,
+				timePicker: true,
+			});
+			$('#id_subject').change(function(){
+				var subject = $('#id_subject').val();
+				if(subject == 'OR'){
+					$('#id_date_of_return').attr('disabled', 'disabled');
+				}else{
+					$('#id_date_of_return').removeAttr('disabled');
+				}
+			});
+		});
+	</script>
 {% endblock %}
