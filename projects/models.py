@@ -9,10 +9,8 @@ class Project(models.Model):
     name = models.CharField(max_length=200)
     date_created = models.DateTimeField(auto_now_add=True)
 
-
     class Meta:
         verbose_name_plural = "project"
-
 
     def __str__(self):
         return self.name
@@ -37,10 +35,8 @@ class WorkDiary(models.Model):
     date = models.DateTimeField(auto_now=True)
     hours = models.FloatField()
 
-
     class Meta:
         verbose_name_plural = "workdiary"
-
 
     def __str__(self):
         return self.finished_task
