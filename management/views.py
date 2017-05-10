@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from .forms import RequestForm
 from .models import Requests
 from accounts.models import Account
+from projects.models import WorkDiary
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail, BadHeaderError
@@ -65,3 +66,11 @@ class DeactivateAccountView(TemplateView):
 		employee = request.POST['id']
 		Account.objects.filter(id=employee).update(is_active=False)
 		return redirect('admin')
+
+class EmployeeProfileView(TemplateView):
+	template_name = 'management/employee-profile.html'
+	def get(self, request, *args, **kwargs):
+		employee_id = kwargs['id']
+		employee = Account.objects.get(id=employee_id)
+		return_data = {'employee': employee}
+		return render(request, self.template_name, return_data)
