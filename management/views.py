@@ -45,9 +45,9 @@ class AdminView(TemplateView):
 	def get(self, request, *args, **kwargs):
 		all_employees = Account.objects.filter(is_active=True)
 		projects = Project.objects.all()
-		print(projects)
+		work = WorkDiary.objects.all()
 		accounts_to_confirm = Account.objects.filter(is_active=False)
-		return_data = {'all_employees': all_employees, 'accounts_to_confirm': accounts_to_confirm, 'projects': projects}
+		return_data = {'all_employees': all_employees, 'accounts_to_confirm': accounts_to_confirm, 'projects': projects, 'work': work,}
 		return render(request, self.template_name, return_data)
 
 class ConfirmAccountView(TemplateView):

@@ -21,7 +21,7 @@
     <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="card-block">
         {% for assignment in assignments %}
-            <h2>{{ assignment.project.name }}{{ assignmnent.project.id }}</h2>
+            <h2>{{ assignment.project.name }}</h2>
 
             <form role="form" method="post" action="">
                 {% csrf_token %}
@@ -43,7 +43,6 @@
 </div>
 <br />
 <div>
-
 <table class="table table-striped"><br />
 <div>
 <form class="navbar-form" method='GET' action=''>

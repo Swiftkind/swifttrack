@@ -1,1 +1,45 @@
 {% extends 'management.html' %}
+
+
+{% block content %}
+<div>
+<div class="pull-right">
+    <a href="{% url 'project' %}" class="btn btn-default btn-md">Add Project</a>
+    <a href="{% url 'project' %}" class="btn btn-default btn-md">Add Employee</a>
+</div>
+{% for project in projects %}
+    <h1>{{ project.name }}</h1>
+{% endfor %}
+</div>
+<hr />
+{% for work in work %}
+<h1>{{ work.date }}</h1>
+{% endfor %}
+<hr />
+<div class="container">
+<table class="table table-striped"><br />
+    <thead>
+          <tr>
+                <th>Employee</th>
+                <th>Hours</th>
+                <th>Description</th>
+          </tr>
+    </thead>
+    <tbody>
+          <tr>
+                <td>Employee name</td>
+                <td>Hours</td>
+                <td>Description</td>
+          </tr>
+            <tr>
+                <td colspan="8" class="text-center bg-warning">No Data</td>
+            </tr>
+    </tbody>
+    <hr />
+</table>
+</div>
+
+{% endblock %}
+
+
+
