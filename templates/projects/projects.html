@@ -2,8 +2,7 @@
 
 {% block tabs %}
 
-<div class="container">
-  <br><br>
+<div class="container"><br /><br />
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="{% url 'project' %}">Projects</a></li>
         <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
@@ -21,13 +20,13 @@
                   <th>ACTION</th>
               </tr>
             </thead>
-            {% for project in project %}
+            {% for assignment in assignments %}
             <tbody>
               <tr>
-                <td>{{ project.name }}</td>
-                <td>{{ temporary }}</td>
+                <td>{{ assignment.project.name }}</td>
+                <td>{{ assignment.weekly_hours }}</td>
                 <td>
-                  <a href="{% url 'work-diary' project.id %}" class="btn btn-primary btn-sm">Work Diary</a>
+                  <a href="{% url 'work-diary' assignment.id %}" class="btn btn-primary btn-sm">Work Diary</a>
                 </td>
               </tr>
             {% empty %}
