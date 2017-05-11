@@ -38,7 +38,7 @@ class UpdateRequest(TemplateView):
 		# subject = 'Request for leave confirmation'
 		# messages = 'Your request for leave with subject '+request.POST['subject']+' and content '+request.POST['content']+' was confirmed'
 		# from_email = settings.EMAIL_HOST_USER
-		return redirect('request')
+		return redirect('view_all_requests')
 
 class AdminView(TemplateView):
 	template_name = 'management/admin.html'
@@ -72,4 +72,11 @@ class EmployeeProfileView(TemplateView):
 		employee_id = kwargs['id']
 		employee = Account.objects.get(id=employee_id)
 		return_data = {'employee': employee}
+		return render(request, self.template_name, return_data)
+
+class ViewRequestsView(TemplateView):
+	template_name = 'management/all-requests.html'
+	def get(self, request, *args, **kwargs):
+		confirmed_requests = Requests.objects.all()
+		return_data = {'confirmed_requests': confirmed_requests}
 		return render(request, self.template_name, return_data)
