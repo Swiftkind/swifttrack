@@ -13,9 +13,6 @@
 		    <div role="tabpanel" class="tab-pane" id="home"></div>
 		    <div role="tabpanel" class="tab-pane active" id="profile">
 		    	<br>
-		    	{% if user.is_staff %}
-	                <a class="btn btn-info" href="{% url 'add-payroll' %}">Add payroll</a>
-	            {% endif %}
 		    	<table class="table table-striped">
 		    		<thead>
 		    			<tr>

@@ -61,7 +61,7 @@
 			    			</tbody>
 				    	</table>
 			    	{% else %}
-			    		<div class="col-md-12">
+			    		<div class="col-md-4">
 			    			<h3>Send a request</h3><br>
 				    		<form action="{% url 'request' %}" method="post">
 					    		{% csrf_token %}
@@ -69,7 +69,7 @@
 				    			<button type="submit" class="btn btn-primary">Submit request</button>
 				    		</form>
 			    		</div>
-			    		<div class="col-md-12">
+			    		<div class="col-md-8">
 			    		<br>
 			    			<div class="well">
 					    		<table class="table table-striped">
