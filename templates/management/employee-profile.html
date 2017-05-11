@@ -1,26 +1,15 @@
-{% extends 'dashboard.html' %}
+{% extends 'management.html' %}
 
 {% block content %}
-	<div class="container">
-		<div class="row">
-			<h3>Administration</h3>
-			<hr>
-			<div class="col-md-3">
-				<ul class="nav nav-pills nav-stacked">
-				  <li class="active"><a href="{% url 'admin' %}">Employees</a></li>
-				</ul>
-			</div>
-			<div class="col-md-9">
-				<div class="well">
-					<img src="{{employee.profile_pic.url}}" width="250px" height="250px" class="img-circle center-block">
-					<h2 class="text-center">{{employee.get_full_name}}</h2>
-					<p class="text-center">Date joined: {{employee.date_joined}}</p>
-					<p class="text-center">Email address: {{employee.email}}</p>
-					<p class="text-center">Contact number: {{employee.contact_number}}</p>
-					<p class="text-center">Address: {{employee.address}}</p>
-					<p class="text-center">Bio: {{employee.about_me}}</p>
-				</div>
-			</div>
+	<div class="col-md-6 col-md-offset-3">
+		<div class="well">
+			<img src="{{employee.profile_pic.url}}" width="250px" height="250px" class="img-circle center-block">
+			<h2 class="text-center">{{employee.get_full_name}}</h2>
+			<p class="text-center">Date joined: {{employee.date_joined}}</p>
+			<p class="text-center">Email address: {{employee.email}}</p>
+			<p class="text-center">Contact number: {{employee.contact_number}}</p>
+			<p class="text-center">Address: {{employee.address}}</p>
+			<p class="text-center">Bio: {{employee.about_me}}</p>
 		</div>
 	</div>
 {% endblock %}
