@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^dashboard$', views.AdminView.as_view(), name='admin'),
     url(r'^confirm-account', views.ConfirmAccountView.as_view(), name='confirm_account'),
     url(r'^deactivate-account', views.DeactivateAccountView.as_view(), name='deactivate_account'),
+    url(r'^employees/$', views.AllEmployeesView.as_view(), name='all_employees'),
     url(r'^employee/(?P<id>[0-9]+)', views.EmployeeProfileView.as_view(), name='employee_profile'),
     url(r'^view-requests$', views.ViewRequestsView.as_view(), name='view_all_requests'),
 ]
