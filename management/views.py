@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from .forms import RequestForm
 from .models import Requests
 from accounts.models import Account
-from projects.models import WorkDiary
+from projects.models import WorkDiary, Project
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail, BadHeaderError
@@ -41,11 +41,13 @@ class UpdateRequest(TemplateView):
 		return redirect('view_all_requests')
 
 class AdminView(TemplateView):
-	template_name = 'management/admin.html'
+	template_name = 'management/workdiaries.html'
 	def get(self, request, *args, **kwargs):
 		all_employees = Account.objects.filter(is_active=True)
+		projects = Project.objects.all()
+		print(projects)
 		accounts_to_confirm = Account.objects.filter(is_active=False)
-		return_data = {'all_employees': all_employees, 'accounts_to_confirm': accounts_to_confirm}
+		return_data = {'all_employees': all_employees, 'accounts_to_confirm': accounts_to_confirm, 'projects': projects}
 		return render(request, self.template_name, return_data)
 
 class ConfirmAccountView(TemplateView):
@@ -66,6 +68,15 @@ class DeactivateAccountView(TemplateView):
 		Account.objects.filter(id=employee).update(is_active=False)
 		return redirect('admin')
 
+class AllEmployeesView(TemplateView):
+	template_name = 'management/employees.html'
+	def get(self, request, *args, **kwargs):
+		all_employees = Account.objects.filter(is_active=True)
+		projects = Project.objects.all()
+		accounts_to_confirm = Account.objects.filter(is_active=False)
+		return_data = {'all_employees': all_employees, 'accounts_to_confirm': accounts_to_confirm, 'projects': projects}
+		return render(request, self.template_name, return_data)
+
 class EmployeeProfileView(TemplateView):
 	template_name = 'management/employee-profile.html'
 	def get(self, request, *args, **kwargs):
@@ -78,5 +89,6 @@ class ViewRequestsView(TemplateView):
 	template_name = 'management/all-requests.html'
 	def get(self, request, *args, **kwargs):
 		confirmed_requests = Requests.objects.all()
-		return_data = {'confirmed_requests': confirmed_requests}
+		projects = Project.objects.all()
+		return_data = {'confirmed_requests': confirmed_requests, 'projects':projects}
 		return render(request, self.template_name, return_data)
