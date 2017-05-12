@@ -12,12 +12,13 @@ class ProjectView(LoginRequiredMixin, TemplateView):
     model = Project, ProjectAssignment
     template_name = 'projects/projects.html'
 
+
     def get(self, request, *args, **kwargs):
-        project = Project.objects.filter(user=request.user.id)
-        assignment = ProjectAssignment.objects.filter(employee=request.user.id)
+        project = Project.objects.filter(projectassignment=request.user.id)
+        assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
         ctx_data = {
             'assignments': assignment,
-            'project': project,
+            'projects': project,
         }
         return render(self.request, self.template_name, ctx_data)
 
@@ -28,10 +29,13 @@ class WorkDiaryView(TemplateView):
     model = WorkDiary, Project
     template_name = 'projects/work_diary.html'
 
+
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial={'user': request.user.id})
-        assignment = ProjectAssignment.objects.filter(id=request.user.id)
-        work = WorkDiary.objects.all()
+        id = request.GET.get('id')
+        project = Project.objects.filter(projectassignment=request.user.id)
+        assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
+        work = WorkDiary.objects.filter(project_assignment=id)
         query = self.request.GET.get('q')
         if query:
             work = work.filter(
@@ -43,11 +47,13 @@ class WorkDiaryView(TemplateView):
                 ).distinct()
         ctx_data = {
             'form': form,
-            'work': work,
-            'id': kwargs['id'],
+            'works': work,
+            'projects': project,
             'assignments': assignment,
+            'id': kwargs['id'],
         }
         return render(self.request, self.template_name, ctx_data)
+
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)

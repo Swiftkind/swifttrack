@@ -5,12 +5,13 @@ from accounts.models import Account
 
 class Project(models.Model):
 
-    user = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     date_created = models.DateTimeField(auto_now_add=True)
 
+
     class Meta:
         verbose_name_plural = "project"
+
 
     def __str__(self):
         return self.name
@@ -22,8 +23,13 @@ class ProjectAssignment(models.Model):
     project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
     weekly_hours = models.FloatField()
 
+
     class Meta:
         verbose_name_plural = "project-assignment"
+
+
+    def __str__(self):
+        return self.project.name
 
 
 class WorkDiary(models.Model):
@@ -35,8 +41,10 @@ class WorkDiary(models.Model):
     date = models.DateTimeField(auto_now=True)
     hours = models.FloatField()
 
+
     class Meta:
         verbose_name_plural = "workdiary"
+
 
     def __str__(self):
         return self.finished_task

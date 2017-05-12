@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^employees/$', views.AllEmployeesView.as_view(), name='all_employees'),
     url(r'^employee/(?P<id>[0-9]+)', views.EmployeeProfileView.as_view(), name='employee_profile'),
     url(r'^view-requests$', views.ViewRequestsView.as_view(), name='view_all_requests'),
+    url(r'^view/projects/(?P<id>[0-9]+)/$', views.ProjectManageView.as_view(), name='view_projects'),
 ]

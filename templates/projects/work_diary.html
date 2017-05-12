@@ -10,19 +10,21 @@
 <div class="pull-right">
     <a href="{% url 'project' %}" class="btn btn-default btn-md">Back</a>
 </div>
-    <h1>Work Diary</h1>
+    <h3>Work Diary</h3>
 </div>
+
+{% for assignment in assignments %}
+    <h2>{{ assignment.project.name }}</h2>
+{% endfor %}
 
 <div id="accordion" role="tablist" aria-multiselectable="true">
 <div  class="pull-right">
     <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" glyphicon glyphicon-circle-arrow-down aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
 </div>
+<br />
 <div class="card">
     <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="card-block">
-        {% for assignment in assignments %}
-            <h2>{{ assignment.project.name }}</h2>
-
             <form role="form" method="post" action="">
                 {% csrf_token %}
                 {% for field in form %}
@@ -36,7 +38,6 @@
                 {% endfor %}
                     <button type="submit" class="btn btn-primary btn-sm">Save</button>
             </form>
-        {% endfor %}
       </div>
     </div>
 </div>
@@ -60,9 +61,8 @@
                 <th>ISSUES</th>
           </tr>
     </thead>
-    {% for work in work %}
+    {% for work in works %}
     <tbody>
-
           <tr>
                 <td>{{ work.date }}</td>
                 <td>{{ work.hours }}</td>
@@ -72,7 +72,7 @@
           </tr>
     {% empty %}
             <tr>
-                <td colspan="8" class="text-center bg-warning">No Projects</td>
+                <td colspan="8" class="text-center bg-warning">No Logs</td>
             </tr>
     </tbody>
       {% endfor %}
