@@ -41,35 +41,49 @@ class UpdateRequest(TemplateView):
         # from_email = settings.EMAIL_HOST_USER
         return redirect('view_all_requests')
 
+
 class AdminView(TemplateView):
     template_name = 'management/workdiaries.html'
     def get(self, request, *args, **kwargs):
         projects = Project.objects.all()
         day_diff = int(kwargs['day'])
-        direction = kwargs['di']
-        if day_diff is 0:
-            date_today = datetime.now().date()
         date_today = datetime.now() - timedelta(days=day_diff)
+        previous_day = day_diff + 1
+        if day_diff is 0:
+            next_day = 0
+        else:
+            next_day = day_diff - 1
         '''
         Add __date to the datefield to use only the date of the datetime object in the query
         '''
-        day_diff = day_diff + 1
         work_diaries = WorkDiary.objects.filter(date__date=date_today)
-        accounts_to_confirm = Account.objects.filter(is_active=False)
-        return_data = {'accounts_to_confirm': accounts_to_confirm, 'projects': projects, 'work_diaries': work_diaries, 'date_now': date_today, 'previous_day': day_diff}
+        return_data = {'projects': projects, 'work_diaries': work_diaries, 'date_now': date_today, 'previous_day': previous_day, 'next_day': next_day}
         return render(request, self.template_name, return_data)
+    def post(self, request, *args, **kwargs):
+        day_diff = int(kwargs['day'])
+        previous_day = day_diff + 1
+        if day_diff is 0:
+            next_day = 0
+        else:
+            next_day = day_diff - 1
+        the_date = request.POST.get('getDiariesByDate')
+        the_date = datetime.strptime(the_date, '%m/%d/%Y')
+        work_diaries = WorkDiary.objects.filter(date__date=the_date)
+        return_data = {'work_diaries': work_diaries, 'previous_day': previous_day, 'next_day': next_day, 'date_now':the_date, 'return_today': True}
+        return render(request, self.template_name, return_data)
+
 
 class ConfirmAccountView(TemplateView):
     def post(self, request, *args, **kwargs):
         if request.POST.get('confirm') is not None:
             employee = request.POST['id']
             Account.objects.filter(id=employee).update(is_active=True)
-            return redirect('admin')
+            return redirect('all_employees')
         if request.POST.get('decline') is not None:
             employee = request.POST['id']
             account = Account.objects.get(id=employee)
             account.delete()
-            return redirect('admin')
+            return redirect('all_employees')
 
 class DeactivateAccountView(TemplateView):
     def post(self, request, *args, **kwargs):
