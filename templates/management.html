@@ -1,44 +1,43 @@
 <!doctype html>
 <html>
-    <head>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-        <link rel="stylesheet" href="{% static 'css/daterange-picker.css' %}">
-        <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
-    </head>
-    <body>
-        
-         <div id="wrapper">
 
-            <!-- Sidebar -->
-            <div id="sidebar-wrapper">
-                <ul class="sidebar-nav list-group">
-                    <li class="sidebar-brand">
-                        <a href="#">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/daterange-picker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav list-group">
+                <li class="sidebar-brand">
+                    <a href="#">
                             SwiftTrack
                         </a>
-                    </li>
-                    <form class="navbar-form">
-                        <div class="form-group">
-                          <input type="date" id="getDiaries" class="form-control">
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                     </form>
-                    <li class="active"><a href="#projects" data-toggle="collapse">Projects</a></li>
-                    <div id="projects" class="collapse">
-                        {% for project in projects %}
-                            <li><a href="#">{{project.name}}</a></li>
-                        {% endfor %}
+                </li>
+                <form class="navbar-form">
+                    <div class="form-group">
+                        <input type="date" id="getDiaries" class="form-control">
                     </div>
-                    <li class=""><a href="{% url 'all_employees' %}">Employees</a></li>
-                </ul>
-            </div>
-            <!-- /#sidebar-wrapper -->
-
-            <!-- Page Content -->
-            <nav class="navbar navbar-inverse" style="border-radius: 0px;">
-                <div class="navbar-header">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+                <li class="active"><a href="#projects" data-toggle="collapse">Projects</a></li>
+                <div id="projects" class="collapse">
+                    {% for project in projects %}
+                    <li><a href="#">{{project.name}}</a></li>
+                    {% endfor %}
+                </div>
+                <li class=""><a href="{% url 'all_employees' %}">Employees</a></li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <nav class="navbar navbar-inverse" style="border-radius: 0px;">
+            <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -47,53 +46,57 @@
                 </button>
                 <form class="navbar-form navbar-left" role="search">
                     <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Search">
+                        <input type="text" class="form-control" placeholder="Search">
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
-                 </form>
-                </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        {% if user.is_authenticated %}
-                            <li><a href="{% url 'admin' %}">Dashboard</a></li>
-                            <li><a href="">Payroll</a></li>
-                            <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
-                            <li><a href="{% url 'logout' %}">Logout</a></li>
-                        {% else %}
-                            <li><a href="{% url 'login' %}">Login</a></li>
-                            <li><a href="{% url 'registration' %}">Register</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </nav>
-            <div class="col-md-12"><a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a></div><br><br>
-            {% block content %}
-            {% endblock %}
+                </form>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'admin' 0 'prev'%}">Dashboard</a></li>
+                    <li><a href="">Payroll</a></li>
+                    <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
+                    <li>
+                        <a href=""><img src="{{request.user.profile_pic.url}}" width="25px" height="25px" class="img-circle"></a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'registration' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+        <div class="col-md-12"><a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a></div>
+        <br>
+        <br> {% block content %} {% endblock %}
         <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/moment.js' %}"></script>
+    <script src="{% static 'js/daterange-picker.js' %}"></script>
+    <script src="{% static 'js/moment.js' %}"></script>
+    {% block javascript %}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#wrapper").toggleClass("toggled");
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+        $('#getDiaries').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            timePicker: true,
+        });
+    });
+    </script>
+    {% endblock %}
+</body>
 
-        </div>
-        <!-- /#wrapper -->
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
-        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-        <script src="{% static 'js/daterange-picker.js' %}"></script>
-        <script src="{% static 'js/moment.js' %}"></script>
-        {% block javascript %}
-            <script type="text/javascript">
-                $(document).ready(function(){
-                    $("#wrapper").toggleClass("toggled");
-                    $("#menu-toggle").click(function(e) {
-                        e.preventDefault();
-                        $("#wrapper").toggleClass("toggled");
-                    });
-                    $('#getDiaries').daterangepicker({
-                        singleDatePicker: true,
-                        showDropdowns: true,
-                        timePicker: true,
-                    });
-                 });
-            </script>
-        {% endblock %}
-    </body>
 </html>
