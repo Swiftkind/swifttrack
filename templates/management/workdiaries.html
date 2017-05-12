@@ -1,45 +1,34 @@
-{% extends 'management.html' %}
-
-
-{% block content %}
-<div>
-<div class="pull-right">
-    <a href="{% url 'project' %}" class="btn btn-default btn-md">Add Project</a>
-    <a href="{% url 'project' %}" class="btn btn-default btn-md">Add Employee</a>
+{% extends 'management.html' %} {% block content %}
+<div class="col-lg-12">
+    <h3>Work Diaries for {{date_now | date}}</h3>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <br />
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Project</th>
+                        <th>Hours</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for work_diary in work_diaries %}
+                    <tr>
+                        <td> <img src="{{work_diary.project_assignment.employee.profile_pic.url}}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;{{work_diary.project_assignment.employee.get_full_name}}</td>
+                        <td>{{work_diary.project_assignment.project.name}}</td>
+                        <td>{{work_diary.hours}} hours</td>
+                        <td>{{work_diary.finished_task}}
+                            <br>{{work_diary.todo_task}}
+                            <br>{{work_diary.issues}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <hr />
+            </table>
+            <a href="{% url 'admin' previous_day 'prev' %}">Previous</a>
+        </div>
+    </div>
 </div>
-{% for project in projects %}
-    <h1>{{ project.name }}</h1>
-{% endfor %}
-</div>
-<hr />
-{% for work in work %}
-<h1>{{ work.date }}</h1>
-{% endfor %}
-<hr />
-<div class="container">
-<table class="table table-striped"><br />
-    <thead>
-          <tr>
-                <th>Employee</th>
-                <th>Hours</th>
-                <th>Description</th>
-          </tr>
-    </thead>
-    <tbody>
-          <tr>
-                <td>Employee name</td>
-                <td>Hours</td>
-                <td>Description</td>
-          </tr>
-            <tr>
-                <td colspan="8" class="text-center bg-warning">No Data</td>
-            </tr>
-    </tbody>
-    <hr />
-</table>
-</div>
-
 {% endblock %}
-
-
-

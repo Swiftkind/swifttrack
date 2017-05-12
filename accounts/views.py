@@ -42,7 +42,7 @@ class LoginView(TemplateView):
             if user is not None:
                 if user.is_staff is True:
                     login(request, user)
-                    return redirect('admin')
+                    return redirect('admin', day=0)
                 login(request, user)
                 return redirect('project')
             else:
