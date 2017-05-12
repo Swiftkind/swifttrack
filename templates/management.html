@@ -19,18 +19,20 @@
                             SwiftTrack
                         </a>
                 </li>
-                    <form class="navbar-form">
-                        <div class="form-group">
-                          <input type="date" id="getDiaries" class="form-control">
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                     </form>
-                    <li class="active"><a href="#projects" data-toggle="collapse">Projects</a><button>+</button></li>
-                    <div id="projects" class="collapse">
-                        {% for project in projects %}
-                            <li><a href="{% url 'view_projects' project.id %}">{{ project.name }}</a></li>
-                        {% endfor %}
+                <form class="navbar-form" method="post" action="{% url 'admin' 0 %}">
+                    {% csrf_token %}
+                    <label class="white-text">Search work diaries by date</label>
+                    <div class="input-group">
+                        <input type="date" id="getDiaries" name="getDiariesByDate" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">Go!</button>
+                          </span>
                     </div>
+                </form>
+                <li class="active"><a href="#projects">Projects</a></li>
+                {% for project in projects %}
+                <li><a href="{% url 'view_projects' project.id %}">&nbsp;&nbsp;&nbsp;{{ project.name }}</a></li>
+                {% endfor %}
                 <li class=""><a href="{% url 'all_employees' %}">Employees</a></li>
             </ul>
         </div>
@@ -55,7 +57,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'admin' 0 %}">Dashboard</a></li>
-                    <li><a href="">Payroll</a></li>
+                    <li><a href="{% url 'management_payroll' %}">Payroll</a></li>
                     <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
                     <li>
                         <a href=""><img src="{{request.user.profile_pic.url}}" width="25px" height="25px" class="img-circle"></a>

@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from .forms import RequestForm
 from .models import Requests
-from accounts.models import Account
+from accounts.models import Account, Payroll
 from projects.models import WorkDiary, Project, ProjectAssignment
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail, BadHeaderError
 from datetime import datetime, timedelta
+from threading import Timer
+import calendar
+import pytz
 
 # Create your views here.
 
@@ -59,6 +62,7 @@ class AdminView(TemplateView):
         work_diaries = WorkDiary.objects.filter(date__date=date_today)
         return_data = {'projects': projects, 'work_diaries': work_diaries, 'date_now': date_today, 'previous_day': previous_day, 'next_day': next_day}
         return render(request, self.template_name, return_data)
+        
     def post(self, request, *args, **kwargs):
         day_diff = int(kwargs['day'])
         previous_day = day_diff + 1
@@ -132,3 +136,52 @@ class ProjectManageView(TemplateView):
             'works': works,
         }
         return render(request, self.template_name, ctx_data)
+
+
+class ManagementPayrollView(TemplateView):
+
+    template_name = 'management/payroll.html'
+
+    def get(self, request, *args, **kwargs):
+        date_now = datetime.now(pytz.utc)
+        year = date_now.year
+        month = date_now.month
+        day = date_now.day
+        last_day = calendar.monthrange(year, month)[1]
+        if day is 15 or day is last_day:
+            has_date = Payroll.objects.filter(date_generated__date=date_now.date())
+            if has_date:
+                pass
+            else:
+                employees = Account.objects.all().exclude(is_staff=True)
+                for emp in employees:
+                    p = Payroll(
+                        date=date_now,
+                        employee=emp,
+                        amount_before_deductions=10000.00,
+                        description='Sample description',
+                        paid=False
+                    )
+                    p.save()
+        else:
+          pass
+        payrolls = Payroll.objects.all()
+        return_data = {'payrolls':payrolls}
+        return render(request, self.template_name, return_data)
+
+    def post(self, request, *args, **kwargs):
+        pay_id = request.POST['id']
+        status = request.POST['status']
+        paid = status or None
+        Payroll.objects.filter(id=pay_id).update(paid=paid, date_paid=datetime.now(pytz.utc))
+        return redirect('management_payroll')
+
+
+class PayrollReportView(TemplateView):
+    template_name = 'management/payroll-report.html'
+
+    def get(self, request, *args, **kwargs):
+        payroll_id = kwargs.get('id')
+        payroll = Payroll.objects.get(id=payroll_id)
+        return_data = {'payroll':payroll}
+        return render(request, self.template_name, return_data)
