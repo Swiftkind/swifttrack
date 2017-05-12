@@ -69,7 +69,7 @@ class AdminView(TemplateView):
         the_date = request.POST.get('getDiariesByDate')
         the_date = datetime.strptime(the_date, '%m/%d/%Y')
         work_diaries = WorkDiary.objects.filter(date__date=the_date)
-        return_data = {'work_diaries': work_diaries, 'previous_day': previous_day, 'next_day': next_day, 'date_today':the_date, 'return_today': True}
+        return_data = {'work_diaries': work_diaries, 'previous_day': previous_day, 'next_day': next_day, 'date_now':the_date, 'return_today': True}
         return render(request, self.template_name, return_data)
 
 
@@ -78,12 +78,12 @@ class ConfirmAccountView(TemplateView):
         if request.POST.get('confirm') is not None:
             employee = request.POST['id']
             Account.objects.filter(id=employee).update(is_active=True)
-            return redirect('admin')
+            return redirect('all_employees')
         if request.POST.get('decline') is not None:
             employee = request.POST['id']
             account = Account.objects.get(id=employee)
             account.delete()
-            return redirect('admin', day=0, di='prev')
+            return redirect('all_employees')
 
 class DeactivateAccountView(TemplateView):
     def post(self, request, *args, **kwargs):

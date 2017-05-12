@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div id="wrapper">
+    <div id="wrapper" class="toggled">
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav list-group">
@@ -71,10 +71,7 @@
                     {% endif %}
                 </ul>
             </div>
-        </nav>
-        <div class="col-md-12"><a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a></div>
-        <br>
-        <br> {% block content %} {% endblock %}
+        </nav>{% block content %} {% endblock %}
         <!-- /#page-content-wrapper -->
     </div>
     <!-- /#wrapper -->
@@ -86,7 +83,6 @@
     {% block javascript %}
     <script type="text/javascript">
     $(document).ready(function() {
-        $("#wrapper").toggleClass("toggled");
         $("#menu-toggle").click(function(e) {
             e.preventDefault();
             $("#wrapper").toggleClass("toggled");
