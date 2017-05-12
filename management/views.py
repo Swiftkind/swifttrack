@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from .forms import RequestForm
 from .models import Requests
 from accounts.models import Account
-from projects.models import WorkDiary, Project
+from projects.models import WorkDiary, Project, ProjectAssignment
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail, BadHeaderError
@@ -47,7 +47,6 @@ class AdminView(TemplateView):
         projects = Project.objects.all()
         day_diff = int(kwargs['day'])
         direction = kwargs['di']
-        # import pdb; pdb.set_trace()
         if day_diff is 0:
             date_today = datetime.now().date()
         date_today = datetime.now() - timedelta(days=day_diff)
@@ -103,3 +102,19 @@ class ViewRequestsView(TemplateView):
         projects = Project.objects.all()
         return_data = {'confirmed_requests': confirmed_requests, 'projects':projects}
         return render(request, self.template_name, return_data)
+
+class ProjectManageView(TemplateView):
+
+    template_name = 'management/project.html'
+
+
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get('id')
+        projects = Project.objects.all()
+        works = WorkDiary.objects.filter(project_assignment=id)
+        ctx_data = {
+            'id': kwargs['id'],
+            'projects': projects,
+            'works': works,
+        }
+        return render(request, self.template_name, ctx_data)

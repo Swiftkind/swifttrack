@@ -19,18 +19,18 @@
                             SwiftTrack
                         </a>
                 </li>
-                <form class="navbar-form">
-                    <div class="form-group">
-                        <input type="date" id="getDiaries" class="form-control">
+                    <form class="navbar-form">
+                        <div class="form-group">
+                          <input type="date" id="getDiaries" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                     </form>
+                    <li class="active"><a href="#projects" data-toggle="collapse">Projects</a><button>+</button></li>
+                    <div id="projects" class="collapse">
+                        {% for project in projects %}
+                            <li><a href="{% url 'view_projects' project.id %}">{{ project.name }}</a></li>
+                        {% endfor %}
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-                <li class="active"><a href="#projects" data-toggle="collapse">Projects</a></li>
-                <div id="projects" class="collapse">
-                    {% for project in projects %}
-                    <li><a href="#">{{project.name}}</a></li>
-                    {% endfor %}
-                </div>
                 <li class=""><a href="{% url 'all_employees' %}">Employees</a></li>
             </ul>
         </div>
