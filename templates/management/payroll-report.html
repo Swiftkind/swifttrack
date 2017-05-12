@@ -1,0 +1,27 @@
+{% extends 'management.html' %} {% block content %}
+<div class="col-lg-8 col-lg-offset-2">
+    <div class="well">
+        <div class="center-block">
+            <h2>Swiftkind</h2>
+            <p>#730-A Molave Street, Juna Subdivision, Matina, Davao City, Philippines, 8000</p>
+            <p>(082) 225 - 1050</p>
+            <hr>
+            <h3>{{payroll.employee.get_full_name}}</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{payroll.description}}</td>
+                        <td>{{payroll.amount_before_deductions}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
