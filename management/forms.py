@@ -1,6 +1,8 @@
 from django.forms import ModelForm, widgets
 from .models import Requests
+from projects.models import Project, ProjectAssignment
 from datetime import datetime
+
 
 class RequestForm(ModelForm):
     class Meta:
@@ -16,3 +18,29 @@ class RequestForm(ModelForm):
         super(RequestForm, self).__init__(*args, **kargs)
         self.fields['subject'].widget.attrs.update({'class' : 'form-control'})
         self.fields['content'].widget.attrs.update({'class' : 'form-control'})
+
+
+class AddProjectForm(ModelForm):
+ 
+    class Meta:
+        model = Project
+        fields = ['name',]
+
+
+    def __init__(self, *args, **kargs):
+        super(AddProjectForm, self).__init__(*args, **kargs)
+        self.fields['name'].widget.attrs.update({'class' : 'form-control'})
+
+
+class AssignEmployeeForm(ModelForm):
+ 
+    class Meta:
+        model = ProjectAssignment
+        fields = ['employee', 'project', 'weekly_hours',]
+
+
+    def __init__(self, *args, **kargs):
+        super(AssignEmployeeForm, self).__init__(*args, **kargs)
+        self.fields['employee'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['project'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['weekly_hours'].widget.attrs.update({'class' : 'form-control'})
