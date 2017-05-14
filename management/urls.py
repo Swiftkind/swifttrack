@@ -15,4 +15,7 @@ urlpatterns = [
     url(r'^payroll/$', views.ManagementPayrollView.as_view(), name='management_payroll'),
     url(r'^payroll/update$', views.ManagementPayrollView.as_view(), name='update_payroll'),
     url(r'^payroll/report/(?P<id>[0-9]+)/$', views.PayrollReportView.as_view(), name='payroll_report'),
+    url(r'^add/project/$', views.AddProjectView.as_view(), name='add-project'),
+    url(r'^add/employee/$', views.AssignEmployeeView.as_view(), name='add-employee'),
+
 ]

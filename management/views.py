@@ -75,6 +75,19 @@ class AdminView(TemplateView):
         work_diaries = WorkDiary.objects.filter(date__date=the_date)
         return_data = {'work_diaries': work_diaries, 'previous_day': previous_day, 'next_day': next_day, 'date_now':the_date, 'return_today': True}
         return render(request, self.template_name, return_data)
+    def post(self, request, *args, **kwargs):
+        day_diff = int(kwargs['day'])
+        previous_day = day_diff + 1
+        if day_diff is 0:
+            next_day = 0
+        else:
+            next_day = day_diff - 1
+        the_date = request.POST.get('getDiariesByDate')
+        the_date = datetime.strptime(the_date, '%m/%d/%Y')
+        work_diaries = WorkDiary.objects.filter(date__date=the_date)
+        return_data = {'work_diaries': work_diaries, 'previous_day': previous_day, 'next_day': next_day, 'date_now':the_date, 'return_today': True}
+        return render(request, self.template_name, return_data)
+
 
 
 class ConfirmAccountView(TemplateView):
@@ -121,21 +134,24 @@ class ViewRequestsView(TemplateView):
         return_data = {'confirmed_requests': confirmed_requests, 'projects':projects}
         return render(request, self.template_name, return_data)
 
+
 class ProjectManageView(TemplateView):
 
     template_name = 'management/project.html'
 
 
     def get(self, request, *args, **kwargs):
-        id = request.GET.get('id')
-        projects = Project.objects.all()
-        works = WorkDiary.objects.filter(project_assignment=id)
+
+        project = Project.objects.get(id=kwargs.get('id'))
+        assignment = ProjectAssignment.objects.get(project=project)
+        works = WorkDiary.objects.filter(project_assignment=assignment)
         ctx_data = {
-            'id': kwargs['id'],
-            'projects': projects,
             'works': works,
+            'project': project,
+
         }
         return render(request, self.template_name, ctx_data)
+
 
 
 class ManagementPayrollView(TemplateView):
@@ -185,3 +201,40 @@ class PayrollReportView(TemplateView):
         payroll = Payroll.objects.get(id=payroll_id)
         return_data = {'payroll':payroll}
         return render(request, self.template_name, return_data)
+
+class AddProjectView(TemplateView):
+
+    template_name = 'management/add_project.html'
+
+    def get(self, request, *args, **kwargs):
+        form = AddProjectForm(initial={'user': request.user.id})
+        ctx_data={'form': form,}
+        return render(request, self.template_name, ctx_data)
+
+    def post(self, request, *args, **kwargs):
+        form = AddProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin', day=0)
+        ctx_data ={'form': form, 'error': 'Can\'t add project'}
+        return render(request, self.template_name, ctx_data)
+
+
+class AssignEmployeeView(TemplateView):
+
+    template = 'management/add-employee.html'
+
+    def get(self, request, *args, **kwargs):
+        form = AddEmployeeForm()
+        ctx_data = {
+            'form': form,
+        }
+        return render(request, self.template_name, ctx_data)
+
+    def post(self, request, *args, **kwargs):
+        form = AddEmployeeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin', day=0)
+        ctx_data ={'form': form, 'error': 'Can\'t add employee'}
+        return render(request, self.template_name, ctx_data)
