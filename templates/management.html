@@ -4,9 +4,9 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/daterange-picker.css' %}">
     <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <style type="text/css">
 .project-sidebar {
@@ -22,21 +22,22 @@
             <ul class="sidebar-nav list-group">
                 <li class="sidebar-brand">
                     <a href="#">
-                            SwiftTrack
-                        </a>
+                        SWIFTTRACK
+                    </a>
                 </li>
                 <form class="navbar-form" method="post" action="{% url 'admin' 0 %}">
                     {% csrf_token %}
-                    <label class="white-text">Search work diaries by date</label>
+                    <label class="white-text">Search work diaries by date:</label>
                     <div class="input-group">
-                        <input type="date" id="getDiaries" name="getDiariesByDate" class="form-control">
+                        <input type="" id="getDiaries" name="getDiariesByDate" class="form-control">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">Go!</button>
                           </span>
                     </div>
                 </form>
-                <li>
-                    <a href="{% url 'add_project' %}">Projects<span style="font-size:16px; text:center;" class="pull-right glyphicon glyphicon-plus"></span></a>
+                <br>
+                <li class="list-heading">
+                    <span class="list-heading-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
                 </li>
                 <div class="project-sidebar">
                     {% for project in projects %}
@@ -45,8 +46,8 @@
                     </li>
                     {% endfor %}
                 </div>
-                <li class="">
-                    <a href="{% url 'all_employees' %}">Employees</a>
+                <li class="list-heading">
+                    <span class="list-heading-text">Employees</span>
                 </li>
             </ul>
         </div>
@@ -89,18 +90,14 @@
         <!-- /#page-content-wrapper -->
     </div>
     <!-- /#wrapper -->
-    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/moment.js' %}"></script>
     <script src="{% static 'js/daterange-picker.js' %}"></script>
     <script src="{% static 'js/moment.js' %}"></script>
     {% block javascript %}
     <script type="text/javascript">
     $(document).ready(function() {
-        $("#menu-toggle").click(function(e) {
-            e.preventDefault();
-            $("#wrapper").toggleClass("toggled");
-        });
         $('#getDiaries').daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,
