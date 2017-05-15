@@ -2,7 +2,7 @@
 <div class="col-lg-12">
     <h3><strong>{{ project.name }}</strong></h3>
     <div class="pull-right">
-        <a href="{% url 'assign_employee' %}" class="btn btn-default btn-md">Assign Employee</a>
+        <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-md">Assign Employee</a>
     </div>
     <table class="table table-striped">
         <br />
