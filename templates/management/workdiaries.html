@@ -31,6 +31,8 @@
                             <br>{{work_diary.issues}}</td>
                         <td>{{work_diary.project_assignment.project.name}}</td>
                     </tr>
+                    {% empty %}
+                    <div class="alert alert-warning">Sorry! No work diaries for this day.</div>
                     {% endfor %}
                 </tbody>
                 <hr />

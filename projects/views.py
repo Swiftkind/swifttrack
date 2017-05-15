@@ -26,16 +26,16 @@ class ProjectView(LoginRequiredMixin, TemplateView):
 class WorkDiaryView(TemplateView):
 
     form_class = WorkDiaryForm
-    model = WorkDiary, Project
+    model = WorkDiary, Project, ProjectAssignment
     template_name = 'projects/work_diary.html'
 
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class(initial={'user': request.user.id})
-        id = request.GET.get('id')
+        ass_id = kwargs.get('id')
+        form = self.form_class(initial={'project_assignment': ass_id})
         project = Project.objects.filter(projectassignment=request.user.id)
         assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
-        work = WorkDiary.objects.filter(project_assignment=id)
+        work = WorkDiary.objects.filter(project_assignment=ass_id)
         query = self.request.GET.get('q')
         if query:
             work = work.filter(
@@ -51,6 +51,7 @@ class WorkDiaryView(TemplateView):
             'projects': project,
             'assignments': assignment,
             'id': kwargs['id'],
+            'ass_id': ass_id,
         }
         return render(self.request, self.template_name, ctx_data)
 
