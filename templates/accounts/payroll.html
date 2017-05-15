@@ -25,9 +25,11 @@
                     <tr>
                         <td>{{pr.date_generated}}</td>
                         <td>{{pr.description}}</td>
-                        <td>{% if payroll.paid is True %} Confirmed
+                        <td>
+                            {% if pr.paid is True %} Confirmed
                             <a href="" class="btn btn-default">Download</a> {% else %} Waiting for confirmation
-                            <a href="" class="btn btn-default" disabled>Download</a> {% endif %}</td>
+                            <a href="" class="btn btn-default" disabled>Download</a> {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

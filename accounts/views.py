@@ -95,7 +95,7 @@ class UpdatePasswordView(TemplateView):
 class PayrollView(TemplateView):
     template_name = 'accounts/payroll.html'
     def get(self, request, *args, **kwargs):
-        payroll = Payroll.objects.filter(employee_id=request.user).order_by('-date')
+        payroll = Payroll.objects.filter(employee_id=request.user.id).order_by('-date')
         return_data = {'payroll':payroll}
         return render(request, self.template_name, return_data)
 
