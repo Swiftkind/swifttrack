@@ -131,7 +131,7 @@ class ProjectManageView(TemplateView):
     def get(self, request, *args, **kwargs):
 
         project = Project.objects.get(id=kwargs.get('id'))
-        assignment = ProjectAssignment.objects.get(project=project)
+        assignment = ProjectAssignment.objects.filter(project=project)
         works = WorkDiary.objects.filter(project_assignment=assignment)
         ctx_data = {
             'works': works,
