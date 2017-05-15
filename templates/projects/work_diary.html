@@ -6,8 +6,9 @@
         </div>
         <h3>Work Diary</h3>
     </div>
-    {% for assignment in assignments %}
-    <h2>{{ assignment.project.name }}</h2> {% endfor %}
+
+    <h2>{{ project_assignment.project.name }}</h2> 
+
     <div id="accordion" role="tablist" aria-multiselectable="true">
         <div class="pull-right">
             <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" glyphicon glyphicon-circle-arrow-down aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
@@ -52,7 +53,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for work in works %}
+            {% for work in works %}
                 <tr>
                     <td>{{ work.date }}</td>
                     <td>{{ work.hours }}</td>
@@ -60,11 +61,11 @@
                     <td>{{ work.todo_task }}</td>
                     <td>{{ work.issues }}</td>
                 </tr>
-                {% empty %}
+            {% empty %}
                 <tr>
                     <td colspan="8" class="text-center bg-warning">No Logs</td>
                 </tr>
-                {% endfor %}
+            {% endfor %}
             </tbody>
         </table>
     </div>

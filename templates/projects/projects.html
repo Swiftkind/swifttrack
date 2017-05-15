@@ -8,11 +8,6 @@
         <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
         <li role="presentation"><a href="{% url 'request' %}">Contact</a></li>
     </ul>
-{% for project in projects%}
-    {% for work in works %}
-        {{ project.name }}
-    {% endfor %}
-{% endfor %}
     <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="home">
