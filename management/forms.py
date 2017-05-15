@@ -37,10 +37,13 @@ class AssignEmployeeForm(ModelForm):
     class Meta:
         model = ProjectAssignment
         fields = ['employee', 'project', 'weekly_hours',]
+        widgets = {
+            'project': widgets.TextInput(attrs={'type': 'hidden'}),
+        }
 
 
     def __init__(self, *args, **kargs):
         super(AssignEmployeeForm, self).__init__(*args, **kargs)
         self.fields['employee'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['project'].widget.attrs.update({'class' : 'form-control'})
         self.fields['weekly_hours'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['project'].label = ''

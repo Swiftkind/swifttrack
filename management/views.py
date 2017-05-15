@@ -59,7 +59,7 @@ class AdminView(TemplateView):
         '''
         Add __date to the datefield to use only the date of the datetime object in the query
         '''
-        work_diaries = WorkDiary.objects.filter(date__date=date_today)
+        work_diaries = WorkDiary.objects.filter(date__date=date_today).order_by('-date')
         return_data = {'projects': projects, 'work_diaries': work_diaries, 'date_now': date_today, 'previous_day': previous_day, 'next_day': next_day}
         return render(request, self.template_name, return_data)
 
@@ -191,41 +191,51 @@ class PayrollReportView(TemplateView):
 
 class AddProjectView(TemplateView):
 
-    model = Project
     form_class = AddProjectForm
     template_name = 'management/project-add.html'
+
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial={'user': request.user.id})
         ctx_data={'form': form,}
         return render(request, self.template_name, ctx_data)
 
+
     def post(self, request, *args, **kwargs):
-        # if request.method == 'POST':
-            form = self.form_class(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('admin', day=0)
-            ctx_data ={'form': form, 'error': 'Can\'t add project'}
-            return render(request, self.template_name, ctx_data)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin', day=0)
+        ctx_data = {
+            'form': form, 
+            'error': 'Can\'t add project',
+        }
+        return render(request, self.template_name, ctx_data)
 
 
 class AssignEmployeeView(TemplateView):
 
-    model = ProjectAssignment
     form_class = AssignEmployeeForm
     template = 'management/project-assign-employee.html'
 
+
     def get(self, request, *args, **kwargs):
-        form = self.form_class(initial={'employee': request.user.id})
-        ctx_data = {'form': form}
-        return render(request, 'management/project-assign-employee.html', ctx_data)
+        proj_id = kwargs['id']
+        form = self.form_class(initial={'project': proj_id})
+        ctx_data = {
+            'form': form,
+            'proj_id': proj_id,
+        }
+        return render(self.request, 'management/project-assign-employee.html', ctx_data)
+
 
     def post(self, request, *args, **kwargs):
-        # if request.method == 'POST':
-            form = self.form_class(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('admin', day=0)
-            ctx_data ={'form': form, 'error': 'Can\'t add employee'}
-            return render(request, 'management/project-assign-employee.html', ctx_data)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin', day=0)
+        ctx_data = {
+            'form': form,
+            'error': 'Can\'t add employee',
+        }
+        return render(request, 'management/project-assign-employee.html', ctx_data)
