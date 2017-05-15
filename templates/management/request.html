@@ -55,9 +55,12 @@
                                                 {% if request.confirmed is True %} Confirmed {% else %} Not confirmed {% endif %}
                                             </td>
                                         </tr>
-                                        {% empty %} No requests {% endfor %}
+                                        {% endfor %}
                                     </tbody>
                                 </table>
+                                {% if not requests_by_user %}
+                                    <div class="alert alert-warning">No requests!</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
