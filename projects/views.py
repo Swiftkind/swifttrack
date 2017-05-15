@@ -36,7 +36,7 @@ class WorkDiaryView(TemplateView):
         works = WorkDiary.objects.filter(project_assignment=project_assignment)
         query = self.request.GET.get('q')
         if query:
-            work = work.filter(
+            works = works.filter(
                 Q(finished_task__icontains=query)|
                 Q(todo_task__icontains=query)|
                 Q(issues__icontains=query)|
