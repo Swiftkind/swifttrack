@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
 </head>
 <style type="text/css">
-    .project-sidebar {
-        height: 100;
-        overflow: auto;
-    }
+.project-sidebar {
+    height: 100;
+    overflow: auto;
+}
 </style>
 
 <body>
@@ -35,19 +35,16 @@
                           </span>
                     </div>
                 </form>
-
                 <li>
                     <a href="{% url 'add_project' %}">Projects<span style="font-size:16px; text:center;" class="pull-right glyphicon glyphicon-plus"></span></a>
                 </li>
-
                 <div class="project-sidebar">
-                {% for project in projects %}
+                    {% for project in projects %}
                     <li>
-                        <a href="{% url 'view_projects' project.id %}">{{ project.name }}</a>
+                        <a href="{% url 'view_projects' project.id %}">&nbsp;&nbsp;&nbsp;{{ project.name }}</a>
                     </li>
-                {% endfor %}
+                    {% endfor %}
                 </div>
-
                 <li class="">
                     <a href="{% url 'all_employees' %}">Employees</a>
                 </li>

@@ -3,16 +3,16 @@ from . import views
 from .views import ProjectManageView, AddProjectView, AssignEmployeeView
 
 urlpatterns = [
-    url(r'^make-request$', views.RequestView.as_view(), name='request'),
-    url(r'^request-status$', views.UpdateRequest.as_view(), name='update_request'),
+    url(r'^request/create$', views.RequestView.as_view(), name='request'),
+    url(r'^request/confirm$', views.UpdateRequest.as_view(), name='update_request'),
     url(r'^dashboard/(?P<day>[0-9]+)/$', views.AdminView.as_view(), name='admin'),
     #url(r'^dashboard/(?P<day>)', views.AdminWorkDiariesView.as_view(), name='admin_work_diaries'),
-    url(r'^confirm-account', views.ConfirmAccountView.as_view(), name='confirm_account'),
-    url(r'^deactivate-account', views.DeactivateAccountView.as_view(), name='deactivate_account'),
+    url(r'^account/confirm', views.ConfirmAccountView.as_view(), name='confirm_account'),
+    url(r'^account/deactivate', views.DeactivateAccountView.as_view(), name='deactivate_account'),
     url(r'^employees/$', views.AllEmployeesView.as_view(), name='all_employees'),
     url(r'^employee/(?P<id>[0-9]+)', views.EmployeeProfileView.as_view(), name='employee_profile'),
-    url(r'^view-requests$', views.ViewRequestsView.as_view(), name='view_all_requests'),
-    url(r'^view/projects/(?P<id>[0-9]+)/$', ProjectManageView.as_view(), name='view_projects'),
+    url(r'^requests/view$', views.ViewRequestsView.as_view(), name='view_all_requests'),
+    url(r'^view/projects/(?P<id>[0-9]+)/$', views.ProjectManageView.as_view(), name='view_projects'),
     url(r'^payroll/$', views.ManagementPayrollView.as_view(), name='management_payroll'),
     url(r'^payroll/update$', views.ManagementPayrollView.as_view(), name='update_payroll'),
     url(r'^payroll/report/(?P<id>[0-9]+)/$', views.PayrollReportView.as_view(), name='payroll_report'),

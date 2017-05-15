@@ -1,42 +1,35 @@
-
-{% extends 'management.html' %}
-
-{% block content %}
-
-<div class="container">
-<div>
-<div>
+{% extends 'management.html' %} {% block content %}
+<div class="col-lg-12">
     <h3><strong>{{ project.name }}</strong></h3>
-<div class="pull-right">
-    <a href="{% url 'assign_employee' %}" class="btn btn-default btn-md">Assign Employee</a>
-</div>
-<br>
-<div class="container">
-<table class="table table-striped"><br />
-    <thead>
-          <tr>
-            <th>Employee</th>  
-            <th>Hours</th>
-            <th>Description</th>
-          </tr>
-    </thead>
-    <tbody>
-    {% for works in works %}
-        <tr>
-            <td> <img src="{{ works.project_assignment.employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;{{works.project_assignment.employee.get_full_name}}</td>
-            <td>{{ works.hours }} hours</td>
-            <td>{{ works.finished_task }}
-                <br>{{ works.todo_task }}
-                <br>{{ works.issues }}
-            </td>
-        </tr>
-    {% empty %}
+    <div class="pull-right">
+        <a href="{% url 'assign_employee' %}" class="btn btn-default btn-md">Assign Employee</a>
+    </div>
+    <table class="table table-striped">
+        <br />
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Hours</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for works in works %}
+            <tr>
+                <td> <img src="{{ works.project_assignment.employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;{{works.project_assignment.employee.get_full_name}}</td>
+                <td>{{ works.hours }} hours</td>
+                <td>{{ works.finished_task }}
+                    <br>{{ works.todo_task }}
+                    <br>{{ works.issues }}
+                </td>
+            </tr>
+            {% empty %}
             <tr>
                 <td colspan="8" class="text-center bg-warning">No Data</td>
             </tr>
-    {% endfor %}
-    </tbody>
-    <hr />
-</table>
+            {% endfor %}
+        </tbody>
+        <hr />
+    </table>
 </div>
 {% endblock %}

@@ -94,7 +94,7 @@ class DeactivateAccountView(TemplateView):
     def post(self, request, *args, **kwargs):
         employee = request.POST['id']
         Account.objects.filter(id=employee).update(is_active=False)
-        return redirect('admin')
+        return redirect('admin', day=0)
 
 class AllEmployeesView(TemplateView):
     template_name = 'management/employees.html'

@@ -7,18 +7,23 @@ class WorkDiaryForm(forms.ModelForm):
     class Meta:
         model =  WorkDiary
         fields = [
-            # 'project_assignment',
+            'project_assignment',
             'finished_task',
             'todo_task',
             'issues',
             'hours',
         ]
 
+        widgets = {
+            'project_assignment': widgets.TextInput(attrs={'type':'hidden'})
+        }
+
     def __init__(self, *args, **kwargs):
         super(WorkDiaryForm, self).__init__(*args, **kwargs)
         self.fields['finished_task'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
         self.fields['todo_task'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
         self.fields['issues'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
+        self.fields['project_assignment'].label = ''
 
 class AddProjectForm(forms.ModelForm):
     class Meta:
