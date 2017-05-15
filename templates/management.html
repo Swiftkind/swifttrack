@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{% static 'css/daterange-picker.css' %}">
     <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
 </head>
+<style type="text/css">
+    .project-sidebar {
+        height: 100;
+        overflow: auto;
+    }
+</style>
 
 <body>
     <div id="wrapper" class="toggled">
@@ -29,11 +35,22 @@
                           </span>
                     </div>
                 </form>
-                <li class="active"><a href="#projects">Projects</a></li>
+
+                <li>
+                    <a href="{% url 'add_project' %}">Projects<span style="font-size:16px; text:center;" class="pull-right glyphicon glyphicon-plus"></span></a>
+                </li>
+
+                <div class="project-sidebar">
                 {% for project in projects %}
-                <li><a href="{% url 'view_projects' project.id %}">&nbsp;&nbsp;&nbsp;{{ project.name }}</a></li>
+                    <li>
+                        <a href="{% url 'view_projects' project.id %}">{{ project.name }}</a>
+                    </li>
                 {% endfor %}
-                <li class=""><a href="{% url 'all_employees' %}">Employees</a></li>
+                </div>
+
+                <li class="">
+                    <a href="{% url 'all_employees' %}">Employees</a>
+                </li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
