@@ -1,0 +1,30 @@
+$box-shadow-right: 0 5px 5px 0 #333,
+0 5px 5px 0 #333,
+0 5px 5px -5px #333 !important;
+$white: #ffffff;
+$black: #000000;
+#sidebar-wrapper {
+    background-color: #111111;
+    box-shadow: $box-shadow-right;
+    .white-text {
+        color: $white;
+    }
+    .list-heading {
+        background-color: $black;
+    }
+    .sidebar-add-link {
+        margin-right: 25px;
+    }
+    .list-heading-text {
+        color: $white;
+        font-weight: bold;
+    }
+    .sidebar-nav {
+        li {
+            a {
+                color: $white;
+                font-weight: bold;
+            }
+        }
+    }
+}

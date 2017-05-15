@@ -28,10 +28,6 @@ class RequestView(TemplateView):
             form = RequestForm()
             requests_by_user = Requests.objects.filter(employee=request.user.id)
         return redirect('request')
-        #   return_data = {'form': form, 'success': 'Your request was successfully sent.', 'requests_by_user':requests_by_user}
-        #   return render(request, self.template_name, return_data)
-        # return_data = {'form': form}
-        # return render(request, self.template_name, return_data)
 
 class UpdateRequest(TemplateView):
     def post(self, request, *args, **kwargs):
@@ -117,9 +113,9 @@ class EmployeeProfileView(TemplateView):
 class ViewRequestsView(TemplateView):
     template_name = 'management/all-requests.html'
     def get(self, request, *args, **kwargs):
-        confirmed_requests = Requests.objects.all()
+        all_requests = Requests.objects.all()
         projects = Project.objects.all()
-        return_data = {'confirmed_requests': confirmed_requests, 'projects':projects}
+        return_data = {'all_requests': all_requests, 'projects':projects}
         return render(request, self.template_name, return_data)
 
 
