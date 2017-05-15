@@ -31,11 +31,9 @@ class WorkDiaryView(TemplateView):
 
 
     def get(self, request, *args, **kwargs):
-        ass_id = kwargs.get('id')
-        form = self.form_class(initial={'project_assignment': ass_id})
-        project = Project.objects.filter(projectassignment=request.user.id)
-        assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
-        work = WorkDiary.objects.filter(project_assignment=ass_id)
+        form = self.form_class(initial={'project_assignment': kwargs['id']})
+        project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
+        works = WorkDiary.objects.filter(project_assignment=project_assignment)
         query = self.request.GET.get('q')
         if query:
             work = work.filter(
@@ -47,11 +45,8 @@ class WorkDiaryView(TemplateView):
                 ).distinct()
         ctx_data = {
             'form': form,
-            'works': work,
-            'projects': project,
-            'assignments': assignment,
-            'id': kwargs['id'],
-            'ass_id': ass_id,
+            'works': works,
+            'project_assignment': project_assignment,
         }
         return render(self.request, self.template_name, ctx_data)
 

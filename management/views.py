@@ -140,7 +140,6 @@ class ProjectManageView(TemplateView):
         return render(request, self.template_name, ctx_data)
 
 
-
 class ManagementPayrollView(TemplateView):
 
     template_name = 'management/payroll.html'
@@ -197,6 +196,13 @@ class AddProjectView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial={'user': request.user.id})
+
+class AddProjectView(TemplateView):
+
+    template_name = 'management/add_project.html'
+
+    def get(self, request, *args, **kwargs):
+        form = AddProjectForm(initial={'user': request.user.id})
         ctx_data={'form': form,}
         return render(request, self.template_name, ctx_data)
 
