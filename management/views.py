@@ -201,7 +201,7 @@ class AddProjectView(TemplateView):
         return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
+        # if request.method == 'POST':
             form = self.form_class(request.POST)
             if form.is_valid():
                 form.save()
@@ -217,12 +217,12 @@ class AssignEmployeeView(TemplateView):
     template = 'management/project-assign-employee.html'
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
+        form = self.form_class(initial={'employee': request.user.id})
         ctx_data = {'form': form}
         return render(request, 'management/project-assign-employee.html', ctx_data)
 
     def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
+        # if request.method == 'POST':
             form = self.form_class(request.POST)
             if form.is_valid():
                 form.save()
