@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,6 +17,14 @@ class ProjectView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         project = Project.objects.filter(projectassignment=request.user.id)
         assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
+        page = self.request.GET.get('page', 1)
+        paginator = Paginator(assignment, 5)
+        try:
+            assignment = paginator.page(page)
+        except PageNotAnInteger:
+            assignment = paginator.page(1)
+        except EmptyPage:
+            assignment = paginator.page(paginator.num_pages)
         ctx_data = {
             'assignments': assignment,
             'projects': project,
