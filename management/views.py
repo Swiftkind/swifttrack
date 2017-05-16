@@ -135,6 +135,19 @@ class ProjectManageView(TemplateView):
         }
         return render(request, self.template_name, ctx_data)
 
+class ViewReportsByEmployee(TemplateView):
+    template_name = 'management/reports_by_employee.html'
+    def get(self, request, *args, **kwargs):
+        emp_id = kwargs['emp_id']
+        emp = Account.objects.get(id=emp_id)
+        project_assignments = ProjectAssignment.objects.filter(employee=emp_id)
+        projects = []
+        for project in project_assignments:
+            projects.append(project.id)
+        reports = WorkDiary.objects.filter(project_assignment__in = projects).order_by('-date')
+        return_data = {'reports':reports, 'employee':emp}
+        return render(request, self.template_name, return_data)
+
 
 class ManagementPayrollView(TemplateView):
 
