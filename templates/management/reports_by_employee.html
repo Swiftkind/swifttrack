@@ -19,22 +19,23 @@
         <tbody>
             {% for report in reports %}
             <tr>
-                <td>
+                <td style="width: 10%;">
                     <strong>{{ report.date }}</strong>
                 </td>
-                <td>
+                <td style="width: 10%;">
                     <strong>{{ report.project_assignment.project.name }}</strong>
                 </td>
-                <td>
+                <td style="width: 10%;">
                     <strong>{{ report.hours }}</strong>
                 </td>
-                <td>
-                    <strong>Finished tasks:</strong> <small>posted on {{ report.date | timesince }} ago</small><br /><br />
+                <td style="width: 30%;">
+                    <strong>Finished tasks:</strong><br /><br />
                         {{ report.finished_task | linebreaksbr }}<hr>
-                    <strong>To-do tasks:</strong> <small>posted on {{ report.date | timesince }} ago</small><br /><br />
+                    <strong>To-do tasks:</strong><br /><br />
                         {{ report.todo_task | linebreaksbr }}<hr>
-                    <strong>Issues:</strong> <small>posted on {{ report.date | timesince }} ago</small><br /><br />
-                        {{ report.issues | linebreaksbr }}
+                    <strong>Issues:</strong><br /><br />
+                        {{ report.issues | linebreaksbr }}<br /><br />
+                        <small>posted on {{ report.date | timesince }} ago</small>
                 </td>
             </tr>
             {% empty %}
@@ -48,14 +49,14 @@
     <div class='paginator'>
         <nav aria-label="...">
             <ul class="pager">
-                <li class="previous">{% if project_assignments.has_previous %}<a href="?page={{ project_assignments.previous_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Older</a>{% endif %}
+                <li class="previous">{% if project_assignments.has_previous %}<a href="?page={{ project_assignments.previous_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
                 </li>
                 <li>
                 <span class="current">
                     Page {{ project_assignments.number }} of {{ project_assignments.paginator.num_pages }}.
                 </span>
                 </li>
-            <li class="next"> {% if project_assignments.has_next %}<a href="?page={{ project_assignments.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Newer <span aria-hidden="true">&rarr;</span></a>{% endif %}</li>
+            <li class="next"> {% if project_assignments.has_next %}<a href="?page={{ project_assignments.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}</li>
             </ul>
         </nav>
     </div>

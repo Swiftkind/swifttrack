@@ -129,7 +129,15 @@ class ProjectManageView(TemplateView):
 
         project = Project.objects.get(id=kwargs.get('id'))
         assignment = ProjectAssignment.objects.filter(project=project)
-        works = WorkDiary.objects.filter(project_assignment=assignment)
+        works = WorkDiary.objects.filter(project_assignment=assignment).order_by('-date')
+        page = self.request.GET.get('page', 1)
+        paginator = Paginator(works, 5)
+        try:
+            works = paginator.page(page)
+        except PageNotAnInteger:
+            works = paginator.page(1)
+        except EmptyPage:
+            works = paginator.page(paginator.num_pages)
         ctx_data = {
             'works': works,
             'project': project,
@@ -229,8 +237,8 @@ class AddProjectView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('admin', day=0)
+            p = form.save()
+            return redirect('view_projects', id=p.id)
         ctx_data = {
             'form': form,
             'error': 'Can\'t add project',
@@ -263,8 +271,8 @@ class AssignEmployeeView(TemplateView):
             if assigned is True:
                 error = 'Employee is already assigned to this project.'
             else:
-                form.save()
-                return redirect('admin', day=0)
+                p_id = form.save()
+                return redirect('view_projects', id=p_id.id)
         ctx_data = {
             'form': form,
             'error': error,

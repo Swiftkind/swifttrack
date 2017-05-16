@@ -26,14 +26,15 @@
                             <strong>{{work_diary.hours}}</strong>
                         </td>
                         <td style="width: 40%;">
-                            <strong>Finished:</strong> <small>posted on {{ work_diary.date | timesince }} ago</small><br/><br/>
+                            <strong>Finished:</strong><br /><br />
                                 {{ work_diary.finished_task | linebreaksbr }}
                             <hr>
-                            <strong>To-Do:</strong> <small>posted on {{ work_diary.date | timesince }} ago</small><br/><br/>
+                            <strong>To-Do:</strong><br /><br />
                                 {{ work_diary.todo_task | linebreaksbr }}
                             <hr>
-                            <strong>Issues:</strong> <small>posted on {{ work_diary.date | timesince }} ago</small><br/><br/>
-                                {{ work_diary.issues | linebreaksbr }}
+                            <strong>Issues:</strong><br /><br />
+                                {{ work_diary.issues | linebreaksbr }}<br/ ><br />
+                                <small>Posted  {{ work_diary.date | timesince }} ago</small>
                         </td>
                         <td style="text-align: center;">
                             <strong> {{ work_diary.project_assignment.project.name }} </strong>
