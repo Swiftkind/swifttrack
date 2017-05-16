@@ -55,7 +55,8 @@
                     Page {{ works.number }} of {{ works.paginator.num_pages }}.
                 </span>
                 </li>
-            <li class="next"> {% if works.has_next %}<a href="?page={{ works.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}</li>
+                <li class="next"> {% if works.has_next %}<a href="?page={{ works.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                </li>
             </ul>
         </nav>
     </div>
