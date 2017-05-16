@@ -3,6 +3,7 @@
 
 <head>
     {% load static %}
+    {% load management_custom_tags %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/daterange-picker.css' %}">
     <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
@@ -40,15 +41,12 @@
                     <span class="list-heading-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
                 </li>
                 <div class="project-sidebar">
-                    {% for project in projects %}
-                    <li>
-                        <a href="{% url 'view_projects' project.id %}">&nbsp;&nbsp;&nbsp;{{ project.name }}</a>
-                    </li>
-                    {% endfor %}
+                    {% all_projects %}
                 </div>
                 <li class="list-heading">
                     <span class="list-heading-text">Employees</span>
                 </li>
+                {% all_employees %}
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
