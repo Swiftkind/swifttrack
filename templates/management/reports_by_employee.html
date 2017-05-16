@@ -1,0 +1,37 @@
+ {% extends 'management.html' %} {% block content %}
+<div class="col-lg-12">
+    <h3><strong><img src="{{ employee.profile_pic.url }}" width="50px" height="50px" class="img-circle"> {{ employee.get_full_name }}</strong></h3>
+    <table class="table table-striped">
+        <br />
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Hours</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>{{report.date}}</td>
+                <td>{{report.project_assignment.project.name}}</td>
+                <td>{{ report.hours }} hours</td>
+                <td><b>Finished tasks:</b><br>
+                    {{ report.finished_task }}<hr>
+                    <b>To-do tasks:</b><br>
+                    {{ report.todo_task }}<hr>
+                    <b>Issues:</b><br>
+                    {{ report.issues }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center bg-warning">No Data</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <hr />
+    </table>
+</div>
+{% endblock %}

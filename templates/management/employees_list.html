@@ -1,5 +1,5 @@
 {% for employee in employees %}
     <li>
-        <a href="">&nbsp;&nbsp;&nbsp;{{ employee.get_full_name }}</a>
+        <a href="{% url 'reports_by_employee' employee.id %}">&nbsp;&nbsp;&nbsp;{{ employee.get_full_name }}</a>
     </li>
 {% endfor %}
