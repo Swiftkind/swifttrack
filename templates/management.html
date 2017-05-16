@@ -10,12 +10,16 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <style type="text/css">
-.project-sidebar {
-    height: 100;
-    overflow: auto;
-}
-</style>
 
+    .project-sidebar {
+        height: 350px;
+        overflow: auto;
+    }
+    .employee-sidebar {
+        height: 350px;
+        overflow: auto;
+    }
+</style>
 <body>
     <div id="wrapper" class="toggled">
         <!-- Sidebar -->
@@ -43,10 +47,12 @@
                 <div class="project-sidebar">
                     {% all_projects %}
                 </div>
+                <div class="employee-sidebar">
                 <li class="list-heading">
                     <span class="list-heading-text">Employees</span>
                 </li>
                 {% all_employees %}
+                </div>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->

@@ -10,26 +10,34 @@
                 <thead>
                     <tr>
                         <th style="width: 20%;">Employee</th>
-                        <th>Hours</th>
+                        <th style="text-align: center;">Hours</th>
                         <th style="width: 30%;">Description</th>
-                        <th>Project</th>
+                        <th style="text-align: center;">Project</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for work_diary in work_diaries %}
                     <tr>
-                        <td style="width: 20%;"> <img src=" {{work_diary.project_assignment.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{work_diary.project_assignment.employee.get_full_name}}</td>
-                        <td>{{work_diary.hours}} hours</td>
-                        <td style="width: 30%;">
-                            <b>Finished tasks:</b>
-                            <br>{{work_diary.finished_task}}
-                            <br>
-                            <b>To-do tasks:</b>
-                            <br>{{work_diary.todo_task}}
-                            <br>
-                            <b>Issues:</b>
-                            <br>{{work_diary.issues}}</td>
-                        <td>{{work_diary.project_assignment.project.name}}</td>
+                        <td style="width: 20%;"> 
+                            <img src=" {{work_diary.project_assignment.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
+                            <strong> {{work_diary.project_assignment.employee.get_full_name}}</strong>
+                        </td>
+                        <td style="text-align: center;">
+                            <strong>{{work_diary.hours}}</strong>
+                        </td>
+                        <td style="width: 40%;">
+                            <strong>Finished:</strong> <small>posted on {{ work_diary.date | timesince }} ago</small><br/><br/>
+                                {{ work_diary.finished_task | linebreaksbr }}
+                            <hr>
+                            <strong>To-Do:</strong> <small>posted on {{ work_diary.date | timesince }} ago</small><br/><br/>
+                                {{ work_diary.todo_task | linebreaksbr }}
+                            <hr>
+                            <strong>Issues:</strong> <small>posted on {{ work_diary.date | timesince }} ago</small><br/><br/>
+                                {{ work_diary.issues | linebreaksbr }}
+                        </td>
+                        <td style="text-align: center;">
+                            <strong> {{ work_diary.project_assignment.project.name }} </strong>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

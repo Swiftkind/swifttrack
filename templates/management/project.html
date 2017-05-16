@@ -1,26 +1,40 @@
- {% extends 'management.html' %} {% block content %}
+ {% extends 'management.html' %} 
+
+ {% block content %}
+
 <div class="col-lg-12">
-    <h3><strong>{{ project.name }}</strong></h3>
-    <div class="pull-right">
-        <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-md">Assign Employee</a>
-    </div>
+
+        <h3>
+            <strong>{{ project.name }}</strong>
+        </h3>
+
+        <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-md pull-right">Assign Employee</a><br /><br />
+
     <table class="table table-striped">
-        <br />
         <thead>
             <tr>
-                <th>Employee</th>
-                <th>Hours</th>
-                <th>Description</th>
+                <th style="width: 15%;">Employee</th>
+                <th style="width: 5%;">Hours</th>
+                <th style="width: 30%;">Description</th>
             </tr>
         </thead>
         <tbody>
             {% for works in works %}
             <tr>
-                <td> <img src="{{ works.project_assignment.employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;{{works.project_assignment.employee.get_full_name}}</td>
-                <td>{{ works.hours }} hours</td>
-                <td>{{ works.finished_task }}
-                    <br>{{ works.todo_task }}
-                    <br>{{ works.issues }}
+                <td> 
+                    <img src="{{ works.project_assignment.employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;
+                    <strong>{{works.project_assignment.employee.get_full_name}}</strong>
+                </td>
+                <td style="width: 5%;">
+                    <strong> {{ works.hours }} </strong>
+                </td>
+                <td style="width: 30%;">
+                    <strong>Finished:</strong> <small>posted on {{ works.date | timesince }} ago</small><br /><br />
+                        {{ works.finished_task | linebreaksbr }}<hr>
+                    <strong>To-Do:</strong> <small>posted on {{ works.date | timesince }} ago</small><br /><br />
+                        {{ works.todo_task | linebreaksbr }}<hr>
+                    <strong>Issues:</strong> <small>posted on {{ works.date | timesince }} ago</small><br /><br />
+                        {{ works.issues | linebreaksbr }}
                 </td>
             </tr>
             {% empty %}
@@ -29,7 +43,7 @@
             </tr>
             {% endfor %}
         </tbody>
-        <hr />
     </table>
 </div>
+
 {% endblock %}
