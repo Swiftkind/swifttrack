@@ -1,28 +1,40 @@
- {% extends 'management.html' %} {% block content %}
+{% extends 'management.html' %}
+
+{% block content %}
+
 <div class="col-lg-12">
-    <h3><strong><img src="{{ employee.profile_pic.url }}" width="50px" height="50px" class="img-circle"> {{ employee.get_full_name }}</strong></h3>
+    <h3>
+        <strong><img src="{{ employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">  {{ employee.get_full_name }}</strong>
+    </h3>
     <table class="table table-striped">
         <br />
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Project</th>
-                <th>Hours</th>
-                <th>Description</th>
+                <th style="width: 10%;">Date</th>
+                <th style="width: 5%;">Project</th>
+                <th style="width: 5%;">Hours</th>
+                <th style="width: 40%;">Description</th>
             </tr>
         </thead>
         <tbody>
             {% for report in reports %}
             <tr>
-                <td>{{report.date}}</td>
-                <td>{{report.project_assignment.project.name}}</td>
-                <td>{{ report.hours }} hours</td>
-                <td><b>Finished tasks:</b><br>
-                    {{ report.finished_task }}<hr>
-                    <b>To-do tasks:</b><br>
-                    {{ report.todo_task }}<hr>
-                    <b>Issues:</b><br>
-                    {{ report.issues }}
+                <td>
+                    <strong>{{ report.date }}</strong>
+                </td>
+                <td>
+                    <strong>{{ report.project_assignment.project.name }}</strong>
+                </td>
+                <td>
+                    <strong>{{ report.hours }}</strong>
+                </td>
+                <td>
+                    <strong>Finished tasks:</strong> <small>posted on {{ report.date | timesince }} ago</small><br /><br />
+                        {{ report.finished_task | linebreaksbr }}<hr>
+                    <strong>To-do tasks:</strong> <small>posted on {{ report.date | timesince }} ago</small><br /><br />
+                        {{ report.todo_task | linebreaksbr }}<hr>
+                    <strong>Issues:</strong> <small>posted on {{ report.date | timesince }} ago</small><br /><br />
+                        {{ report.issues | linebreaksbr }}
                 </td>
             </tr>
             {% empty %}
@@ -31,7 +43,21 @@
             </tr>
             {% endfor %}
         </tbody>
-        <hr />
     </table>
+
+    <div class='paginator'>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous">{% if project_assignments.has_previous %}<a href="?page={{ project_assignments.previous_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Older</a>{% endif %}
+                </li>
+                <li>
+                <span class="current">
+                    Page {{ project_assignments.number }} of {{ project_assignments.paginator.num_pages }}.
+                </span>
+                </li>
+            <li class="next"> {% if project_assignments.has_next %}<a href="?page={{ project_assignments.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Newer <span aria-hidden="true">&rarr;</span></a>{% endif %}</li>
+            </ul>
+        </nav>
+    </div>
 </div>
 {% endblock %}

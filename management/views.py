@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import RequestForm, AddProjectForm, AssignEmployeeForm
 from .models import Requests
 from accounts.models import Account, Payroll
@@ -135,17 +136,30 @@ class ProjectManageView(TemplateView):
         }
         return render(request, self.template_name, ctx_data)
 
+
 class ViewReportsByEmployee(TemplateView):
+
     template_name = 'management/reports_by_employee.html'
+
+
     def get(self, request, *args, **kwargs):
+
         emp_id = kwargs['emp_id']
         emp = Account.objects.get(id=emp_id)
         project_assignments = ProjectAssignment.objects.filter(employee=emp_id)
+        page = self.request.GET.get('page', 1)
+        paginator = Paginator(project_assignments, 5)
+        try:
+            project_assignments = paginator.page(page)
+        except PageNotAnInteger:
+            project_assignments = paginator.page(1)
+        except EmptyPage:
+            project_assignments = paginator.page(paginator.num_pages)
         projects = []
         for project in project_assignments:
             projects.append(project.id)
         reports = WorkDiary.objects.filter(project_assignment__in = projects).order_by('-date')
-        return_data = {'reports':reports, 'employee':emp}
+        return_data = {'reports':reports, 'employee':emp, 'project_assignments': project_assignments,}
         return render(request, self.template_name, return_data)
 
 
