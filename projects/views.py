@@ -42,8 +42,9 @@ class WorkDiaryView(TemplateView):
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial={'project_assignment': kwargs['id']})
         project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
-        works = WorkDiary.objects.filter(project_assignment=project_assignment)
+        works = WorkDiary.objects.filter(project_assignment=project_assignment).order_by('-date')
         query = self.request.GET.get('q')
+        page = self.request.GET.get('page', 1)
         if query:
             works = works.filter(
                 Q(finished_task__icontains=query)|
@@ -52,6 +53,14 @@ class WorkDiaryView(TemplateView):
                 Q(date__icontains=query)|
                 Q(hours__icontains=query)
                 ).distinct()
+        paginator = Paginator(works, 5)
+        try:
+            works = paginator.page(page)
+        except PageNotAnInteger:
+            works = paginator.page(1)
+        except EmptyPage:
+            works = paginator.page(paginator.num_pages)
+
         ctx_data = {
             'form': form,
             'works': works,
@@ -64,7 +73,7 @@ class WorkDiaryView(TemplateView):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/project/')
+            return redirect('work-diary', id=kwargs['id'])
         ctx_data = {
             'form': form,
         }
