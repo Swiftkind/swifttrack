@@ -230,10 +230,16 @@ class AssignEmployeeView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('admin', day=0)
+            employee = request.POST.get('employee')
+            project = request.POST.get('project')
+            assigned = ProjectAssignment.objects.filter(employee=employee, project=project).exists()
+            if assigned is True:
+                error = 'Employee is already assigned to this project.'
+            else:
+                form.save()
+                return redirect('admin', day=0)
         ctx_data = {
             'form': form,
-            'error': 'Can\'t add employee',
+            'error': error,
         }
         return render(request, 'management/project-assign-employee.html', ctx_data)
