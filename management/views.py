@@ -52,9 +52,6 @@ class UpdateRequest(TemplateView):
         status = request.POST['status']
         confirmed = status or None
         Requests.objects.filter(id=id).update(confirmed=confirmed)
-        # subject = 'Request for leave confirmation'
-        # messages = 'Your request for leave with subject '+request.POST['subject']+' and content '+request.POST['content']+' was confirmed'
-        # from_email = settings.EMAIL_HOST_USER
         return redirect('view_all_requests')
 
 
