@@ -1,6 +1,7 @@
 import calendar
 import pytz
 import decimal
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -159,7 +160,16 @@ class ProjectManageView(TemplateView):
         assignment = ProjectAssignment.objects.filter(project=project)
         works = WorkDiary.objects.filter(project_assignment=assignment).order_by('-date')
         page = self.request.GET.get('page', 1)
-        paginator = Paginator(works, 5)
+        query = request.GET.get('q')
+        if query:
+            works = works.filter(
+                Q(finished_task__icontains=query)|
+                Q(todo_task__icontains=query)|
+                Q(issues__icontains=query)|
+                Q(date__icontains=query)|
+                Q(hours__icontains=query)
+                ).distinct()
+        paginator = Paginator(works, 10)
         try:
             works = paginator.page(page)
         except PageNotAnInteger:
@@ -183,7 +193,7 @@ class ViewReportsByEmployee(TemplateView):
         emp = Account.objects.get(id=emp_id)
         project_assignments = ProjectAssignment.objects.filter(employee=emp_id)
         page = self.request.GET.get('page', 1)
-        paginator = Paginator(project_assignments, 5)
+        paginator = Paginator(project_assignments, 10)
         try:
             project_assignments = paginator.page(page)
         except PageNotAnInteger:
@@ -332,8 +342,8 @@ class AssignEmployeeView(TemplateView):
             if assigned is True:
                 error = 'Employee is already assigned to this project.'
             else:
-                p_id = form.save()
-                return redirect('view_projects', id=p_id.id)
+                form.save()
+                return redirect('view_projects', id=kwargs.get('id'))
         ctx_data = {
             'form': form,
             'error': error,
