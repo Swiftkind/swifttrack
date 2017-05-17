@@ -54,6 +54,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=255, blank=True)
     contact_number = models.CharField(max_length=13, blank=True)
     profile_pic = models.ImageField('Profile picture', upload_to='profiles', default='img/default-profile.png')
+    hourly_rate = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
 
     date_joined = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -86,9 +87,10 @@ class Payroll(models.Model):
     employee = models.ForeignKey(Account)
     amount_before_deductions = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     description = models.TextField()
-    date_generated = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
     date_paid = models.DateTimeField(blank=True, null=True)
+    invoice_file = models.CharField(max_length=255, blank=True, null=True)
+
   
     def __str__(self):
         return self.description+' to '+str(self.employee_id)
