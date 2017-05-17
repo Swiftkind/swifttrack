@@ -15,7 +15,6 @@ urlpatterns = [
     url(r'^projects/(?P<id>[0-9]+)/$', views.ProjectManageView.as_view(), name='view_projects'),
     url(r'^payroll/$', views.ManagementPayrollView.as_view(), name='management_payroll'),
     url(r'^payroll/update$', views.ManagementPayrollView.as_view(), name='update_payroll'),
-    url(r'^payroll/report/(?P<id>[0-9]+)/$', views.PayrollReportView.as_view(), name='payroll_report'),
     url(r'^add/project/$', AddProjectView.as_view(), name='add_project'),
     url(r'^projects/(?P<id>[0-9]+)/assign/employee/$', AssignEmployeeView.as_view(), name='assign_employee'),
     url(r'^employee/(?P<emp_id>[0-9]+)/reports$', views.ViewReportsByEmployee.as_view(), name='reports_by_employee')

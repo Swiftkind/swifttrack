@@ -23,6 +23,7 @@ class CustomUserAdmin(UserAdmin):
             'contact_number',
             'profile_pic',
             'about_me',
+            'hourly_rate'
         )}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),

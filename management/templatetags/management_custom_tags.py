@@ -4,9 +4,11 @@ from projects.models import Project
 
 register = template.Library()
 
+
 @register.inclusion_tag('management/employees_list.html')
 def all_employees():
-    return {'employees': Account.objects.all()}
+    return {'employees': Account.objects.filter(is_active=True)}
+
 
 @register.inclusion_tag('management/projects_list.html')
 def all_projects():

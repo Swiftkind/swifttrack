@@ -17,20 +17,23 @@
                     {% for payroll in payrolls %}
                     <tr>
                         <td>{{payroll.date_generated}}</td>
-                        <td><img src=" {{payroll.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{payroll.employee.get_full_name}}</td>
+                        <td><img src="{{payroll.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{payroll.employee.get_full_name}}</td>
                         <td>
-                            <a href="{% url 'payroll_report' payroll.id %}">View payroll</a>
+                            <a target="_blank" href="../../media/{{payroll.invoice_file}}">{{payroll.invoice_file}}</a>
                         </td>
                         <td>
-                            {% if payroll.paid is True %} Confirmed
-                            <a href="" class="btn btn-default">Download</a> {% else %}
-                            <form action="{% url 'update_payroll' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" value="{{payroll.id}}" name="id">
-                                <input type="hidden" name="status" value="{% if not payroll.paid %}True{% endif %}">
-                                <button type="submit" class="btn btn-sm btn-info">Confirm</button>
-                                <a href="" class="btn btn-default">Download</a>
-                            </form>
+                            {% if payroll.paid is True %}
+                                Confirmed
+                                <a target="_blank" href="../../media/{{payroll.invoice_file}}" class="btn btn-default">Download</a>
+                            {% else %}
+                                <form action="{% url 'update_payroll' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{payroll.id}}" name="id">
+                                    <input type="hidden" value="{{payroll.invoice_file}}" name="invoice_file">
+                                    <input type="hidden" name="status" value="{% if not payroll.paid %}True{% endif %}">
+                                    <button type="submit" class="btn btn-sm btn-info">Confirm</button>
+                                    <a target="_blank" href="../../media/{{payroll.invoice_file}}" class="btn btn-default">Download</a>
+                                </form>
                             {% endif %}
                         </td>
                     </tr>

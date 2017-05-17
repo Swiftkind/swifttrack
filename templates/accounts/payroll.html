@@ -23,12 +23,15 @@
                 <tbody>
                     {% for pr in payroll %}
                     <tr>
-                        <td>{{pr.date_generated}}</td>
+                        <td>{{pr.date}}</td>
                         <td>{{pr.description}}</td>
                         <td>
-                            {% if pr.paid is True %} Confirmed
-                            <a href="" class="btn btn-default">Download</a> {% else %} Waiting for confirmation
-                            <a href="" class="btn btn-default" disabled>Download</a> {% endif %}
+                            {% if pr.paid is True %}
+                                Confirmed
+                                <a target="_blank" href="../media/{{pr.invoice_file}}" class="btn btn-default">Download</a>
+                            {% else %}
+                                Waiting for confirmation
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
