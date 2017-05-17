@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import RequestForm, AddProjectForm, AssignEmployeeForm
 from .models import Requests
 from accounts.models import Account, Payroll
@@ -128,24 +129,45 @@ class ProjectManageView(TemplateView):
 
         project = Project.objects.get(id=kwargs.get('id'))
         assignment = ProjectAssignment.objects.filter(project=project)
-        works = WorkDiary.objects.filter(project_assignment=assignment)
+        works = WorkDiary.objects.filter(project_assignment=assignment).order_by('-date')
+        page = self.request.GET.get('page', 1)
+        paginator = Paginator(works, 5)
+        try:
+            works = paginator.page(page)
+        except PageNotAnInteger:
+            works = paginator.page(1)
+        except EmptyPage:
+            works = paginator.page(paginator.num_pages)
         ctx_data = {
             'works': works,
             'project': project,
         }
         return render(request, self.template_name, ctx_data)
 
+
 class ViewReportsByEmployee(TemplateView):
+
     template_name = 'management/reports_by_employee.html'
+
+
     def get(self, request, *args, **kwargs):
+
         emp_id = kwargs['emp_id']
         emp = Account.objects.get(id=emp_id)
         project_assignments = ProjectAssignment.objects.filter(employee=emp_id)
+        page = self.request.GET.get('page', 1)
+        paginator = Paginator(project_assignments, 5)
+        try:
+            project_assignments = paginator.page(page)
+        except PageNotAnInteger:
+            project_assignments = paginator.page(1)
+        except EmptyPage:
+            project_assignments = paginator.page(paginator.num_pages)
         projects = []
         for project in project_assignments:
             projects.append(project.id)
         reports = WorkDiary.objects.filter(project_assignment__in = projects).order_by('-date')
-        return_data = {'reports':reports, 'employee':emp}
+        return_data = {'reports':reports, 'employee':emp, 'project_assignments': project_assignments,}
         return render(request, self.template_name, return_data)
 
 
@@ -215,8 +237,8 @@ class AddProjectView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('admin', day=0)
+            p = form.save()
+            return redirect('view_projects', id=p.id)
         ctx_data = {
             'form': form,
             'error': 'Can\'t add project',
@@ -249,8 +271,8 @@ class AssignEmployeeView(TemplateView):
             if assigned is True:
                 error = 'Employee is already assigned to this project.'
             else:
-                form.save()
-                return redirect('admin', day=0)
+                p_id = form.save()
+                return redirect('view_projects', id=p_id.id)
         ctx_data = {
             'form': form,
             'error': error,
