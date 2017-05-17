@@ -84,14 +84,14 @@
     <div class='paginator'>
         <nav aria-label="...">
             <ul class="pager">
-                <li class="previous">{% if works.has_previous %}<a href="?page={{ works.previous_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
+                <li class="previous">{% if works.has_previous %}<a href="?page={{ works.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
                 </li>
                 <li>
                 <span class="current">
                     Page {{ works.number }} of {{ works.paginator.num_pages }}.
                 </span>
                 </li>
-                <li class="next"> {% if works.has_next %}<a href="?page={{ works.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                <li class="next"> {% if works.has_next %}<a href="?page={{ works.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}
                 </li>
             </ul>
         </nav>

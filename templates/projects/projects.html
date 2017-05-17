@@ -42,14 +42,14 @@
     <div class='paginator'>
         <nav aria-label="...">
             <ul class="pager">
-                <li class="previous">{% if assignments.has_previous %}<a href="?page={{ assignments.previous_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Older</a>{% endif %}
+                <li class="previous">{% if assignments.has_previous %}<a href="?page={{ assignments.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Older</a>{% endif %}
                 </li>
                 <li>
                 <span class="current">
                     Page {{ assignments.number }} of {{ assignments.paginator.num_pages }}.
                 </span>
                 </li>
-                <li class="next"> {% if assignments.has_next %}<a href="?page={{ assignments.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Newer <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                <li class="next"> {% if assignments.has_next %}<a href="?page={{ assignments.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Newer <span aria-hidden="true">&rarr;</span></a>{% endif %}
                 </li>
             </ul>
         </nav>

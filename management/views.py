@@ -169,7 +169,7 @@ class ProjectManageView(TemplateView):
                 Q(date__icontains=query)|
                 Q(hours__icontains=query)
                 ).distinct()
-        paginator = Paginator(works, 10)
+        paginator = Paginator(works, 2)
         try:
             works = paginator.page(page)
         except PageNotAnInteger:
@@ -339,7 +339,7 @@ class AssignEmployeeView(TemplateView):
             project = request.POST.get('project')
             assigned = ProjectAssignment.objects.filter(
                 employee=employee, project=project).exists()
-            if assigned is True:
+            if assigned:
                 error = 'Employee is already assigned to this project.'
             else:
                 form.save()
