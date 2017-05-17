@@ -43,7 +43,7 @@ class AccountManager(BaseUserManager):
 
 class Account(AbstractBaseUser, PermissionsMixin):
     """ Custom model for the account user. it is
-        an override from the `djangog.auth.models.User`
+        an override from the `django.auth.models.User`
     """
 
     email = models.EmailField(max_length=225, unique=True)
@@ -78,7 +78,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
             )
 
     def get_short_name(self):
-        return self.first_name
+        return "{}".format(self.first_name)
 
 
 """ Payroll """
