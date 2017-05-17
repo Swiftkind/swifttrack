@@ -5,6 +5,7 @@ from datetime import datetime
 
 # Create your models here.
 
+
 class Requests(models.Model):
     RFL = "RFL"
     EL = "EL"
