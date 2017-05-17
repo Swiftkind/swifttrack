@@ -10,7 +10,6 @@ from . forms import WorkDiaryForm
 
 class ProjectView(LoginRequiredMixin, TemplateView):
 
-    model = Project, ProjectAssignment
     template_name = 'projects/projects.html'
 
 
@@ -35,7 +34,6 @@ class ProjectView(LoginRequiredMixin, TemplateView):
 class WorkDiaryView(TemplateView):
 
     form_class = WorkDiaryForm
-    model = WorkDiary, Project, ProjectAssignment
     template_name = 'projects/work_diary.html'
 
 

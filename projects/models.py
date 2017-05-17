@@ -14,7 +14,7 @@ class Project(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return "{}".format(self.name)
 
 
 class ProjectAssignment(models.Model):
@@ -29,7 +29,7 @@ class ProjectAssignment(models.Model):
 
 
     def __str__(self):
-        return self.project.name
+        return "{}".format(self.project.name)
 
 
 class WorkDiary(models.Model):
@@ -47,4 +47,4 @@ class WorkDiary(models.Model):
 
 
     def __str__(self):
-        return self.finished_task
+        return "{}".format(self.id)

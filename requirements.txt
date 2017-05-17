@@ -1,9 +1,15 @@
 Django==1.10
 django-widget-tweaks==1.4.1
 Pillow==4.1.1
+<<<<<<< cab17d2fa88e5eb2244b1d017b7e6462857b11b4
 pytz==2017.2
 webencodings==0.5.1
 xhtml2pdf==0.2b1
 PyPDF2==1.26.0
 html5lib==1.0b10
 httplib2==0.10.3
+=======
+psycopg2==2.7.1
+django-widget-tweaks==1.4.1
+pytz==2017.2
+>>>>>>> clean unneccessary codes
