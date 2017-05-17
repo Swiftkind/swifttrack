@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import Account, Payroll
+from .models import Account, Payroll, AccountLog
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
@@ -72,5 +72,13 @@ class CustomUserChangeForm(UserChangeForm):
         model = Account
         fields = ("email",)
 
+
+class AccountLogAdmin(admin.ModelAdmin):
+    list_display = ['account', 'status', 'date_created', 'ip']
+
+    class Meta:
+        model = AccountLog
+
 admin.site.register(Account, CustomUserAdmin)
 admin.site.register(Payroll)
+admin.site.register(AccountLog, AccountLogAdmin)

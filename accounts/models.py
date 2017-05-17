@@ -81,6 +81,25 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return "{}".format(self.first_name)
 
 
+class AccountLog(models.Model):
+    """ user log
+    """
+    INVALID = 'invalid'
+    VALID = 'valid'
+    STATUSES = (
+        (INVALID, 'Invalid'),
+        (VALID, 'Valid'),
+    )
+
+    account = models.ForeignKey(Account)
+    ip = models.CharField(max_length=50, null=True, blank=True)
+    status = models.CharField(max_length=150, choices=STATUSES, default=INVALID)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{}".format(self.account.email)
+
+
 """ Payroll """
 class Payroll(models.Model):
     date = models.DateTimeField()

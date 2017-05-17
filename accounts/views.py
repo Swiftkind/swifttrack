@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from .models import Account, Payroll
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from .forms import LoginForm, AddPayrollForm
+from .mixins import AccountTimestamp
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -24,30 +25,30 @@ class RegistrationView(TemplateView):
         else:
             print(form.errors)
             return render(request, self.template_name, {'form': form})
-#Login view
-class LoginView(TemplateView):
+
+
+class LoginView(AccountTimestamp, TemplateView):
+    """ View for processing login credentials
+    """
     template_name = 'accounts/login.html'
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return redirect('account')
-        else:
-            form = LoginForm()
-            return render(request, self.template_name, {'form': form})
-    def post(self, request, *args, **kwargs):
-        form = LoginForm(request.POST)
+
+    def get(self, *args, **kwargs):
+        if not self.request.user.is_authenticated():
+            return render(self.request, self.template_name, {
+                'form': LoginForm(),
+            })
+        return redirect('account')
+
+    def post(self, *args, **kwargs):
+        form = LoginForm(self.request.POST)
+
         if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(email=email, password=password)
-            if user is not None:
-                if user.is_staff is True:
-                    login(request, user)
-                    return redirect('admin', day=0)
-                login(request, user)
-                return redirect('project')
-            else:
-                return_data = {'form': form, 'error': 'Can\'t login account. Reasons: (1) Your account is not yet confirmed by the administrator. (2) You have entered invalid credentials.'}
-                return render(request, self.template_name, return_data)
+            login(self.request, form.user_cache)
+            self.record(self.request)
+
+            return redirect('admin', day=0)
+        return render(self.request, self.template_name, {'form': form})
+
 
 #Logout view
 class LogoutView(TemplateView):
@@ -113,3 +114,5 @@ class AddPayrollView(TemplateView):
             return redirect('payroll')
         return_data ={'form': form, 'error': 'Can\'t add payroll'}
         return render(request, self.template_name, return_data)
+
+

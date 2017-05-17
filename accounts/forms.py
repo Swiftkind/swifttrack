@@ -1,7 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from .models import Account, Payroll
 from django import forms
+from django.contrib.auth import authenticate
 from django.forms import ModelForm, widgets
+
 
 class CustomUserCreationForm(UserCreationForm):
     """
@@ -55,9 +57,29 @@ class CustomUserChangeForm(UserChangeForm):
 #         fields = ('password',)
 
 #Login form
+# class LoginForm(forms.Form):
+#     email = forms.EmailField(max_length=100, label="Email address", widget=forms.TextInput(attrs={'class': 'form-control',}))
+#     password = forms.CharField(min_length=6, label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control',}))
+
 class LoginForm(forms.Form):
-    email = forms.EmailField(max_length=100, label="Email address", widget=forms.TextInput(attrs={'class': 'form-control',}))
-    password = forms.CharField(min_length=6, label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control',}))
+    """ custom login form
+    """
+    user_cache = None
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    def clean(self):
+        """ validate user credentials
+        """
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+
+        user = authenticate(email=email, password=password)
+        if not user:
+            raise forms.ValidationError("Invalid Email or Password")
+        else:
+            self.user_cache = user
+        return self.cleaned_data
 
 #Add payroll form
 class AddPayrollForm(ModelForm):
