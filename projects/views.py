@@ -9,14 +9,12 @@ from . forms import WorkDiaryForm
 
 
 class ProjectView(LoginRequiredMixin, TemplateView):
-
     template_name = 'projects/projects.html'
-
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.filter(projectassignment=request.user.id)
         assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
-        page = self.request.GET.get('page', 1)
+        page = request.GET.get('page', 1)
         paginator = Paginator(assignment, 5)
         try:
             assignment = paginator.page(page)
@@ -32,17 +30,14 @@ class ProjectView(LoginRequiredMixin, TemplateView):
 
 
 class WorkDiaryView(TemplateView):
-
-    form_class = WorkDiaryForm
     template_name = 'projects/work_diary.html'
 
-
     def get(self, request, *args, **kwargs):
-        form = self.form_class(initial={'project_assignment': kwargs['id']})
+        form = WorkDiaryForm(initial={'project_assignment': kwargs['id']})
         project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
         works = WorkDiary.objects.filter(project_assignment=project_assignment).order_by('-date')
-        query = self.request.GET.get('q')
-        page = self.request.GET.get('page', 1)
+        query = request.GET.get('q')
+        page = request.GET.get('page', 1)
         if query:
             works = works.filter(
                 Q(finished_task__icontains=query)|
@@ -58,7 +53,6 @@ class WorkDiaryView(TemplateView):
             works = paginator.page(1)
         except EmptyPage:
             works = paginator.page(paginator.num_pages)
-
         ctx_data = {
             'form': form,
             'works': works,
@@ -66,9 +60,8 @@ class WorkDiaryView(TemplateView):
         }
         return render(self.request, self.template_name, ctx_data)
 
-
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = WorkDiaryForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('work-diary', id=kwargs['id'])
