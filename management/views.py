@@ -209,7 +209,7 @@ class ManagementPayrollView(TemplateView):
         last_day = calendar.monthrange(date_sep['get_year'],
             date_sep['get_month'])[1]
         employees = Account.objects.all().exclude(is_staff=True)
-        if date_sep['get_day'] is 15 or date_sep['get_day'] is last_day:
+        if date_sep['get_day'] is 18 or date_sep['get_day'] is last_day:
             if Payroll.objects.filter(
                     date__date=date_now.date()).exists() is not True:
                 for emp in employees:
@@ -239,8 +239,8 @@ class ManagementPayrollView(TemplateView):
                             'total_hours': total_hours}
                     template = 'management/payroll-report.html'
                     file_path = 'payroll/' + \
-                        slugify(emp.first_name + '_' + emp.last_name +
-                                '_' + str(date_now.date())) + '.pdf'
+                        slugify('{} {} {}.pdf'.format(emp.first_name,
+                            emp.last_name, date_now.date()))
                     style = 'h3 {font-size: 18px; font-weight: bold; }' + \
                         'h4 {font-size: 16px; font-weight: bold}'
                     create_pdf = CreatePdf()
