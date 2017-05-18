@@ -209,7 +209,7 @@ class ManagementPayrollView(TemplateView):
         last_day = calendar.monthrange(date_sep['get_year'],
             date_sep['get_month'])[1]
         employees = Account.objects.all().exclude(is_staff=True)
-        if date_sep['get_day'] is 18 or date_sep['get_day'] is last_day:
+        if date_sep['get_day'] is 15 or date_sep['get_day'] is last_day:
             if Payroll.objects.filter(
                     date__date=date_now.date()).exists() is not True:
                 for emp in employees:
