@@ -239,8 +239,8 @@ class ManagementPayrollView(TemplateView):
                             'total_hours': total_hours}
                     template = 'management/payroll-report.html'
                     file_path = 'payroll/' + \
-                        slugify('{} {} {}.pdf'.format(emp.first_name,
-                            emp.last_name, date_now.date()))
+                        slugify('{} {} {}'.format(emp.first_name,
+                            emp.last_name, date_now.date()))+'.pdf'
                     style = 'h3 {font-size: 18px; font-weight: bold; }' + \
                         'h4 {font-size: 16px; font-weight: bold}'
                     create_pdf = CreatePdf()
