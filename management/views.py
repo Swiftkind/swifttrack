@@ -261,11 +261,13 @@ class AssignEmployeeView(TemplateView):
     template = 'management/project-assign-employee.html'
 
     def get(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs.get('id'))
         proj_id = kwargs['id']
         form = self.form_class(initial={'project': proj_id})
         ctx_data = {
             'form': form,
             'proj_id': proj_id,
+            'project': project,
         }
         return render(request, 'management/project-assign-employee.html', ctx_data)
 
