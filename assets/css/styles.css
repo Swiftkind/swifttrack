@@ -1,0 +1,26 @@
+/* line 6, ../scss/sass/styles.scss */
+#sidebar-wrapper {
+  background-color: #111111;
+  box-shadow: 0 5px 5px 0 #333, 0 5px 5px 0 #333, 0 5px 5px -5px #333 !important;
+}
+/* line 9, ../scss/sass/styles.scss */
+#sidebar-wrapper .white-text {
+  color: #ffffff;
+}
+/* line 12, ../scss/sass/styles.scss */
+#sidebar-wrapper .list-heading {
+  background-color: #000000;
+}
+/* line 15, ../scss/sass/styles.scss */
+#sidebar-wrapper .sidebar-add-link {
+  margin-right: 25px;
+}
+/* line 18, ../scss/sass/styles.scss */
+#sidebar-wrapper .list-heading-text {
+  color: #ffffff;
+  font-weight: bold;
+}
+/* line 24, ../scss/sass/styles.scss */
+#sidebar-wrapper .sidebar-nav li a {
+  color: #ffffff;
+}
