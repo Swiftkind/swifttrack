@@ -156,7 +156,7 @@ class ProjectManageView(TemplateView):
                 Q(date__icontains=query)|
                 Q(hours__icontains=query)
                 ).distinct()
-        paginator = Paginator(works, 2)
+        paginator = Paginator(works, 5)
         try:
             works = paginator.page(page)
         except PageNotAnInteger:
@@ -198,6 +198,7 @@ class ViewReportsByEmployee(TemplateView):
 
 
 class ManagementPayrollView(TemplateView):
+
     template_name = 'management/payroll.html'
 
     def get(self, request, *args, **kwargs):
@@ -209,53 +210,6 @@ class ManagementPayrollView(TemplateView):
         last_day = calendar.monthrange(date_sep['get_year'],
             date_sep['get_month'])[1]
         employees = Account.objects.all().exclude(is_staff=True)
-        if date_sep['get_day'] is 15 or date_sep['get_day'] is last_day:
-            if Payroll.objects.filter(
-                    date__date=date_now.date()).exists() is not True:
-                for emp in employees:
-                    '''2. Get total hours of employee for the period and
-                    generate the invoice
-                    '''
-                    projects_utils = ProjectsUtils()
-                    projects = projects_utils.get_employee_projects_assignments(
-                        emp.id)
-                    date_from = date_utils.get_start_date(date_now)
-                    diaries = WorkDiary.objects.filter(
-                        project_assignment__in=projects,
-                        date__date__gte=date_from,
-                        date__date__lte=date_now)
-                    total_hours = decimal.Decimal(0)
-                    for diary in diaries:
-                        total_hours = total_hours + decimal.Decimal(diary.hours)
-                    '''3. Get payroll record and generate the invoice
-                    '''
-                    AMOUNT_BEFORE_DEDUCTIONS = total_hours * emp.hourly_rate
-                    PAYROLL_DESCRIPTION = 'Salary for the month'
-                    # Prepare requirements for pdf creation
-                    data = {'fname': emp.first_name, 'lname': emp.last_name,
-                            'amount': AMOUNT_BEFORE_DEDUCTIONS,
-                            'description': PAYROLL_DESCRIPTION,
-                            'period': date_now.date(),
-                            'total_hours': total_hours}
-                    template = 'management/payroll-report.html'
-                    file_path = 'payroll/' + \
-                        slugify('{} {} {}'.format(emp.first_name,
-                            emp.last_name, date_now.date()))+'.pdf'
-                    style = 'h3 {font-size: 18px; font-weight: bold; }' + \
-                        'h4 {font-size: 16px; font-weight: bold}'
-                    create_pdf = CreatePdf()
-                    payroll_report = create_pdf.generate_pdf(data, template,
-                        file_path, style)
-                    #Save payroll record
-                    payroll = Payroll(
-                        date=date_now,
-                        employee=emp,
-                        amount_before_deductions=AMOUNT_BEFORE_DEDUCTIONS,
-                        description=PAYROLL_DESCRIPTION,
-                        paid=False,
-                        invoice_file=file_path
-                    )
-                    payroll.save()
         #Now return the payroll records
         all_payroll = Payroll.objects.all()
         return_data = {'payrolls': all_payroll}
@@ -269,8 +223,8 @@ class ManagementPayrollView(TemplateView):
             'Payroll confirmation',
             'Hi! Your payroll is successfully confirmed! You may view or' + \
             'download it from the attachment. Thank you.',
-            'gergimarjohnalinsangao@gmail.com',
-            ['fantanhoj_ramiger@ymail.com']
+            'jfkrule@gmail.com',
+            ['dummydump01@gmail.com']
         )
         message.attach_file('media/' + request.POST['invoice_file'])
         message.send()
