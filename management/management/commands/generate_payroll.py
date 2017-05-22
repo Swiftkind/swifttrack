@@ -1,6 +1,7 @@
 import calendar
 import pytz
 import decimal
+
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import EmailMessage
@@ -17,22 +18,16 @@ from projects.models import WorkDiary
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        '''
-        Generate payroll record 
-        '''
         date_now = datetime.now(pytz.utc)
         date_utils = DateUtils()
         date_sep = date_utils.get_year_month_day(date_now)
         last_day = calendar.monthrange(date_sep['get_year'],
             date_sep['get_month'])[1]
         employees = Account.objects.all().exclude(is_staff=True)
-        if date_sep['get_day'] is 19 or date_sep['get_day'] is last_day:
+        if date_sep['get_day'] is 15 or date_sep['get_day'] is last_day:
             if Payroll.objects.filter(
                     date__date=date_now.date()).exists() is not True:
                 for emp in employees:
-                    '''2. Get total hours of employee for the period and
-                    generate the invoice
-                    '''
                     projects_utils = ProjectsUtils()
                     projects = projects_utils.get_employee_projects_assignments(
                         emp.id)
@@ -44,11 +39,8 @@ class Command(BaseCommand):
                     total_hours = decimal.Decimal(0)
                     for diary in diaries:
                         total_hours = total_hours + decimal.Decimal(diary.hours)
-                    '''3. Get payroll record and generate the invoice
-                    '''
                     AMOUNT_BEFORE_DEDUCTIONS = total_hours * emp.hourly_rate
                     PAYROLL_DESCRIPTION = 'Salary for the month'
-                    # Prepare requirements for pdf creation
                     data = {'fname': emp.first_name, 'lname': emp.last_name,
                             'amount': AMOUNT_BEFORE_DEDUCTIONS,
                             'description': PAYROLL_DESCRIPTION,
@@ -63,7 +55,6 @@ class Command(BaseCommand):
                     create_pdf = CreatePdf()
                     payroll_report = create_pdf.generate_pdf(data, template,
                         file_path, style)
-                    #Save payroll record
                     payroll = Payroll(
                         date=date_now,
                         employee=emp,
