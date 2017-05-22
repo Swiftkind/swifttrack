@@ -12,5 +12,4 @@ class TimestampMiddleware(AccountTimestamp):
         # check if there is a logged in user
         if request.user.is_authenticated() and not request.user.is_superuser:
             self.record(request)
-
         return response
