@@ -48,9 +48,10 @@ class LoginView(AccountTimestamp, TemplateView):
 
         if form.is_valid():
             login(self.request, form.user_cache)
-            self.record(self.request)
             if form.user_cache.is_staff:
                 return redirect('admin', day=0)
+
+            self.record(self.request)
             return redirect('project')
         return render(self.request, self.template_name, {'form': form})
 
