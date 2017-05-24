@@ -61,7 +61,7 @@ class LogoutView(TemplateView):
 
     def get(self, request):
         logout(request)
-        return redirect('/project/account/')
+        return redirect('login')
 
 # Account view
 
