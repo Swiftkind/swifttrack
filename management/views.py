@@ -141,11 +141,10 @@ class ProjectManageView(TemplateView):
     template_name = 'management/project.html'
 
     def get(self, request, *args, **kwargs):
-
         project = Project.objects.get(id=kwargs.get('id'))
         assignment = ProjectAssignment.objects.filter(project=project)
         works = WorkDiary.objects.filter(
-            project_assignment=assignment).order_by('-date')
+            project_assignment__in=assignment).order_by('-date')
         page = self.request.GET.get('page', 1)
         query = request.GET.get('q')
         if query:
