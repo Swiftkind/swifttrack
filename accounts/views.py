@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, UserProfileForm
 from django.views.generic import TemplateView
 from .models import Account, Payroll
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -79,13 +79,13 @@ class UpdateAccountView(TemplateView):
     template_name = 'accounts/update_account.html'
 
     def get(self, request, *args, **kwargs):
-        form = CustomUserChangeForm(instance=request.user)
+        form = UserProfileForm(instance=request.user)
         change_pass_form = PasswordChangeForm(user=request.user)
         return_data = {'form': form, 'change_pass_form': change_pass_form}
         return render(request, self.template_name, return_data)
 
     def post(self, request, *args, **kwargs):
-        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
         return redirect('project')
