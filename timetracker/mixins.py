@@ -2,19 +2,12 @@ import datetime
 
 from django.utils import timezone
 
-from project.models import Project, ProjectAssignment
 from timetracker.models import TaskLog
 
 
 class TimeSheetMixin(object):
     """Manage time sheet
     """
-
-    def user_projects(self, user):
-        """List user projects
-        """
-        projects =ProjectAssignment.objects.filter(account=user)
-        return Project.objects.filter(id__in=projects.values_list('project__id', flat=True))
 
     def total_hours(self, queryset):
         """Get total hours
@@ -40,9 +33,17 @@ class TimeSheetMixin(object):
         """Check user timesheet
         """
 
-        logs = TaskLog.objects.filter(member__account=user)
+        logs = TaskLog.objects.filter(task__member__employee=user)
 
         if project:
-            logs = logs.filter(member__project=project)
+            logs = logs.filter(task__member__project=project)
 
         return logs
+
+    def weekly_hours(self, user, project):
+        """Check hours for the week
+        """
+
+        week_dates = self.week_date()
+        tasklogs = self.user_timesheet(user, project).filter(start__range=[week_dates['start_date'], week_dates['current_date']])
+        return self.total_hours(tasklogs)

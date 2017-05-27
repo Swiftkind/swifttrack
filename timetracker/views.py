@@ -12,9 +12,10 @@ from django.views.generic import (
 from projects.models import Project, ProjectAssignment
 from .models import TaskLog, Task
 from .forms import TaskForm
+from .mixins import TimeSheetMixin
 
 
-class TaskListView(LoginRequiredMixin, TemplateView):
+class TaskListView(LoginRequiredMixin, TimeSheetMixin, TemplateView):
     """List of task by project
     """
 
@@ -23,6 +24,7 @@ class TaskListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         project = Project.objects.get(id=self.kwargs['project_id'])
         tasks = Task.objects.filter(member__project=project, member__employee=self.request.user)
+        kwargs['hours_this_week'] = self.weekly_hours(self.request.user, project)
         kwargs['tasks'] = tasks
         kwargs['project'] = project
         kwargs['form'] = TaskForm()
@@ -79,5 +81,16 @@ class TaskTimeOutView(LoginRequiredMixin, View):
         project_id = kwargs['project_id']
         task_id = kwargs['task_id']
         task = Task.objects.get(id=task_id, member__employee=self.request.user)
+        task.time_out()
+        return HttpResponseRedirect(reverse('project_task_list', kwargs={'project_id': project_id}))
+
+
+class TaskMarkAsDoneView(LoginRequiredMixin, View):
+    def get(self, request, **kwargs):
+        project_id = kwargs['project_id']
+        task_id = kwargs['task_id']
+        task = Task.objects.get(id=task_id, member__employee=self.request.user)
+        task.mark_as_done = True
+        task.save()
         task.time_out()
         return HttpResponseRedirect(reverse('project_task_list', kwargs={'project_id': project_id}))
