@@ -26,6 +26,7 @@
                 <td>{{ assignment.weekly_hours }}</td>
                 <td>
                   <a href="{% url 'work-diary' assignment.id %}" class="btn btn-primary btn-sm">Work Diary</a>
+                  <a href="{% url 'project_task_list' assignment.project.id %}">TimeTracker</a>
                 </td>
               </tr>
             {% empty %}

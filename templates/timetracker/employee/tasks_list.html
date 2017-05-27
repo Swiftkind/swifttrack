@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ project.name }}</h1>
+
+        <form action="{% url 'project_task_create' project.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Create Task</button>
+        </form>
+
+        <table class="table table-striped" id="product-table"><br />
+            <thead>
+              <tr>
+                  <th>Memo</th>
+                  <th>Log</th>
+                  <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+              <tr>
+                <td>{{ task.memo }}</td>
+                <td>{{ task.log }}</td>
+                <td>
+                    {% if task.is_logged %}
+                        <a href="{% url 'project_task_timeout' project.id task.id %}">Stop</a>
+                    {% else %}
+                        <a href="{% url 'project_task_timein' project.id task.id %}">Start</a>
+                        <a href="{% url 'project_task_delete' project.id task.id %}">Delete</a>
+                    {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+    </div>
+{% endblock %}
