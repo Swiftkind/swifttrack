@@ -4,7 +4,8 @@ from django.http import HttpResponseRedirect
 from django.views.generic import (
                                   ListView,
                                   TemplateView,
-                                  FormView,
+                                  CreateView,
+                                  UpdateView,
                                   View
                                 )
 
@@ -31,17 +32,21 @@ class TaskListView(LoginRequiredMixin, TimeSheetMixin, TemplateView):
         return kwargs
 
 
-class TaskLogListView(LoginRequiredMixin, ListView):
+class TaskLogListView(LoginRequiredMixin, TemplateView):
     """List of log per task
     """
     template_name = "timetracker/employee/taskslog_list.html"
 
-    def get_queryset(self):
-        queryset = TaskLog.objects.filter(task__id=self.kwargs['task_id'], task__member__employee=self.request.user)
-        return queryset
+    def get_context_data(self, **kwargs):
+        task_id = self.kwargs['task_id']
+        task = Task.objects.get(id=task_id)
+        logs = TaskLog.objects.filter(task__id=task_id, task__member__employee=self.request.user)
+        kwargs['logs'] = logs
+        kwargs['task'] = task
+        return kwargs
 
 
-class TaskCreateFormView(LoginRequiredMixin, FormView):
+class TaskCreateFormView(LoginRequiredMixin, CreateView):
     """Create task
     """
 
@@ -57,6 +62,22 @@ class TaskCreateFormView(LoginRequiredMixin, FormView):
         self.object.member = assignee
         self.object.save()
         return super(TaskCreateFormView, self).form_valid(form)
+
+
+class TaskUpdateFormView(LoginRequiredMixin, UpdateView):
+    form_class = TaskForm
+
+    def get_object(self):
+        task = Task.objects.get(id=self.kwargs['task_id'])
+        return task
+
+    def get_success_url(self):
+        return reverse('project_task_list', kwargs={'project_id': self.kwargs['project_id']})
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskUpdateFormView, self).get_context_data(**kwargs)
+        context['project'] = Project.objects.get(id=self.kwargs['project_id'])
+        return context
 
 
 class TaskDeleteView(LoginRequiredMixin, View):
