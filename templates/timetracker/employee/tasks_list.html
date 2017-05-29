@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ project.name }}</h1>
+
+        <h2>Hour Report</h2>
+        <p>Hours this Week: {{ hours_this_week }}</p>
+
+
+        <form action="{% url 'project_task_create' project.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Create Task</button>
+        </form>
+
+        <table class="table table-striped" id="product-table"><br />
+            <thead>
+              <tr>
+                  <th>Memo</th>
+                  <th>Log</th>
+                  <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+              <tr>
+                <td>{{ task.memo }}</td>
+                <td>{{ task.log }}</td>
+                <td>
+                    {% if task.is_logged %}
+                        <a href="{% url 'project_task_timeout' project.id task.id %}">Stop</a> &middot; 
+                        <a href="{% url 'project_task_mark_as_done' project.id task.id %}">Mark as Done</a>
+                    {% elif task.mark_as_done %}
+                        Done!
+                    {% else %}
+                        <a href="{% url 'project_task_mark_as_done' project.id task.id %}">Mark as Done</a> &middot; 
+                        <a href="{% url 'project_task_timein' project.id task.id %}">Start</a> &middot; 
+                        <a href="{% url 'project_task_update' project.id task.id %}">Update</a> &middot; 
+                        <a href="{% url 'project_task_delete' project.id task.id %}">Delete</a>
+                    {% endif %}
+                     &middot; 
+                    <a href="{% url 'task_logs_list' task.id %}">Logs</a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+    </div>
+{% endblock %}

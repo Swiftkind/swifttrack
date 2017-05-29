@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'projects',
     'management',
     'widget_tweaks',
+    'timetracker',
 ]
 
 MIDDLEWARE = [
