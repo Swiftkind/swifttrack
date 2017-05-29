@@ -11,43 +11,27 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class AccountManager(BaseUserManager):
-    """ Manager class that contains methods for
-        the account model
-    """
 
     def create_user(self, email, password=None, **kwargs):
-        """ create user account
-        """
         if not email:
             raise ValueError("Email is required")
-
-        # create account
         email = self.normalize_email(email)
         account = self.model(email=email, username=email)
         account.set_password(password)
         account.save()
-
         return account
 
     def create_superuser(self, email, password, **kwargs):
-        """ creates a user that has administrative
-            access. (can access the admin panel)
-        """
         account = self.create_user(email, password, **kwargs)
         account.is_admin = True
         account.is_staff = True
         account.is_active = True
         account.is_superuser = True
         account.save()
-
         return account
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
-    """ Custom model for the account user. it is
-        an override from the `django.auth.models.User`
-    """
-
     email = models.EmailField(max_length=225, unique=True)
     username = models.CharField(max_length=225, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
@@ -56,7 +40,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=255, blank=True)
     contact_number = models.CharField(max_length=13, blank=True)
     profile_pic = models.ImageField(
-        'Profile picture', upload_to='profiles', default='img/default-profile.png')
+        'Profile picture', upload_to='profiles',)
     hourly_rate = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
 
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -67,14 +51,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=False,
                                     help_text=_('Designates whether this user should be treated as '
                                                 'active. Unselect this instead of deleting accounts.'))
-
     objects = AccountManager()
-
     USERNAME_FIELD = 'email'
 
     def get_full_name(self):
-        """ returns the user's full name
-        """
         return "{} {}".format(self.first_name, self.last_name)
 
     def get_short_name(self):
@@ -82,8 +62,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 
 class AccountLog(models.Model):
-    """ user log
-    """
     INVALID = 'invalid'
     VALID = 'valid'
     STATUSES = (
@@ -98,9 +76,6 @@ class AccountLog(models.Model):
 
     def __str__(self):
         return "{}".format(self.account.email)
-
-
-""" Payroll """
 
 
 class Payroll(models.Model):

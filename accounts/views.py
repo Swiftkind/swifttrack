@@ -1,16 +1,13 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, CustomUserChangeForm, UserProfileForm
 from django.views.generic import TemplateView
-from .models import Account, Payroll
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from .forms import LoginForm, AddPayrollForm
-from .mixins import AccountTimestamp
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Create your views here.
-# Registration view
+from .forms import CustomUserCreationForm, UserProfileForm, LoginForm, AddPayrollForm
+from .models import Account, Payroll
+from .mixins import AccountTimestamp
 
 
 class RegistrationView(TemplateView):
@@ -32,20 +29,15 @@ class RegistrationView(TemplateView):
 
 
 class LoginView(AccountTimestamp, TemplateView):
-    """ View for processing login credentials
-    """
     template_name = 'accounts/login.html'
 
     def get(self, *args, **kwargs):
         if not self.request.user.is_authenticated():
-            return render(self.request, self.template_name, {
-                'form': LoginForm(),
-            })
-        return redirect('account')
+            return render(self.request, self.template_name, {'form': LoginForm()})
+        return redirect('project')
 
     def post(self, *args, **kwargs):
         form = LoginForm(self.request.POST)
-
         if form.is_valid():
             login(self.request, form.user_cache)
             if form.user_cache.is_staff:
@@ -56,14 +48,11 @@ class LoginView(AccountTimestamp, TemplateView):
         return render(self.request, self.template_name, {'form': form})
 
 
-# Logout view
 class LogoutView(TemplateView):
 
     def get(self, request):
         logout(request)
         return redirect('login')
-
-# Account view
 
 
 class AccountView(LoginRequiredMixin, TemplateView):
@@ -72,16 +61,13 @@ class AccountView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {})
 
-# Update account view
-
 
 class UpdateAccountView(TemplateView):
     template_name = 'accounts/update_account.html'
 
     def get(self, request, *args, **kwargs):
         form = UserProfileForm(instance=request.user)
-        change_pass_form = PasswordChangeForm(user=request.user)
-        return_data = {'form': form, 'change_pass_form': change_pass_form}
+        return_data = {'form': form}
         return render(request, self.template_name, return_data)
 
     def post(self, request, *args, **kwargs):
@@ -89,8 +75,6 @@ class UpdateAccountView(TemplateView):
         if form.is_valid():
             form.save()
         return redirect('project')
-
-# Update password view
 
 
 class UpdatePasswordView(TemplateView):
@@ -106,11 +90,9 @@ class UpdatePasswordView(TemplateView):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            return redirect('account')
+            return redirect('project')
         return_data = {'form': form}
         return render(request, self.template_name, return_data)
-
-# Payroll view
 
 
 class PayrollView(TemplateView):
@@ -120,8 +102,6 @@ class PayrollView(TemplateView):
         payroll = Payroll.objects.filter(employee_id=request.user.id).order_by('-date')
         return_data = {'payroll': payroll}
         return render(request, self.template_name, return_data)
-
-# Add payroll view
 
 
 class AddPayrollView(TemplateView):

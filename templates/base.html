@@ -46,8 +46,18 @@
     <!-- ____________________________NAVBAR__________________________________ -->
     {% endblock %}
     {% block content %} {% endblock %}
+    <div class="container">
+    <hr>
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted text-center"><strong> &copy 2017 SwiftTrack</strong></p>
+        </div>
+    </footer>
+    </div>
     <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    {% block javascript %} {% endblock %}
+    <script src="{% static 'js/upload.js' %}"></script>
+    {% block javascript %}
+    {% endblock %}
 </body>
 </html>
