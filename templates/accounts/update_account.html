@@ -3,17 +3,44 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-md-offset-3">
             <div class="well">
-                <h3>Update your account details</h3>
-                <form action="{% url 'update_account' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <button type="submit" class="btn btn-lg btn-block btn-success">Update account details</button><br>
+                <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <div class="col-md-8 col-md-offset-3">
+                        <div id="profile-container">
+                            <input type="file" name="profile_pic" class="image-upload">
+                            <img src="{{user.profile_pic.url}}" width="250px" height="250px" class="profile-img img-circle">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" name="email" id="email" value="{{ form.email.value }}" placeholder="Email" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="first_name" class="form-control" name="first_name" id="first_name" value="{{ form.first_name.value }}" placeholder="First Name" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="last_name" class="form-control" name="last_name" id="last_name" value="{{ form.last_name.value }}" placeholder="Last Name" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="address" class="form-control" name="address" id="address" value="{{ form.address.value }}"  placeholder="Address" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_number">Contact Number</label>
+                        <input type="contact_number" class="form-control" name="contact_number" id="contact_number" value="{{ form.contact_number.value }}" placeholder="Contact Number">
+                    </div>
+                    <div class="form-group">
+                        <label for="about_me">About Me</label>
+                        <textarea class="form-control" rows="5" name="about_me" id="about_me">{{ form.about_me.value }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
