@@ -106,7 +106,7 @@ class UpdatePasswordView(TemplateView):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            return redirect('account')
+            return redirect('project')
         return_data = {'form': form}
         return render(request, self.template_name, return_data)
 
