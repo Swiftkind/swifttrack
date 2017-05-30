@@ -1,16 +1,19 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, CustomUserChangeForm, UserProfileForm
 from django.views.generic import TemplateView
-from .models import Account, Payroll
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from .forms import LoginForm, AddPayrollForm
-from .mixins import AccountTimestamp
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Create your views here.
-# Registration view
+from .forms import (
+                    LoginForm,
+                    AddPayrollForm,
+                    CustomUserCreationForm,
+                    CustomUserChangeForm,
+                    UserProfileForm
+                    )
+from .models import Account, Payroll
+from .mixins import AccountTimestamp
 
 
 class RegistrationView(TemplateView):
@@ -80,8 +83,7 @@ class UpdateAccountView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         form = UserProfileForm(instance=request.user)
-        change_pass_form = PasswordChangeForm(user=request.user)
-        return_data = {'form': form, 'change_pass_form': change_pass_form}
+        return_data = {'form': form}
         return render(request, self.template_name, return_data)
 
     def post(self, request, *args, **kwargs):
