@@ -41,7 +41,7 @@ class LoginView(AccountTimestamp, TemplateView):
             return render(self.request, self.template_name, {
                 'form': LoginForm(),
             })
-        return redirect('account')
+        return redirect('project')
 
     def post(self, *args, **kwargs):
         form = LoginForm(self.request.POST)
