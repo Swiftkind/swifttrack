@@ -7,9 +7,14 @@
 {% endif %}
 <form method="post">
     {% csrf_token %}
-    <p><label for="id_weekly_hours">Weekly hours:</label> <input class="form-control" id="id_weekly_hours" name="weekly_hours" value="{{weekly_hours.weekly_hours}}" required></p>
-    <a href="{% url 'edit-project' project_id %}" class="btn btn-default btn-xs pull-right">Cancel</a>
-    <button type="submit" class="btn btn-primary btn-xs pull-right">Save</button>
+    {{ form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ form.weekly_hours.errors }}
+        <label for="{{ form.weekly_hours.id_for_label }}">Weekly Hours:</label>
+        {{ form.weekly_hours }}
+    </div><br />
+    <a href="{% url 'edit-project' project_id %}" class="btn btn-default btn-md">Cancel</a>
+    <button type="submit" class="btn btn-primary btn-md">Save</button>
 </form>
 </div>
 {% endblock %}

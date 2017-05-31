@@ -206,8 +206,8 @@ class ManagementPayrollView(TemplateView):
             'Payroll confirmation',
             'Hi! Your payroll is successfully confirmed! You may view or' + \
             'download it from the attachment. Thank you.',
-            'EMAIL_HOST_USER',
-            ['account.email'],
+            'gergimarjohnalinsangao@gmail.com',
+            ['fantanhoj_ramiger@ymail.com']
         )
         message.attach_file('media/' + request.POST['invoice_file'])
         message.send()
@@ -291,7 +291,7 @@ class EditProjectView(TemplateView):
         form = EditProjectForm(request.POST or None, instance=project)
         if form.is_valid():
             form.save()
-            return redirect('view_projects', id=kwargs.get('id'))
+            return redirect('edit-project', id=kwargs.get('id'))
         ctx_data = {
             'form': form
         }
