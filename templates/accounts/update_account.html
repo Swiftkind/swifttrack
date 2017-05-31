@@ -13,30 +13,37 @@
                             <img src="{{user.profile_pic.url}}" width="250px" height="250px" class="profile-img img-circle">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email address</label>
-                        <input type="email" class="form-control" name="email" id="email" value="" placeholder="Email" required="">
+                    {{ form.non_field_errors }}
+                    <div class="fieldWrapper">
+                        {{ form.email.errors }}
+                        <label for="{{ form.email.id_for_label }}">Email Address:</label>
+                        {{ form.email }}
                     </div>
-                    <div class="form-group">
-                        <label for="first_name">First Name</label>
-                        <input type="first_name" class="form-control" name="first_name" id="first_name" placeholder="First Name">
+                    <div class="fieldWrapper">
+                        {{ form.first_name.errors }}
+                        <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+                        {{ form.first_name }}
                     </div>
-                    <div class="form-group">
-                        <label for="last_name">Last Name</label>
-                        <input type="last_name" class="form-control" name="last_name" id="last_name" placeholder="Last Name">
+                    <div class="fieldWrapper">
+                        {{ form.last_name.errors }}
+                        <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+                        {{ form.last_name }}
                     </div>
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="address" class="form-control" name="address" id="address" placeholder="Address">
+                    <div class="fieldWrapper">
+                        {{ form.address.errors }}
+                        <label for="{{ form.address.id_for_label }}">Address:</label>
+                        {{ form.address }}
                     </div>
-                    <div class="form-group">
-                        <label for="contact_number">Contact Number</label>
-                        <input type="contact_number" class="form-control" name="contact_number" id="contact_number" placeholder="Contact Number">
+                    <div class="fieldWrapper">
+                        {{ form.contact_number.errors }}
+                        <label for="{{ form.contact_number.id_for_label }}">Contact Number:</label>
+                        {{ form.contact_number }}
                     </div>
-                    <div class="form-group">
-                        <label for="about_me">About Me</label>
-                        <textarea class="form-control" rows="5" name="about_me" id="about_me"></textarea>
-                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.about_me.errors }}
+                        <label for="{{ form.about_me.id_for_label }}">About me:</label>
+                        {{ form.about_me }}
+                    </div><br />
                     <button type="submit" class="btn btn-success">Submit</button>
                   </form>
               </div>
