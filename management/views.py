@@ -3,8 +3,10 @@ import pytz
 import decimal
 
 from django.db.models import Q
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from accounts.models import Account, Payroll
 from projects.models import WorkDiary, Project, ProjectAssignment
@@ -18,14 +20,10 @@ from projects.models import WorkDiary, Project, ProjectAssignment
 from datetime import datetime, timedelta
 from threading import Timer
 
-from .forms import RequestForm, AddProjectForm, AssignEmployeeForm
-from .models import Requests
-from .forms import RequestForm, AddProjectForm, AssignEmployeeForm
+from .forms import RequestForm, AddProjectForm, AssignEmployeeForm, EditProjectForm, EditProjectHoursForm
 from .models import Requests
 from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
-
-# Create your views here.
 
 
 class RequestView(TemplateView):
@@ -48,7 +46,6 @@ class RequestView(TemplateView):
                 employee=request.user.id)
         return redirect('request')
 
-
 class UpdateRequest(TemplateView):
 
     def post(self, request, *args, **kwargs):
@@ -57,7 +54,6 @@ class UpdateRequest(TemplateView):
         confirmed = status or None
         Requests.objects.filter(id=id).update(confirmed=confirmed)
         return redirect('view_all_requests')
-
 
 class AdminView(TemplateView):
 
@@ -86,7 +82,6 @@ class AdminView(TemplateView):
             'return_today': True}
         return render(request, self.template_name, return_data)
 
-
 class ConfirmAccountView(TemplateView):
 
     def post(self, request, *args, **kwargs):
@@ -95,7 +90,6 @@ class ConfirmAccountView(TemplateView):
         if request.POST.get('decline') is not None:
             account = Account.objects.get(id=request.POST['id']).delete()
         return redirect('all_employees')
-
 
 class DeactivateAccountView(TemplateView):
 
@@ -115,7 +109,6 @@ class AllEmployeesView(TemplateView):
             'accounts_to_confirm': accounts_to_confirm}
         return render(request, self.template_name, return_data)
 
-
 class EmployeeProfileView(TemplateView):
 
     template_name = 'management/employee-profile.html'
@@ -125,7 +118,6 @@ class EmployeeProfileView(TemplateView):
         return_data = {'employee': employee}
         return render(request, self.template_name, return_data)
 
-
 class ViewRequestsView(TemplateView):
 
     template_name = 'management/all-requests.html'
@@ -134,7 +126,6 @@ class ViewRequestsView(TemplateView):
         all_requests = Requests.objects.all()
         return_data = {'all_requests': all_requests}
         return render(request, self.template_name, return_data)
-
 
 class ProjectManageView(TemplateView):
 
@@ -168,7 +159,6 @@ class ProjectManageView(TemplateView):
         }
         return render(request, self.template_name, ctx_data)
 
-
 class ViewReportsByEmployee(TemplateView):
 
     template_name = 'management/reports_by_employee.html'
@@ -195,67 +185,16 @@ class ViewReportsByEmployee(TemplateView):
                        'project_assignments': project_assignments, }
         return render(request, self.template_name, return_data)
 
-
 class ManagementPayrollView(TemplateView):
     template_name = 'management/payroll.html'
 
     def get(self, request, *args, **kwargs):
-        '''1. Create payroll record
-        '''
         date_now = datetime.now(pytz.utc)
         date_utils = DateUtils()
         date_sep = date_utils.get_year_month_day(date_now)
         last_day = calendar.monthrange(date_sep['get_year'],
             date_sep['get_month'])[1]
         employees = Account.objects.all().exclude(is_staff=True)
-        if date_sep['get_day'] is 15 or date_sep['get_day'] is last_day:
-            if Payroll.objects.filter(
-                    date__date=date_now.date()).exists() is not True:
-                for emp in employees:
-                    '''2. Get total hours of employee for the period and
-                    generate the invoice
-                    '''
-                    projects_utils = ProjectsUtils()
-                    projects = projects_utils.get_employee_projects_assignments(
-                        emp.id)
-                    date_from = date_utils.get_start_date(date_now)
-                    diaries = WorkDiary.objects.filter(
-                        project_assignment__in=projects,
-                        date__date__gte=date_from,
-                        date__date__lte=date_now)
-                    total_hours = decimal.Decimal(0)
-                    for diary in diaries:
-                        total_hours = total_hours + decimal.Decimal(diary.hours)
-                    '''3. Get payroll record and generate the invoice
-                    '''
-                    AMOUNT_BEFORE_DEDUCTIONS = total_hours * emp.hourly_rate
-                    PAYROLL_DESCRIPTION = 'Salary for the month'
-                    # Prepare requirements for pdf creation
-                    data = {'fname': emp.first_name, 'lname': emp.last_name,
-                            'amount': AMOUNT_BEFORE_DEDUCTIONS,
-                            'description': PAYROLL_DESCRIPTION,
-                            'period': date_now.date(),
-                            'total_hours': total_hours}
-                    template = 'management/payroll-report.html'
-                    file_path = 'payroll/' + \
-                        slugify('{} {} {}'.format(emp.first_name,
-                            emp.last_name, date_now.date()))+'.pdf'
-                    style = 'h3 {font-size: 18px; font-weight: bold; }' + \
-                        'h4 {font-size: 16px; font-weight: bold}'
-                    create_pdf = CreatePdf()
-                    payroll_report = create_pdf.generate_pdf(data, template,
-                        file_path, style)
-                    #Save payroll record
-                    payroll = Payroll(
-                        date=date_now,
-                        employee=emp,
-                        amount_before_deductions=AMOUNT_BEFORE_DEDUCTIONS,
-                        description=PAYROLL_DESCRIPTION,
-                        paid=False,
-                        invoice_file=file_path
-                    )
-                    payroll.save()
-        #Now return the payroll records
         all_payroll = Payroll.objects.all()
         return_data = {'payrolls': all_payroll}
         return render(request, self.template_name, return_data)
@@ -263,18 +202,16 @@ class ManagementPayrollView(TemplateView):
     def post(self, request, *args, **kwargs):
         Payroll.objects.filter(id=request.POST['id']).update(
             paid=request.POST['status'], date_paid=datetime.now(pytz.utc))
-        #Send an email to the employee after confirming the payroll
         message = EmailMessage(
             'Payroll confirmation',
             'Hi! Your payroll is successfully confirmed! You may view or' + \
             'download it from the attachment. Thank you.',
-            'gergimarjohnalinsangao@gmail.com',
-            ['fantanhoj_ramiger@ymail.com']
+            'EMAIL_HOST_USER',
+            ['account.email'],
         )
         message.attach_file('media/' + request.POST['invoice_file'])
         message.send()
         return redirect('management_payroll')
-
 
 class AddProjectView(TemplateView):
 
@@ -298,7 +235,6 @@ class AddProjectView(TemplateView):
             'error': 'Can\'t add project',
         }
         return render(request, self.template_name, ctx_data)
-
 
 class AssignEmployeeView(TemplateView):
 
@@ -333,3 +269,59 @@ class AssignEmployeeView(TemplateView):
             'error': error,
         }
         return render(request, 'management/project-assign-employee.html', ctx_data)
+
+class EditProjectView(TemplateView):
+
+    template_name = 'management/edit_project.html'
+
+    def get(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs.get('id'))
+        assignments = ProjectAssignment.objects.filter(project=project)
+        form = EditProjectForm(request.GET or None, instance=project)
+        ctx_data = {
+            'form': form,
+            'project': project,
+            'assignments': assignments
+        }
+        return render(request, self.template_name, ctx_data)
+
+    def post(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs.get('id'))
+        assignments = ProjectAssignment.objects.filter(project=project)
+        form = EditProjectForm(request.POST or None, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect('view_projects', id=kwargs.get('id'))
+        ctx_data = {
+            'form': form
+        }
+        return render (request, self.template_name, ctx_data)
+
+class EditHoursView(TemplateView):
+
+    template_name = 'management/edit_project_hours.html'
+
+    def get(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs.get('project_id'))
+        weekly_hours = ProjectAssignment.objects.get(id=kwargs.get('id'), project=project)
+        form = EditProjectHoursForm()
+        ctx_data = {'form': form, 'weekly_hours': weekly_hours, 'project_id': project.id}
+        return render(request, self.template_name, ctx_data)
+
+    def post(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs.get('project_id'))
+        weekly_hours = ProjectAssignment.objects.get(id=kwargs.get('id'), project=project)
+        form = EditProjectHoursForm(request.POST, instance=weekly_hours)
+        if form.is_valid():
+            form.save()
+            return redirect('edit-project', id=kwargs.get('project_id'))
+        ctx_data = {'form': form}
+        return render(request, self.template_name, ctx_data)
+
+class RemoveEmployee(View):
+
+    def get(self, request, *args, **kwargs):
+        project_id = kwargs['project_id']
+        employee_id = kwargs['employee_id']
+        ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id).delete()
+        return redirect('edit-project', id=kwargs.get('project_id'))
