@@ -10,7 +10,7 @@ class ProjectsAdmin(admin.ModelAdmin):
 
 class ProjectAssignmentAdmin(admin.ModelAdmin):
 
-    list_display = ['employee', 'project', 'weekly_hours']
+    list_display = ['employee', 'project', 'weekly_hours', 'status']
 
 class WorkDiaryAdmin(admin.ModelAdmin):
 

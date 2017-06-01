@@ -7,6 +7,7 @@ from .views import (
         EditProjectView,
         EditHoursView,
         RemoveEmployee,
+        ReAssignEmployee,
     )
 
 urlpatterns = [
@@ -28,4 +29,5 @@ urlpatterns = [
     url(r'^edit/project/(?P<id>[0-9]+)/$', EditProjectView.as_view(), name='edit-project'),
     url(r'^edit/project/(?P<project_id>[0-9]+)/hours/(?P<id>[0-9]+)/$', EditHoursView.as_view(), name='edit-hours'),
     url(r'^edit/project/(?P<project_id>[0-9]+)/remove/employee/(?P<employee_id>[0-9]+)/$', RemoveEmployee.as_view(), name='remove-employee'),
+    url(r'^edit/project/(?P<project_id>[0-9]+)/reassign/employee/(?P<employee_id>[0-9]+)/$', ReAssignEmployee.as_view(), name='reassign-employee'),
 ]

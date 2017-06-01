@@ -22,7 +22,7 @@ class ProjectAssignment(models.Model):
     employee = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
     weekly_hours = models.FloatField()
-
+    status = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "project-assignment"

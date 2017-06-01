@@ -29,6 +29,7 @@
                   <th>EMPLOYEE NAME</th>
                   <th>HOURS</th>
                   <th>ACTION</th>
+                  <th>STATUS</th>
               </tr>
             </thead>
             {% for assignment in assignments %}
@@ -40,7 +41,15 @@
                 </td>
                 <td>
                     <a href="{% url 'edit-hours' project.id assignment.id  %}" class="btn btn-default btn-xs">Edit Hours</a>
-                    <a href="{% url 'remove-employee' project.id assignment.employee.id %}" class="btn btn-danger btn-xs">Remove Employee</a>
+                </td>
+                <td>
+                {% if assignment.status %}
+                <code>Active</code>
+                    <a href="{% url 'remove-employee' project.id assignment.employee.id %}" class="btn btn-danger btn-xs"> Remove Employee</a> 
+                {% else %}
+                    <code>Inactive Employee</code>
+                    <a href="{% url 'reassign-employee' project.id assignment.employee.id %}" class="btn btn-primary btn-xs">Reassign Employee</a>
+                {% endif %}
                 </td>
               </tr>
               {% empty %}

@@ -323,5 +323,17 @@ class RemoveEmployee(View):
     def get(self, request, *args, **kwargs):
         project_id = kwargs['project_id']
         employee_id = kwargs['employee_id']
-        ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id).delete()
+        pa = ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id)
+        pa.status = False
+        pa.save() 
+        return redirect('edit-project', id=kwargs.get('project_id'))
+
+class ReAssignEmployee(View):
+
+    def get(self, request, *args, **kwargs):
+        project_id = kwargs['project_id']
+        employee_id = kwargs['employee_id']
+        pa = ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id)
+        pa.status = True
+        pa.save() 
         return redirect('edit-project', id=kwargs.get('project_id'))
