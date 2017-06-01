@@ -3,17 +3,51 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
-            <div class="well">
-                <h3>Update your account details</h3>
-                <form action="{% url 'update_account' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <button type="submit" class="btn btn-lg btn-block btn-success">Update account details</button><br>
-                </form>
-            </div>
-        </div>
+        <div class="col-md-6 col-md-offset-3">
+              <div class="well">
+                <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <div class="col-md-8 col-md-offset-3">
+                        <div id="profile-container">
+                            <input type="file" name="profile_pic" class="image-upload">
+                            <img src="{{user.profile_pic.url}}" width="250px" height="250px" class="profile-img img-circle">
+                        </div>
+                    </div>
+                    {{ form.non_field_errors }}
+                    <div class="fieldWrapper">
+                        {{ form.email.errors }}
+                        <label for="{{ form.email.id_for_label }}">Email Address:</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.first_name.errors }}
+                        <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.last_name.errors }}
+                        <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+                        {{ form.last_name }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.address.errors }}
+                        <label for="{{ form.address.id_for_label }}">Address:</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.contact_number.errors }}
+                        <label for="{{ form.contact_number.id_for_label }}">Contact Number:</label>
+                        {{ form.contact_number }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.about_me.errors }}
+                        <label for="{{ form.about_me.id_for_label }}">About me:</label>
+                        {{ form.about_me }}
+                    </div><br />
+                    <button type="submit" class="btn btn-success">Submit</button>
+                  </form>
+              </div>
+          </div>
     </div>
 </div>
-
-{% endblock %}
+{% endblock %} 

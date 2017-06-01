@@ -1,26 +1,37 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
-from .models import Account, Payroll
 from django import forms
-from django.contrib.auth import authenticate
 from django.forms import ModelForm, widgets
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import ( UserCreationForm,
+                                        UserChangeForm, 
+                                        PasswordChangeForm,
+                                        )
 
-
+from .models import Account, Payroll
 
 class UserProfileForm(ModelForm):
-    email = forms.EmailField(required=True)
-    first_name = forms.CharField(help_text="Please enter your first_name")
-    last_name = forms.CharField(help_text="Please enter your last_name")
-    profile_pic = forms.ImageField(help_text="Select a profile image to upload", required=False)
-    about_me = forms.TextInput()
 
     class Meta:
         model = Account
-        fields = ('email', 'first_name', 'last_name', 'profile_pic', 'about_me')
+        fields = ('email', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me')
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['first_name'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['address'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['contact_number'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['profile_pic'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['about_me'].widget.attrs.update({'class' : 'form-control'})
 
 class CustomUserCreationForm(UserCreationForm):
 
-    def __init__(self, *args, **kargs):
-        super(CustomUserCreationForm, self).__init__(*args, **kargs)
+    class Meta:
+        model = Account
+        fields = ('email', 'password1', 'password2', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me')
+    
+    def __init__(self, *args, **kwargs):
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs.update({'class' : 'form-control'})
         self.fields['password1'].widget.attrs.update({'class' : 'form-control'})
         self.fields['password2'].widget.attrs.update({'class' : 'form-control'})
@@ -31,14 +42,11 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['profile_pic'].widget.attrs.update({'class' : 'form-control'})
         self.fields['about_me'].widget.attrs.update({'class' : 'form-control'})
 
-    class Meta:
-        model = Account
-        fields = ('email', 'password1', 'password2', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me')
 
 class CustomUserChangeForm(UserChangeForm):
 
-    def __init__(self, *args, **kargs):
-        super(CustomUserChangeForm, self).__init__(*args, **kargs)
+    def __init__(self, *args, **kwargs):
+        super(CustomUserChangeForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs.update({'class' : 'form-control'})
         self.fields['first_name'].widget.attrs.update({'class' : 'form-control'})
         self.fields['last_name'].widget.attrs.update({'class' : 'form-control'})
@@ -75,7 +83,7 @@ class AddPayrollForm(ModelForm):
             'date': widgets.DateTimeInput(attrs={'type': 'date', 'class':'form-control'}),
         }
 
-    def __init__(self, *args, **kargs):
-        super(AddPayrollForm, self).__init__(*args, **kargs)
+    def __init__(self, *args, **kwargs):
+        super(AddPayrollForm, self).__init__(*args, **kwargs)
         self.fields['description'].widget.attrs.update({'class' : 'form-control'})
         self.fields['employee'].widget.attrs.update({'class' : 'form-control'})
