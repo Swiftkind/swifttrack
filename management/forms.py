@@ -19,13 +19,11 @@ class RequestForm(ModelForm):
         self.fields['subject'].widget.attrs.update({'class' : 'form-control'})
         self.fields['content'].widget.attrs.update({'class' : 'form-control'})
 
-
 class AddProjectForm(ModelForm):
  
     class Meta:
         model = Project
         fields = ['name',]
-
 
     def __init__(self, *args, **kargs):
         super(AddProjectForm, self).__init__(*args, **kargs)
@@ -41,9 +39,27 @@ class AssignEmployeeForm(ModelForm):
             'project': widgets.TextInput(attrs={'type': 'hidden'}),
         }
 
-
     def __init__(self, *args, **kargs):
         super(AssignEmployeeForm, self).__init__(*args, **kargs)
         self.fields['employee'].widget.attrs.update({'class' : 'form-control'})
         self.fields['weekly_hours'].widget.attrs.update({'class' : 'form-control'})
         self.fields['project'].label = ''
+
+class EditProjectForm(ModelForm):
+
+    class Meta:
+        model = Project
+        fields = ['name']
+        widgets = {
+            'name': widgets.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class EditProjectHoursForm(ModelForm):
+
+    class Meta:
+        model = ProjectAssignment
+        fields = ['weekly_hours']
+
+    def __init__(self, *args, **kargs):
+        super(EditProjectHoursForm, self).__init__(*args, **kargs)
+        self.fields['weekly_hours'].widget.attrs.update({'class' : 'form-control'})

@@ -13,7 +13,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.filter(projectassignment=request.user.id)
-        assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
+        assignment = ProjectAssignment.objects.filter(employee_id=request.user.id, status=True)
         page = request.GET.get('page', 1)
         paginator = Paginator(assignment, 5)
         try:
