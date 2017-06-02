@@ -13,7 +13,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.filter(projectassignment=request.user.id)
-        assignment = ProjectAssignment.objects.filter(employee_id=request.user.id, status=True)
+        assignment = ProjectAssignment.objects.filter(employee_id=request.user.id)
         page = request.GET.get('page', 1)
         paginator = Paginator(assignment, 5)
         try:
@@ -69,3 +69,23 @@ class WorkDiaryView(TemplateView):
             'form': form,
         }
         return render(self.request, self.template_name, ctx_data)
+
+class WorkDiaryEditView(TemplateView):
+    template_name = 'projects/edit_work_diary.html'
+
+    def get(self, request, *args, **kwargs):
+        work_diary_id = kwargs['work_diary_id']
+        project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
+        works = WorkDiary.objects.get(id=work_diary_id, project_assignment=project_assignment)
+        form = WorkDiaryForm(instance=works)
+        ctx_data = {'form': form}
+        return render(request, self.template_name, ctx_data)
+
+    def post(self, request, *args, **kwargs):
+        work_diary_id = kwargs['work_diary_id']
+        project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
+        works = WorkDiary.objects.get(id=work_diary_id, project_assignment=project_assignment)
+        form = WorkDiaryForm(request.POST, instance=works)
+        if form.is_valid():
+            form.save()
+        return redirect('work-diary', id=kwargs['id'])

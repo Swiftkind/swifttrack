@@ -50,6 +50,7 @@
                     <th style="width: 10%;">TODAY</th>
                     <th style="width: 10%;">TO-DO</th>
                     <th style="width: 10%;">ISSUES</th>
+                    <th style="width: 10%;">ACTION</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,6 +70,9 @@
                     </td>
                     <td style="width: 5%;">
                         {{ work.issues | linebreaksbr }}
+                    </td>
+                    <td style="width: 5%;">
+                        <a href="{% url 'edit-work-diary' work.project_assignment.id work.id %}" class="btn btn-primary btn-xs">Edit</a>
                     </td>
                 </tr>
             {% empty %}

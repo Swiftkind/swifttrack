@@ -1,8 +1,13 @@
 from django import forms
-from projects.models import Project, WorkDiary
+from projects.models import Project, WorkDiary, ProjectAssignment
 from django.forms import widgets, ModelForm
 
 class WorkDiaryForm(forms.ModelForm):
+
+    project_assignment = forms.ModelChoiceField(
+        queryset=ProjectAssignment.objects.all(),
+        widget=forms.TextInput(attrs={'type':'hidden'})
+    )
 
     class Meta:
         model =  WorkDiary
@@ -14,15 +19,12 @@ class WorkDiaryForm(forms.ModelForm):
             'hours',
         ]
 
-        widgets = {
-            'project_assignment': widgets.TextInput(attrs={'type':'hidden'})
-        }
-
     def __init__(self, *args, **kwargs):
         super(WorkDiaryForm, self).__init__(*args, **kwargs)
         self.fields['finished_task'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
         self.fields['todo_task'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
         self.fields['issues'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
+        self.fields['hours'].widget.attrs.update({'class': 'form-control', 'rows': '3'})
         self.fields['project_assignment'].label = ''
 
 class AddProjectForm(forms.ModelForm):
