@@ -206,8 +206,8 @@ class ManagementPayrollView(TemplateView):
             'Payroll confirmation',
             'Hi! Your payroll is successfully confirmed! You may view or' + \
             'download it from the attachment. Thank you.',
-            'gergimarjohnalinsangao@gmail.com',
-            ['fantanhoj_ramiger@ymail.com']
+            'swiftkind.com',
+            ['torecipient@example.com']
         )
         message.attach_file('media/' + request.POST['invoice_file'])
         message.send()
