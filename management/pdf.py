@@ -14,11 +14,11 @@ class CreatePdf():
     3. file_path:string - the folder and the desired file name when saving the file; Files are saved in media folder
         (be sure to have MEDIA_URL and MEDIA ROOT in your settings)
     '''
-    def generate_pdf(self, data, template, file_path, style):
+    def generate_pdf(self, data, template, file_path):
         template = get_template(template)
         html = template.render(Context(data))
         file = open(os.path.join(settings.MEDIA_ROOT, file_path), "w+b")
-        pisaStatus = pisa.CreatePDF(html, dest=file, default_css=style)
+        pisaStatus = pisa.CreatePDF(html, dest=file)
         file.seek(0)
         pdf = file.read()
         file.close()

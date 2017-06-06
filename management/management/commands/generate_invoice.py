@@ -24,9 +24,9 @@ class Command(BaseCommand):
         last_day = calendar.monthrange(date_sep['get_year'],
             date_sep['get_month'])[1]
         employees = Account.objects.all().exclude(is_staff=True)
-        if date_sep['get_day'] is 15 or date_sep['get_day'] is last_day:
-            if Payroll.objects.filter(
-                    date__date=date_now.date()).exists() is not True:
+        payroll = Payroll.objects.filter(date__date=date_now.date()).exists()
+        if date_sep['get_day'] is 6 or date_sep['get_day'] is last_day:
+            if not payroll:
                 for emp in employees:
                     projects = projects_utils.get_employee_projects_assignments(emp.id)
                     date_from = date_utils.get_start_date(date_now)
@@ -45,14 +45,12 @@ class Command(BaseCommand):
                             'period': date_now.date(),
                             'total_hours': total_hours}
                     template = 'management/payroll-report.html'
-                    file_path = 'payroll/' + \
-                        slugify('{} {} {}'.format(emp.first_name,
-                            emp.last_name, date_now.date()))+'.pdf'
-                    style = 'h3 {font-size: 18px; font-weight: bold; }' + \
-                        'h4 {font-size: 16px; font-weight: bold}'
+                    file_slug = slugify('{} {} {}'.format(emp.first_name,
+                            emp.last_name, date_now.date()))
+                    file_path = '{}{}{}'.format('payroll/', file_slug, '.pdf')
                     create_pdf = CreatePdf()
                     payroll_report = create_pdf.generate_pdf(data, template,
-                        file_path, style)
+                        file_path)
                     payroll = Payroll(
                         date=date_now,
                         employee=emp,
@@ -62,3 +60,4 @@ class Command(BaseCommand):
                         invoice_file=file_path
                     )
                     payroll.save()
+                self.stdout.write("Successfully Generated invoice!")

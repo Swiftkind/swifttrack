@@ -13,7 +13,7 @@ from projects.models import WorkDiary, Project, ProjectAssignment
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.template.defaultfilters import slugify
 from accounts.models import Account, Payroll
 from projects.models import WorkDiary, Project, ProjectAssignment
@@ -200,15 +200,19 @@ class ManagementPayrollView(TemplateView):
         return render(request, self.template_name, return_data)
 
     def post(self, request, *args, **kwargs):
-        Payroll.objects.filter(id=request.POST['id']).update(
-            paid=request.POST['status'], date_paid=datetime.now(pytz.utc))
+        payroll = Payroll.objects.get(id=request.POST['id'])
+        instance = payroll
+        instance.paid = request.POST['status']
+        instance.date_paid = datetime.now(pytz.utc)
+        instance.save()
+        from_email = settings.EMAIL_HOST_USER
+        to_email = [payroll.employee.email,]
         message = EmailMessage(
-            'Payroll confirmation',
-            'Hi! Your payroll is successfully confirmed! You may view or' + \
-            'download it from the attachment. Thank you.',
-            'swiftkind.com',
-            ['torecipient@example.com']
-        )
+                'Payroll Confirmation',
+                'We would like to inform you that your payroll has been successfully sent!',
+                from_email,
+                to_email,
+            )
         message.attach_file('media/' + request.POST['invoice_file'])
         message.send()
         return redirect('management_payroll')
