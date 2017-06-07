@@ -75,17 +75,36 @@ class WorkDiaryEditView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         work_diary_id = kwargs['work_diary_id']
-        project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
-        works = WorkDiary.objects.get(id=work_diary_id, project_assignment=project_assignment)
-        form = WorkDiaryForm(instance=works)
-        ctx_data = {'form': form}
+        project_assignments = ProjectAssignment.objects.get(id=kwargs['id'])
+        works = WorkDiary.objects.get(id=work_diary_id, project_assignment=project_assignments)
+        work_diary = WorkDiary.objects.filter(project_assignment=project_assignments).order_by('-date')
+        form = WorkDiaryForm(instance=works, initial={'project_assignment': kwargs['id']})
+        query = request.GET.get('q')
+        page = request.GET.get('page', 1)
+        if query:
+            work_diary = work_diary.filter(
+                Q(finished_task__icontains=query)|
+                Q(todo_task__icontains=query)|
+                Q(issues__icontains=query)|
+                Q(date__icontains=query)|
+                Q(hours__icontains=query)
+                ).distinct()
+        paginator = Paginator(work_diary, 5)
+        try:
+            work_diary = paginator.page(page)
+        except PageNotAnInteger:
+            work_diary = paginator.page(1)
+        except EmptyPage:
+            work_diary = paginator.page(paginator.num_pages)
+        ctx_data = {'form': form,
+                    'work': works,
+                    'work_diary': work_diary,
+                    'project_assignment':project_assignments,
+                }
         return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
-        work_diary_id = kwargs['work_diary_id']
-        project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
-        works = WorkDiary.objects.get(id=work_diary_id, project_assignment=project_assignment)
-        form = WorkDiaryForm(request.POST, instance=works)
+        form = WorkDiaryForm(request.POST)
         if form.is_valid():
             form.save()
         return redirect('work-diary', id=kwargs['id'])
