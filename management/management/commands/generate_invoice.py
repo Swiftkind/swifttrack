@@ -25,7 +25,7 @@ class Command(BaseCommand):
             date_sep['get_month'])[1]
         employees = Account.objects.all().exclude(is_staff=True)
         payroll = Payroll.objects.filter(date__date=date_now.date()).exists()
-        if date_sep['get_day'] is 6 or date_sep['get_day'] is last_day:
+        if date_sep['get_day'] is 15 or date_sep['get_day'] is last_day:
             if not payroll:
                 for emp in employees:
                     projects = projects_utils.get_employee_projects_assignments(emp.id)
