@@ -11,6 +11,9 @@
                         <div id="profile-container">
                             <input type="file" name="profile_pic" class="image-upload">
                             <img src="{{user.profile_pic.url}}" width="250px" height="250px" class="profile-img img-circle">
+                        </div><br>
+                        <div class="col-md-offset-2">
+                        <input type="file" name="profile_pic" class="image-upload">
                         </div>
                     </div>
                     {{ form.non_field_errors }}

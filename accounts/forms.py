@@ -17,10 +17,10 @@ class UserProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['first_name'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['last_name'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['first_name'].widget.attrs.update({'class' : 'form-control', 'pattern':'[A-Za-z ]+', 'title':'Enter Characters Only '})
+        self.fields['last_name'].widget.attrs.update({'class' : 'form-control', 'pattern':'[A-Za-z ]+', 'title':'Enter Characters Only '})
         self.fields['address'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['contact_number'].widget.attrs.update({'class' : 'form-control'})
+        self.fields['contact_number'].widget.attrs.update({'class' : 'form-control', 'pattern':'[0-9 ]+', 'title':'Enter Number Only '})
         self.fields['profile_pic'].widget.attrs.update({'class' : 'form-control'})
         self.fields['about_me'].widget.attrs.update({'class' : 'form-control'})
 
