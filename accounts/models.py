@@ -56,7 +56,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=255, blank=True)
     contact_number = models.CharField(max_length=13, blank=True)
     profile_pic = models.ImageField(
-        'Profile picture', upload_to='profiles', default='img/default-profile.png')
+        'Profile picture', upload_to='profiles', default='img/default-profile.png', blank=True, null=True)
     hourly_rate = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
 
     date_joined = models.DateTimeField(auto_now_add=True)
