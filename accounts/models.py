@@ -56,7 +56,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=255, blank=True)
     contact_number = models.CharField(max_length=13, blank=True)
     profile_pic = models.ImageField(
-        'Profile picture', upload_to='profiles', default='img/default-profile.png')
+        'Profile picture', upload_to='profiles', blank=True, null=True)
     hourly_rate = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
 
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -79,6 +79,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return "{}".format(self.first_name)
+
+    def get_profile_pic(self):
+        if not self.profile_pic:
+            return '{}'.format('/static/img/default-profile.png')
+        else:
+            return '{}'.format(self.profile_pic.url)
 
 
 class AccountLog(models.Model):

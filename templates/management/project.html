@@ -18,7 +18,7 @@
             {% for works in works %}
             <tr>
                 <td style="width: 30%;"> 
-                    <img src="{{ works.project_assignment.employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;
+                    <img src="{{ works.project_assignment.employee.get_profile_pic }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;
                     <strong>{{works.project_assignment.employee.get_full_name}}</strong>
                 </td>
                 <td style="width: 10%;">
