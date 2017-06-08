@@ -3,7 +3,7 @@ from django.forms import ModelForm, widgets
 from django.utils.translation import gettext as _
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ( UserCreationForm,
-                                        UserChangeForm, 
+                                        UserChangeForm,
                                         PasswordChangeForm,
                                         )
 
@@ -30,21 +30,6 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = Account
         fields = ('email', 'password1', 'password2', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me')
-
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1", "")
-        password2 = self.cleaned_data["password2"]
-        if password1 != password2:
-            raise forms.ValidationError(
-                _("The two password fields didn't match."))
-        return password2
-
-    def save(self, commit=True):
-        user = super(UserCreationForm, self).save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
-        return user
 
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
