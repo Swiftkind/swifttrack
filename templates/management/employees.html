@@ -1,0 +1,54 @@
+{% extends 'management.html' %} {% block content %}
+<div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#allemployees" data-toggle="tab">Active employee accounts</a></li>
+        <li><a href="#confirmations" data-toggle="tab">Account confirmations</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="allemployees">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in all_employees %}
+                    <tr>
+                        <td>
+                            <img src="{{employee.profile_pic.url}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;"><a href="{% url 'employee_profile' employee.id %}">{{employee.get_full_name}}</a>
+                        </td>
+                        <td>{{employee.address}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="confirmations">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Email address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in accounts_to_confirm %}
+                    <tr>
+                        <td>{{employee.email}}</td>
+                        <td>
+                            <form action="{% url 'confirm_account' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{employee.id}}">
+                                <button type="submit" name="confirm" class="btn btn-sm btn-success">Confirm</button>
+                                <button type="submit" name="decline" class="btn btn-sm btn-default">Decline</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endblock %}

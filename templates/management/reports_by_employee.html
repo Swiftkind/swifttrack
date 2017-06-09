@@ -1,0 +1,64 @@
+{% extends 'management.html' %}
+
+{% block content %}
+
+<div class="col-lg-12">
+    <h3>
+        <strong><img src="{{ employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">  {{ employee.get_full_name }}</strong>
+    </h3>
+    <table class="table table-striped">
+        <br />
+        <thead>
+            <tr>
+                <th style="width: 10%;">Date</th>
+                <th style="width: 5%;">Project</th>
+                <th style="width: 5%;">Hours</th>
+                <th style="width: 40%;">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td style="width: 10%;">
+                    <strong>{{ report.date }}</strong>
+                </td>
+                <td style="width: 10%;">
+                    <strong>{{ report.project_assignment.project.name }}</strong>
+                </td>
+                <td style="width: 10%;">
+                    <strong>{{ report.hours }}</strong>
+                </td>
+                <td style="width: 30%;">
+                    <strong>Finished tasks:</strong><br /><br />
+                        {{ report.finished_task | linebreaksbr }}<hr>
+                    <strong>To-do tasks:</strong><br /><br />
+                        {{ report.todo_task | linebreaksbr }}<hr>
+                    <strong>Issues:</strong><br /><br />
+                        {{ report.issues | linebreaksbr }}<br /><br />
+                        <small>posted on {{ report.date | timesince }} ago</small>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center bg-warning">No Data</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class='paginator'>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous">{% if project_assignments.has_previous %}<a href="?page={{ project_assignments.previous_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
+                </li>
+                <li>
+                <span class="current">
+                    Page {{ project_assignments.number }} of {{ project_assignments.paginator.num_pages }}.
+                </span>
+                </li>
+            <li class="next"> {% if project_assignments.has_next %}<a href="?page={{ project_assignments.next_page_number }}{% if request.GEt.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}</li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'management.html' %} {% block content %}
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Payroll</h3></div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Employee</th>
+                        <th>Filename</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payroll in payrolls %}
+                    <tr>
+                        <td>{{payroll.date}}</td>
+                        <td><img src="{{payroll.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{payroll.employee.get_full_name}}</td>
+                        <td>
+                            <a target="_blank" href="../../media/{{payroll.invoice_file}}">{{payroll.invoice_file}}</a>
+                        </td>
+                        <td>
+                            {% if payroll.paid is True %}
+                                Confirmed
+                                <a target="_blank" href="../../media/{{payroll.invoice_file}}" class="btn btn-default">Download</a>
+                            {% else %}
+                                <form action="{% url 'update_payroll' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{payroll.id}}" name="id">
+                                    <input type="hidden" value="{{payroll.invoice_file}}" name="invoice_file">
+                                    <input type="hidden" name="status" value="{% if not payroll.paid %}True{% endif %}">
+                                    <button type="submit" class="btn btn-sm btn-info">Confirm</button>
+                                    <a target="_blank" href="../../media/{{payroll.invoice_file}}" class="btn btn-default">Download</a>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

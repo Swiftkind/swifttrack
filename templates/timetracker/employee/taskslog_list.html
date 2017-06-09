@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ task.member.project.name }} - {{ task.memo }}</h1>
+
+        <h2>Task Logs</h2>
+        <p>Total Hours: {{ task.log }} &middot; <a href="{% url 'project_task_list' task.member.project.id %}">Back to Tasks</a></p>
+
+        <table class="table table-striped" id="product-table"><br />
+            <thead>
+              <tr>
+                  <th>Time</th>
+                  <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for log in logs %}
+              <tr>
+                <td>{{ log.log }}</td>
+                <td>{{ log.start }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+    </div>
+{% endblock %}

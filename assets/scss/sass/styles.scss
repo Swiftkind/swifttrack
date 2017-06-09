@@ -1,0 +1,50 @@
+$box-shadow-right: 0 5px 5px 0 #333, 0 5px 5px 0 #333, 0 5px 5px -5px #333 !important;
+$white: #ffffff;
+$black: #000000;
+$depth_two: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+
+#sidebar-wrapper {
+    background-color: #111111;
+    box-shadow: $box-shadow-right;
+    .white-text {
+        color: $white;
+    }
+    .list-heading {
+        background-color: $black;
+    }
+    .sidebar-add-link {
+        margin-right: 25px;
+    }
+    .list-heading-text {
+        color: $white;
+        font-weight: bold;
+    }
+    .sidebar-nav {
+        li {
+            a {
+                color: $white;
+            }
+        }
+    }
+}
+
+.panel {
+    box-shadow: $depth_two;
+}
+
+#profile-container {
+    position: relative;
+    height: 250px;
+    width: 250px;
+    .image-upload {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: #000;
+        opacity: 0;
+        z-index: 3;
+    }
+    .profile-img {
+        position: absolute;
+    }
+}

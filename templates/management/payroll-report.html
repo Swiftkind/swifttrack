@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block head %}
+    <head>
+        <style>
+            @page {
+                size: letter portrait;
+                @frame header_frame {           /* Static Frame */
+                    -pdf-frame-content: header_content;
+                    left: 50pt; width: 512pt; top: 50pt; height: 100pt;
+                }
+                @frame employee_frame {
+                    -pdf-frame-content: employee_content;
+                     left: 50pt; width: 512pt; top: 110pt; height: 100pt;
+                }
+                @frame grosspay_frame {
+                    -pdf-frame-content: grosspay_content;
+                     left: 50pt; width: 512pt; top: 150pt; height: 100pt;
+                }
+                @frame deductions_frame {
+                    -pdf-frame-content: deductions_content;
+                     left: 50pt; width: 512pt; top: 180pt; height: 100pt;
+                }
+                @frame netpay_frame {
+                    -pdf-frame-content: netpay_content;
+                    left: 50pt; width: 512pt; top: 280pt; height: 100pt;
+                }
+                @frame footer_frame {           /* Another static Frame */
+                    -pdf-frame-content: footer_content;
+                    left: 50pt; width: 512pt; top: 750pt; height: 20pt;
+                }
+            }
+        </style>
+    </head>
+{% endblock %}
+{% block navbar %}{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="well">
+            <div id="header_content">
+                <h3 class="center-text">SwiftKind Payroll {{period | date:'M d, Y'}}</h3><br>
+                <p>#730-A Molave Street, Juna Subdivision, Matina, Davao City, Philippines, 8000</p><br>
+                <p>Telephone: (082) 225 - 1050</p><br>
+            </div>
+            <div id="employee_content">
+                <h4>{{fname}} {{lname}}</h4>
+            </div>
+            <div id="grosspay_content">
+                <table class="table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Amount before deductions</th>
+                            <th>Particulars</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P {{amount}}</td>
+                            <td>{{description}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="deductions_content"><hr><br>
+                <h5>Deductions</h5>
+                <table class="table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Particulars</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P 120.00</td>
+                            <td>SSS</td>
+                        </tr>
+                        <tr>
+                            <td>P 150.00</td>
+                            <td>PAG-IBIG</td>
+                        </tr>
+                        <tr>
+                            <td>P 140.00</td>
+                            <td>Foods</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="netpay_content"><hr><br>
+                <h5>Net pay: P{{amount}}</h5>
+            </div>
+             <div id="footer_content">Swiftkind (http://http://swiftkind.com/) | Page <pdf:pagenumber>
+                of <pdf:pagecount>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

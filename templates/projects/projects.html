@@ -1,0 +1,60 @@
+{% extends 'dashboard.html' %}
+
+{% block tabs %}
+
+<div class="container"><br /><br />
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'project' %}">Projects</a></li>
+        <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
+        <li role="presentation"><a href="{% url 'request' %}">Contact</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="home">
+          <table class="table table-striped" id="product-table"><br />
+            <thead>
+              <tr>
+                  <th>PROJECT NAME</th>
+                  <th>HOURS</th>
+                  <th>ACTION</th>
+              </tr>
+            </thead>
+            {% for assignment in assignments %}
+            <tbody>
+              <tr>
+                <td>{{ assignment.project.name }}</td>
+                <td>{{ assignment.weekly_hours }}</td>
+                <td>
+                  <a href="{% url 'work-diary' assignment.id %}" class="btn btn-primary btn-sm">Work Diary</a>
+                  <a href="{% url 'project_task_list' assignment.project.id %}">TimeTracker</a>
+                </td>
+              </tr>
+            {% empty %}
+                <tr>
+                  <td colspan="8" class="text-center bg-warning">No Projects</td>
+                </tr>
+            </tbody>
+              {% endfor %}
+          </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="profile"></div>
+        <div role="tabpanel" class="tab-pane" id="messages"></div>
+    </div>
+    <div class='paginator'>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous">{% if assignments.has_previous %}<a href="?page={{ assignments.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Older</a>{% endif %}
+                </li>
+                <li>
+                <span class="current">
+                    Page {{ assignments.number }} of {{ assignments.paginator.num_pages }}.
+                </span>
+                </li>
+                <li class="next"> {% if assignments.has_next %}<a href="?page={{ assignments.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Newer <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+{%  endblock %}

@@ -1,0 +1,60 @@
+ {% extends 'management.html' %} 
+
+ {% block content %}
+
+<div class="col-lg-12">
+    <h3><strong>{{ project.name }}</strong></h3>
+    <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-md pull-right">Assign Employee</a><br /><br />
+    <a href="{% url 'edit-project' project.id %}" class="btn btn-default btn-md pull-right">Edit Project</a><br /><br />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Employee</th>
+                <th style="width: 5%;">Hours</th>
+                <th style="width: 30%;">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for works in works %}
+            <tr>
+                <td style="width: 30%;"> 
+                    <img src="{{ works.project_assignment.employee.profile_pic.url }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;
+                    <strong>{{works.project_assignment.employee.get_full_name}}</strong>
+                </td>
+                <td style="width: 10%;">
+                    <strong> {{ works.hours }} </strong>
+                </td>
+                <td style="width: 40%;">
+                    <strong>Finished:</strong><br /><br />
+                        {{ works.finished_task | linebreaksbr }}<hr>
+                    <strong>To-Do:</strong><br /><br />
+                        {{ works.todo_task | linebreaksbr }}<hr>
+                    <strong>Issues:</strong><br /><br />
+                        {{ works.issues | linebreaksbr }}<br /><br />
+                        <small>Posted  {{ works.date | timesince }} ago</small>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center bg-warning">No Data</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class='paginator'>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous">{% if works.has_previous %}<a href="?page={{ works.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
+                </li>
+                <li>
+                <span class="current">
+                    Page {{ works.number }} of {{ works.paginator.num_pages }}.
+                </span>
+                </li>
+                <li class="next"> {% if works.has_next %}<a href="?page={{ works.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

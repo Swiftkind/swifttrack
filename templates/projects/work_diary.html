@@ -1,0 +1,104 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block content %}
+<div class="container">
+    <div>
+        <div class="pull-right">
+            <a href="{% url 'project' %}" class="btn btn-default btn-md">Back</a>
+        </div>
+        <h3>Work Diary</h3>
+    </div>
+
+    <h2>{{ project_assignment.project.name }}</h2> 
+
+    <div id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="pull-right">
+            <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" glyphicon glyphicon-circle-arrow-down aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
+        </div>
+        <br />
+        <div class="card">
+            <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div class="card-block">
+                    <form role="form" method="post" action="">
+                        {% csrf_token %} {% for field in form %}
+                        <div class="form-group{% if field.errors %} has-error{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% render_field field class="form-control" %} {% for error in field.errors %}
+                            <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div>
+        <table class="table table-striped">
+            <br />
+            <div>
+                <form class="navbar-form" method='GET' action=''>
+                    <div class="input-group">
+                        <input type="text" name='q' class='form-control' placeholder='Search something here' value='{{ request.GET.query }}'>
+                    </div>
+                </form>
+            </div>
+            <thead>
+                <tr>
+                    <th style="width: 15%;">DATE</th>
+                    <th style="width: 5%;">HOURS</th>
+                    <th style="width: 10%;">TODAY</th>
+                    <th style="width: 10%;">TO-DO</th>
+                    <th style="width: 10%;">ISSUES</th>
+                    <th style="width: 10%;">ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for work in works %}
+                <tr>
+                    <td style="width: 15%;">
+                        {{ work.date }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ work.hours }}
+                    </td>
+                    <td style="width: 35%;">
+                        {{ work.finished_task | linebreaksbr }}
+                    </td>
+                    <td style="width: 30%;">
+                        {{ work.todo_task | linebreaksbr }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ work.issues | linebreaksbr }}
+                    </td>
+                    <td style="width: 5%;">
+                        <a href="{% url 'edit-work-diary' work.project_assignment.id work.id %}" class="btn btn-primary btn-xs">Edit</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center bg-warning">
+                        No Logs
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class='paginator'>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous">{% if works.has_previous %}<a href="?page={{ works.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
+                </li>
+                <li>
+                <span class="current">
+                    Page {{ works.number }} of {{ works.paginator.num_pages }}.
+                </span>
+                </li>
+                <li class="next"> {% if works.has_next %}<a href="?page={{ works.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
