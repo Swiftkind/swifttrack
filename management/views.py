@@ -74,12 +74,38 @@ class AdminView(TemplateView):
         return render(request, self.template_name, return_data)
 
     def post(self, request, *args, **kwargs):
-        day_diff = int(kwargs['day'])
-        the_date = request.POST.get('getDiariesByDate')
+
+        the_date = request.POST.get('wd_date')
+        employee = request.POST.get('employee')
+
+        if not employee:
+            employee = Account.objects.values_list('id', flat=True).filter(is_staff=False)
+
+        project = request.POST.get('project')
+
+        if not project:
+            project = Project.objects.values_list('id', flat=True)
+
         the_date = datetime.strptime(the_date, '%m/%d/%Y')
-        work_diaries = WorkDiary.objects.filter(date__date=the_date)
+
+
+        work_diaries = WorkDiary.objects.filter(
+            date__date=the_date
+        ).filter(
+            project_assignment__project__id__in=project
+        ).filter(
+            project_assignment__employee__id__in=employee
+        ).order_by('-date')
+
+        if type(project) is str:
+            project = int(project)
+
+        if type(employee) is str:
+            employee = int(employee)
+
         return_data = {'work_diaries': work_diaries, 'date_now': the_date,
-            'return_today': True}
+            'return_today': True, 'employee_selected': employee, 'project_selected': project }
+        
         return render(request, self.template_name, return_data)
 
 class ConfirmAccountView(TemplateView):

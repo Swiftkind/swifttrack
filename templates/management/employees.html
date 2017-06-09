@@ -1,5 +1,11 @@
 {% extends 'management.html' %} {% block content %}
-<div class="container-fluid">
+<div class="col-lg-12">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Employees</h4></div>
+        <div class="panel-body">
+
     <ul class="nav nav-tabs">
         <li class="active"><a href="#allemployees" data-toggle="tab">Active employee accounts</a></li>
         <li><a href="#confirmations" data-toggle="tab">Account confirmations</a></li>
@@ -19,7 +25,7 @@
                         <td>
                             <img src="{{employee.profile_pic.url}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;"><a href="{% url 'employee_profile' employee.id %}">{{employee.get_full_name}}</a>
                         </td>
-                        <td>{{employee.address}}</td>
+                        <td>{{employee.email}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -50,5 +56,9 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    </div>
+    </div>
     </div>
     {% endblock %}
