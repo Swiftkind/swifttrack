@@ -48,12 +48,12 @@
             {% endif %}
             {% if return_today is True %}
             <ul class="pager">
-                <li><a href="{% url 'admin' 0 %}">Go back</a></li>
+                <li><a href="{% url 'admin' %}">Go back</a></li>
             </ul>
             {% else %}
             <ul class="pager">
-                <li><a href="{% url 'admin' previous_day %}">Previous</a></li>{% if previous_day is 1 %}{% else %}
-                <li><a href="{% url 'admin' next_day %}">Next</a></li>{% endif %}
+                <li><a href="{% url 'admin' %}?day-diff={{ previous_day }}">Previous</a></li>{% if previous_day is 2 %}{% else %}
+                <li><a href="{% url 'admin' %}?day-diff={{ next_day }}">Next</a></li>{% endif %}
             </ul>
             {% endif %}
         </div>
