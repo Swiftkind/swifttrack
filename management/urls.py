@@ -13,8 +13,7 @@ from .views import (
 urlpatterns = [
     url(r'^request/create$', views.RequestView.as_view(), name='request'),
     url(r'^request/confirm$', views.UpdateRequest.as_view(), name='update_request'),
-    url(r'^dashboard/(?P<day>[0-9]+)/$', views.AdminView.as_view(), name='admin'),
-    #url(r'^dashboard/(?P<day>)', views.AdminWorkDiariesView.as_view(), name='admin_work_diaries'),
+    url(r'^workdiaries/$', views.AdminView.as_view(), name='admin'),
     url(r'^account/confirm', views.ConfirmAccountView.as_view(), name='confirm_account'),
     url(r'^account/deactivate', views.DeactivateAccountView.as_view(), name='deactivate_account'),
     url(r'^employees/$', views.AllEmployeesView.as_view(), name='all_employees'),

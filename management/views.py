@@ -60,7 +60,11 @@ class AdminView(TemplateView):
     template_name = 'management/workdiaries.html'
 
     def get(self, request, *args, **kwargs):
-        day_diff = int(kwargs['day'])
+        day = request.GET.get('day-diff')
+        if not day:
+            day_diff = 1
+        else:
+            day_diff = int(day)
         date_today = datetime.now() - timedelta(days=day_diff)
         previous_day = day_diff + 1
         if day_diff is 0:
@@ -74,13 +78,13 @@ class AdminView(TemplateView):
         return render(request, self.template_name, return_data)
 
     def post(self, request, *args, **kwargs):
-        day_diff = int(kwargs['day'])
         the_date = request.POST.get('getDiariesByDate')
         the_date = datetime.strptime(the_date, '%m/%d/%Y')
         work_diaries = WorkDiary.objects.filter(date__date=the_date)
         return_data = {'work_diaries': work_diaries, 'date_now': the_date,
             'return_today': True}
         return render(request, self.template_name, return_data)
+
 
 class ConfirmAccountView(TemplateView):
 

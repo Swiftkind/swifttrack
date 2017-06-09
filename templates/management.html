@@ -5,7 +5,7 @@
     {% load static %}
     {% load management_custom_tags %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/daterange-picker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
@@ -30,14 +30,14 @@
                         SWIFTTRACK
                     </a>
                 </li>
-                <form class="navbar-form" method="post" action="{% url 'admin' 0 %}">
+                <form class="navbar-form" method="post" action="{% url 'admin' %}">
                     {% csrf_token %}
                     <label class="white-text">Search work diaries by date:</label>
                     <div class="input-group">
-                        <input type="" id="getDiaries" name="getDiariesByDate" class="form-control">
+                        <input type="text" id="getDiaries" name="getDiariesByDate" class="form-control" value="{% if date_now %}{{date_now | date}}{% else %}{% endif %}">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">Go!</button>
-                          </span>
+                            <button class="btn btn-primary" type="submit">Go</button>
+                        </span>
                     </div>
                 </form>
                 <br>
@@ -67,16 +67,18 @@
                     <span class="icon-bar"></span>
                 </button>
                 <form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
+                    <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search something here" name="q" value="{{ request.GET.query }}">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'admin' 0 %}">Dashboard</a></li>
+                    <li><a href="{% url 'admin' %}">Dashboard</a></li>
                     <li><a href="{% url 'management_payroll' %}">Payroll</a></li>
                     <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
                     <li><a href="{% url 'all_employees' %}">Employees</a></li>
@@ -99,15 +101,16 @@
     <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/moment.js' %}"></script>
-    <script src="{% static 'js/daterange-picker.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'js/moment.js' %}"></script>
     {% block javascript %}
     <script type="text/javascript">
     $(document).ready(function() {
-        $('#getDiaries').daterangepicker({
-            singleDatePicker: true,
-            showDropdowns: true,
-            timePicker: true,
+        $('#getDiaries').datepicker({
+            todayBtn: "linked",
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
         });
     });
     </script>
