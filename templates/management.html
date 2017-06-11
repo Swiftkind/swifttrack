@@ -5,7 +5,7 @@
     {% load static %}
     {% load management_custom_tags %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/daterange-picker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
@@ -26,34 +26,44 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav list-group">
                 <li class="sidebar-brand">
-                    <a href="#">
+                    <a href="{% url 'admin' 0 %}" class="black-text">
                         SWIFTTRACK
                     </a>
                 </li>
-                <form class="navbar-form" method="post" action="{% url 'admin' 0 %}">
+                <form class="custom-navbar-form" method="post" action="{% url 'admin' 0 %}">
                     {% csrf_token %}
-                    <label class="white-text">Search work diaries by date:</label>
-                    <div class="input-group">
-                        <input type="" id="getDiaries" name="getDiariesByDate" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">Go!</button>
-                          </span>
+                    <div class="form-group">
+                        <label class="white-text">Date:</label>
+                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if date_now %}{{date_now | date:'m/d/Y'}}{% else %}{% now "m/d/Y" %}{% endif %}">      
+                    </div>
+                    <div class="form-group">
+                        <label class="white-text">Project:</label><br>
+                        <select class="form-control" name="project">
+                            <option value="">All projects</option>
+                            {% all_projects as projects %}
+                            {% for project in projects %}
+                                <option value="{{project.id}}" {% if project.id == project_selected %}selected{% endif %}>{{project.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="white-text">Employee:</label><br>
+                        <select class="form-control" name="employee">
+                            <option value="">All employees</option>
+                            {% all_employees as employees %}
+                            {% for employee in employees %}
+                                <option value="{{employee.id}}" {% if employee.id == employee_selected %}selected{% endif %}>{{employee.get_full_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Search</button>
                     </div>
                 </form>
                 <br>
                 <li class="list-heading">
-                    <span class="list-heading-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
+                    <span class="white-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
                 </li>
-                <div class="project-sidebar">
-                    {% all_projects %}
-                </div>
-
-                <li class="list-heading">
-                    <span class="list-heading-text">Employees</span>
-                </li>
-                <div class="employee-sidebar">
-                {% all_employees %}
-                </div>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -67,10 +77,12 @@
                     <span class="icon-bar"></span>
                 </button>
                 <form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
+                    <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search something here" name="q" value="{{ request.GET.query }}">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -99,15 +111,16 @@
     <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/moment.js' %}"></script>
-    <script src="{% static 'js/daterange-picker.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'js/moment.js' %}"></script>
     {% block javascript %}
     <script type="text/javascript">
     $(document).ready(function() {
-        $('#getDiaries').daterangepicker({
-            singleDatePicker: true,
-            showDropdowns: true,
-            timePicker: true,
+        $('#getDiaries').datepicker({
+            todayBtn: "linked",
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
         });
     });
     </script>

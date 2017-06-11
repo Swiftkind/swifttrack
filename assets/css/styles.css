@@ -1,7 +1,7 @@
 /* line 6, ../scss/sass/styles.scss */
 #sidebar-wrapper {
-  background-color: #111111;
-  box-shadow: 0 5px 5px 0 #333, 0 5px 5px 0 #333, 0 5px 5px -5px #333 !important;
+  background-color: #111;
+  box-shadow: 3px 3px 3px #ccc;
 }
 /* line 9, ../scss/sass/styles.scss */
 #sidebar-wrapper .white-text {
@@ -9,34 +9,30 @@
 }
 /* line 12, ../scss/sass/styles.scss */
 #sidebar-wrapper .list-heading {
-  background-color: #000000;
+  background-color: #000;
 }
 /* line 15, ../scss/sass/styles.scss */
 #sidebar-wrapper .sidebar-add-link {
   margin-right: 25px;
+  color: #fff;
+  font-size: 18px;
 }
-/* line 18, ../scss/sass/styles.scss */
+/* line 20, ../scss/sass/styles.scss */
 #sidebar-wrapper .list-heading-text {
-  color: #ffffff;
-  font-weight: bold;
+  color: #000000;
 }
-/* line 24, ../scss/sass/styles.scss */
+/* line 25, ../scss/sass/styles.scss */
 #sidebar-wrapper .sidebar-nav li a {
   color: #ffffff;
 }
 
-/* line 31, ../scss/sass/styles.scss */
-.panel {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-}
-
-/* line 35, ../scss/sass/styles.scss */
+/* line 32, ../scss/sass/styles.scss */
 #profile-container {
   position: relative;
   height: 250px;
   width: 250px;
 }
-/* line 39, ../scss/sass/styles.scss */
+/* line 36, ../scss/sass/styles.scss */
 #profile-container .image-upload {
   position: absolute;
   width: 250px;
@@ -45,7 +41,22 @@
   opacity: 0;
   z-index: 3;
 }
-/* line 47, ../scss/sass/styles.scss */
+/* line 44, ../scss/sass/styles.scss */
 #profile-container .profile-img {
   position: absolute;
+}
+
+/* line 49, ../scss/sass/styles.scss */
+.custom-navbar-form {
+  margin: 15px;
+}
+
+/* line 53, ../scss/sass/styles.scss */
+.indigo {
+  background-color: #3f51b5;
+}
+
+/* line 56, ../scss/sass/styles.scss */
+.btn {
+  box-shadow: none;
 }

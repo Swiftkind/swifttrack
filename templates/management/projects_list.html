@@ -1,5 +1,3 @@
 {% for project in projects %}
-    <li>
-        <a href="{% url 'view_projects' project.id %}">&nbsp;&nbsp;&nbsp;{{ project.name }}</a>
-    </li>
+    <option value="{{project.id}}">{{ project.name }}</option>
 {% endfor %}

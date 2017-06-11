@@ -1,5 +1,3 @@
 {% for employee in employees %}
-    <li>
-        <a href="{% url 'reports_by_employee' employee.id %}">&nbsp;&nbsp;&nbsp;{{ employee.get_full_name }}</a>
-    </li>
+    <option value="{{employee.id}}" {% if employee_selected == employee.id %}selected{% endif %}>{{ employee.get_full_name }}</option>
 {% endfor %}

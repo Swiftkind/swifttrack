@@ -1,26 +1,29 @@
 {% extends 'management.html' %} {% block content %}
-<div class="col-md-12">
-    <ul class="nav nav-tabs" data-tabs="tabs" id="requests_tab" role="tablist">
-        <li class="active"><a href="#unconfirmed" data-toggle="tab" aria-controls="unconfirmed" role="tab">Unconfirmed requests</a></li>
-        <li><a href="#confirmed" data-toggle="tab" aria-controls="confirmed" role="tab">Confirmed requests</a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane active fade in" id="unconfirmed" role="tabpanel">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="width: 20%">Employee</th>
-                        <th>Date requested</th>
-                        <th>Subject</th>
-                        <th>Date of leave</th>
-                        <th>Date of return</th>
-                        <th>Content</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for request in all_requests %}
-                        {% if request.confirmed is False %}
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Requests</h4></div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs" data-tabs="tabs" id="requests_tab" role="tablist">
+                <li class="active"><a href="#unconfirmed" data-toggle="tab" aria-controls="unconfirmed" role="tab">Unconfirmed requests</a></li>
+                <li><a href="#confirmed" data-toggle="tab" aria-controls="confirmed" role="tab">Confirmed requests</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active fade in" id="unconfirmed" role="tabpanel">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%">Employee</th>
+                                <th>Date requested</th>
+                                <th>Subject</th>
+                                <th>Date of leave</th>
+                                <th>Date of return</th>
+                                <th>Content</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in all_requests %} {% if request.confirmed is False %}
                             <tr>
                                 <td style="width: 20%"><img src=" {{request.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{request.employee.get_full_name}}</td>
                                 <td>{{request.date_requested}}</td>
@@ -39,29 +42,27 @@
                                     {% endif %}
                                 </td>
                             </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% if not all_requests %}
-                <div class="alert alert-warning">No requests!</div>
-            {% endif %}
-        </div>
-        <div class="tab-pane" id="confirmed" role="tabpanel">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="width: 20%">Employee</th>
-                        <th>Date requested</th>
-                        <th>Subject</th>
-                        <th>Date of leave</th>
-                        <th>Date of return</th>
-                        <th>Content</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for request in all_requests %}
-                        {% if request.confirmed is True %}
+                            {% endif %} {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if not all_requests %}
+                    <div class="alert alert-warning">No requests!</div>
+                    {% endif %}
+                </div>
+                <div class="tab-pane" id="confirmed" role="tabpanel">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%">Employee</th>
+                                <th>Date requested</th>
+                                <th>Subject</th>
+                                <th>Date of leave</th>
+                                <th>Date of return</th>
+                                <th>Content</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in all_requests %} {% if request.confirmed is True %}
                             <tr>
                                 <td style="width: 20%"><img src=" {{request.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{request.employee.get_full_name}}</td>
                                 <td>{{request.date_requested}}</td>
@@ -70,13 +71,14 @@
                                 <td>{{request.date_of_return}}</td>
                                 <td>{{request.content}}</td>
                             </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% if not all_requests %}
-                <div class="alert alert-warning">No requests!</div>
-            {% endif %}
+                            {% endif %} {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if not all_requests %}
+                    <div class="alert alert-warning">No requests!</div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
