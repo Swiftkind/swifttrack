@@ -93,7 +93,7 @@
                     <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
                     <li><a href="{% url 'all_employees' %}">Employees</a></li>
                     <li>
-                        <a href=""><img src="{{request.user.profile_pic.url}}" width="25px" height="25px" class="img-circle"></a>
+                        <a href=""><img src="{{request.user.get_profile_pic}}" width="25px" height="25px" class="img-circle"></a>
                     </li>
                     <li>
                         <a href="{% url 'logout' %}">Logout</a>

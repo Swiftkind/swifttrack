@@ -17,7 +17,7 @@
                     {% for payroll in payrolls %}
                     <tr>
                         <td>{{payroll.date}}</td>
-                        <td><img src="{{payroll.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{payroll.employee.get_full_name}}</td>
+                        <td><img src="{{payroll.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{payroll.employee.get_full_name}}</td>
                         <td>
                             <a target="_blank" href="../../media/{{payroll.invoice_file}}">{{payroll.invoice_file}}</a>
                         </td>
