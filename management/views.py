@@ -24,9 +24,10 @@ from .forms import RequestForm, AddProjectForm, AssignEmployeeForm, EditProjectF
 from .models import Requests
 from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
+from .mixins import StaffRequiredMixin
 
 
-class RequestView(TemplateView):
+class RequestView(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/request.html'
 
@@ -46,7 +47,7 @@ class RequestView(TemplateView):
                 employee=request.user.id)
         return redirect('request')
 
-class UpdateRequest(TemplateView):
+class UpdateRequest(StaffRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         id = request.POST['id']
@@ -55,8 +56,10 @@ class UpdateRequest(TemplateView):
         Requests.objects.filter(id=id).update(confirmed=confirmed)
         return redirect('view_all_requests')
 
-class AdminView(TemplateView):
 
+class AdminView(StaffRequiredMixin, TemplateView):
+
+    permission_required = 'is_staff'
     template_name = 'management/workdiaries.html'
 
     def get(self, request, *args, **kwargs):
@@ -108,7 +111,7 @@ class AdminView(TemplateView):
         
         return render(request, self.template_name, return_data)
 
-class ConfirmAccountView(TemplateView):
+class ConfirmAccountView(StaffRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('confirm') is not None:
@@ -117,14 +120,14 @@ class ConfirmAccountView(TemplateView):
             account = Account.objects.get(id=request.POST['id']).delete()
         return redirect('all_employees')
 
-class DeactivateAccountView(TemplateView):
+class DeactivateAccountView(StaffRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         Account.objects.filter(id=request.POST['id']).update(is_active=False)
         return redirect('admin', day=0)
 
 
-class AllEmployeesView(TemplateView):
+class AllEmployeesView(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/employees.html'
 
@@ -135,7 +138,7 @@ class AllEmployeesView(TemplateView):
             'accounts_to_confirm': accounts_to_confirm}
         return render(request, self.template_name, return_data)
 
-class EmployeeProfileView(TemplateView):
+class EmployeeProfileView(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/employee-profile.html'
 
@@ -144,7 +147,7 @@ class EmployeeProfileView(TemplateView):
         return_data = {'employee': employee}
         return render(request, self.template_name, return_data)
 
-class ViewRequestsView(TemplateView):
+class ViewRequestsView(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/all-requests.html'
 
@@ -153,7 +156,7 @@ class ViewRequestsView(TemplateView):
         return_data = {'all_requests': all_requests}
         return render(request, self.template_name, return_data)
 
-class ProjectManageView(TemplateView):
+class ProjectManageView(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/project.html'
 
@@ -185,7 +188,7 @@ class ProjectManageView(TemplateView):
         }
         return render(request, self.template_name, ctx_data)
 
-class ViewReportsByEmployee(TemplateView):
+class ViewReportsByEmployee(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/reports_by_employee.html'
 
@@ -211,7 +214,7 @@ class ViewReportsByEmployee(TemplateView):
                        'project_assignments': project_assignments, }
         return render(request, self.template_name, return_data)
 
-class ManagementPayrollView(TemplateView):
+class ManagementPayrollView(StaffRequiredMixin, TemplateView):
     template_name = 'management/payroll.html'
 
     def get(self, request, *args, **kwargs):
@@ -243,7 +246,7 @@ class ManagementPayrollView(TemplateView):
         message.send()
         return redirect('management_payroll')
 
-class AddProjectView(TemplateView):
+class AddProjectView(StaffRequiredMixin, TemplateView):
 
     form_class = AddProjectForm
     template_name = 'management/project-add.html'
@@ -266,7 +269,7 @@ class AddProjectView(TemplateView):
         }
         return render(request, self.template_name, ctx_data)
 
-class AssignEmployeeView(TemplateView):
+class AssignEmployeeView(StaffRequiredMixin, TemplateView):
 
     form_class = AssignEmployeeForm
     template = 'management/project-assign-employee.html'
@@ -300,7 +303,7 @@ class AssignEmployeeView(TemplateView):
         }
         return render(request, 'management/project-assign-employee.html', ctx_data)
 
-class EditProjectView(TemplateView):
+class EditProjectView(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/edit_project.html'
 
@@ -327,7 +330,7 @@ class EditProjectView(TemplateView):
         }
         return render (request, self.template_name, ctx_data)
 
-class EditHoursView(TemplateView):
+class EditHoursView(StaffRequiredMixin, TemplateView):
 
     template_name = 'management/edit_project_hours.html'
 
@@ -348,7 +351,7 @@ class EditHoursView(TemplateView):
         ctx_data = {'form': form}
         return render(request, self.template_name, ctx_data)
 
-class RemoveEmployee(View):
+class RemoveEmployee(StaffRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         project_id = kwargs['project_id']
@@ -358,7 +361,7 @@ class RemoveEmployee(View):
         pa.save() 
         return redirect('edit-project', id=kwargs.get('project_id'))
 
-class ReAssignEmployee(View):
+class ReAssignEmployee(StaffRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         project_id = kwargs['project_id']
