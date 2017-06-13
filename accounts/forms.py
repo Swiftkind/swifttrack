@@ -1,8 +1,9 @@
 from django import forms
 from django.forms import ModelForm, widgets
+from django.utils.translation import gettext as _
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ( UserCreationForm,
-                                        UserChangeForm, 
+                                        UserChangeForm,
                                         PasswordChangeForm,
                                         )
 
@@ -29,7 +30,7 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = Account
         fields = ('email', 'password1', 'password2', 'first_name', 'last_name', 'address', 'contact_number', 'profile_pic', 'about_me')
-    
+
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs.update({'class' : 'form-control'})
