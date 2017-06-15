@@ -18,10 +18,9 @@ from .mixins import AccountTimestamp
 
 class RegistrationView(TemplateView):
     template_name = 'accounts/register.html'
-    form_class = CustomUserCreationForm
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
+        form = CustomUserCreationForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
@@ -44,6 +43,8 @@ class LoginView(AccountTimestamp, TemplateView):
             return render(self.request, self.template_name, {
                 'form': LoginForm(),
             })
+        if self.request.user.is_staff:
+            return redirect('admin', day=0)
         return redirect('project')
 
     def post(self, *args, **kwargs):
@@ -59,14 +60,11 @@ class LoginView(AccountTimestamp, TemplateView):
         return render(self.request, self.template_name, {'form': form})
 
 
-# Logout view
 class LogoutView(TemplateView):
 
     def get(self, request):
         logout(request)
         return redirect('login')
-
-# Account view
 
 
 class AccountView(LoginRequiredMixin, TemplateView):
@@ -74,8 +72,6 @@ class AccountView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {})
-
-# Update account view
 
 
 class UpdateAccountView(TemplateView):
@@ -91,8 +87,6 @@ class UpdateAccountView(TemplateView):
         if form.is_valid():
             form.save()
         return redirect('project')
-
-# Update password view
 
 
 class UpdatePasswordView(TemplateView):
@@ -112,8 +106,6 @@ class UpdatePasswordView(TemplateView):
         return_data = {'form': form}
         return render(request, self.template_name, return_data)
 
-# Payroll view
-
 
 class PayrollView(TemplateView):
     template_name = 'accounts/payroll.html'
@@ -122,8 +114,6 @@ class PayrollView(TemplateView):
         payroll = Payroll.objects.filter(employee_id=request.user.id).order_by('-date')
         return_data = {'payroll': payroll}
         return render(request, self.template_name, return_data)
-
-# Add payroll view
 
 
 class AddPayrollView(TemplateView):
