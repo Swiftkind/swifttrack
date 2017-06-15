@@ -34,7 +34,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="white-text">Date:</label>
-                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'m/d/Y'}}{% endif %}">      
+                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'m/d/Y'}}{% endif %}" required>      
                     </div>
                     <div class="form-group">
                         <label class="white-text">Project:</label><br>
@@ -76,9 +76,9 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <form class="navbar-form navbar-left" role="search">
+                <form class="navbar-form navbar-left" role="search" action="{% url 'global-search' %}">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search something here" name="q" value="{{ request.GET.query }}">
+                        <input type="text" class="form-control" placeholder="Search something here" name="q" value="{{ request.GET.q }}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </span>

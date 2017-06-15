@@ -1,0 +1,177 @@
+{% extends 'management.html' %}
+
+{% block content %}
+    <div class="col-lg-12">
+        {% if search_workdiaries %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Work diaries</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Employee</th>
+                            <th style="text-align: center;">Hours</th>
+                            <th style="width: 30%;">Description</th>
+                            <th style="text-align: center;">Project</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for workdiary in search_workdiaries %}
+                        <tr>
+                            <td style="width: 20%;"> 
+                                <img src=" {{workdiary.project_assignment.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
+                                <strong> {{workdiary.project_assignment.employee.get_full_name}}</strong>
+                            </td>
+                            <td style="text-align: center;">
+                                <strong>{{workdiary.hours}}</strong>
+                            </td>
+                            <td style="width: 40%;">
+                                <strong>Finished:</strong><br /><br />
+                                    {{ workdiary.finished_task | linebreaksbr }}
+                                <hr>
+                                <strong>To-Do:</strong><br /><br />
+                                    {{ workdiary.todo_task | linebreaksbr }}
+                                <hr>
+                                <strong>Issues:</strong><br /><br />
+                                    {{ workdiary.issues | linebreaksbr }}<br/ ><br />
+                                    <small>Posted  {{ workdiary.date | timesince }} ago</small>
+                            </td>
+                            <td style="text-align: center;">
+                                <strong> {{ workdiary.project_assignment.project.name }} </strong>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+        {% if search_employees %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Employees</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in search_employees %}
+                        <tr>
+                            <td>
+                                <img src="{{employee.get_profile_pic}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;"><a href="{% url 'employee_profile' employee.id %}">{{employee.get_full_name}}</a>
+                            </td>
+                            <td>{{employee.email}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+        {% if search_requests %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Requests</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%">Employee</th>
+                                <th>Date requested</th>
+                                <th>Subject</th>
+                                <th>Date of leave</th>
+                                <th>Date of return</th>
+                                <th>Content</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in search_requests %}
+                            <tr>
+                                <td style="width: 20%"><img src=" {{request.employee.profile_pic.url}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{request.employee.get_full_name}}</td>
+                                <td>{{request.date_requested}}</td>
+                                <td>{{request.get_subject_display}}</td>
+                                <td>{{request.date_of_leave}}</td>
+                                <td>{{request.date_of_return}}</td>
+                                <td>{{request.content}}</td>
+                                <td>
+                                    {% if request.confirmed is True %} Confirmed {% else %}
+                                    <form action="{% url 'update_request' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{request.id}}" name="id">
+                                        <input type="hidden" name="status" value="{% if not request.confirmed %}True{% endif %}">
+                                        <button type="submit" class="btn btn-sm btn-info">Confirm</button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+        {% if search_payroll %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Payroll</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Employee</th>
+                                <th>Filename</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payroll in search_payroll %}
+                            <tr>
+                                <td>{{payroll.date}}</td>
+                                <td><img src="{{payroll.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;{{payroll.employee.get_full_name}}</td>
+                                <td>
+                                    <a target="_blank" href="../../media/{{payroll.invoice_file}}">{{payroll.invoice_file}}</a>
+                                </td>
+                                <td>
+                                    {% if payroll.paid is True %}
+                                        Confirmed
+                                        <a target="_blank" href="../../media/{{payroll.invoice_file}}" class="btn btn-default">Download</a>
+                                    {% else %}
+                                        <form action="{% url 'update_payroll' %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="{{payroll.id}}" name="id">
+                                            <input type="hidden" value="{{payroll.invoice_file}}" name="invoice_file">
+                                            <input type="hidden" name="status" value="{% if not payroll.paid %}True{% endif %}">
+                                            <button type="submit" class="btn btn-sm btn-info">Confirm</button>
+                                            <a target="_blank" href="../../media/{{payroll.invoice_file}}" class="btn btn-default">Download</a>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endfor %}
+        {% else %}
+            {% if not search_workdiaries and not search_employees and not search_requests and not search_payroll %}
+                <div class="alert alert-warning">Nothing matched your query.</div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
