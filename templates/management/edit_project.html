@@ -19,7 +19,8 @@
       </div>
     {% endfor %}
     <div>
-        <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-xs pull-right">Add Employee</a><br /><br />
+        <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-xs pull-right">Add Employee</a>
+        <a href="#" class="btn btn-danger btn-xs pull-right">Remove Project</a><br /><br />
     </div>
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="home">
@@ -36,7 +37,7 @@
             <tbody>
               <tr>
                 <td> {{ assignment.employee }} </td>
-                <td> 
+                <td>
                     {{ assignment.weekly_hours }}
                 </td>
                 <td>
@@ -45,7 +46,7 @@
                 <td>
                 {% if assignment.status %}
                 <code>Active</code>
-                    <a href="{% url 'remove-employee' project.id assignment.employee.id %}" class="btn btn-danger btn-xs"> Remove Employee</a> 
+                    <a href="{% url 'remove-employee' project.id assignment.employee.id %}" class="btn btn-danger btn-xs"> Remove Employee</a>
                 {% else %}
                     <code>Inactive Employee</code>
                     <a href="{% url 'reassign-employee' project.id assignment.employee.id %}" class="btn btn-primary btn-xs">Reassign Employee</a>
