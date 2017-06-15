@@ -2,34 +2,33 @@ import calendar
 import pytz
 import decimal
 
-from django.db.models import Q
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from accounts.models import Account, Payroll
-from projects.models import WorkDiary, Project, ProjectAssignment
+from threading import Timer
+from datetime import datetime, timedelta
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import EmailMessage, send_mail
+from django.db.models import Q
+from django.shortcuts import render, redirect
 from django.template.defaultfilters import slugify
-from accounts.models import Account, Payroll
-from projects.models import WorkDiary, Project, ProjectAssignment
-from datetime import datetime, timedelta
 from django.utils import timezone
-from threading import Timer
+from django.views.generic import TemplateView, View
 
-from .forms import RequestForm, AddProjectForm, AssignEmployeeForm, EditProjectForm, EditProjectHoursForm
+from .forms import (RequestForm,
+                    AddProjectForm,
+                    AssignEmployeeForm,
+                    EditProjectForm,
+                    EditProjectHoursForm,
+                    )
 from .models import Requests
 from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
 from .mixins import StaffRequiredMixin
+from accounts.models import Account, Payroll
+from projects.models import WorkDiary, Project, ProjectAssignment
 
 
 class RequestView(StaffRequiredMixin, TemplateView):
-
     template_name = 'management/request.html'
 
     def get(self, request, *args, **kwargs):
@@ -48,6 +47,7 @@ class RequestView(StaffRequiredMixin, TemplateView):
                 employee=request.user.id)
         return redirect('request')
 
+
 class UpdateRequest(StaffRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
@@ -59,26 +59,18 @@ class UpdateRequest(StaffRequiredMixin, TemplateView):
 
 
 class AdminView(StaffRequiredMixin, TemplateView):
-
     permission_required = 'is_staff'
     template_name = 'management/workdiaries.html'
 
     def get(self, request, *args, **kwargs):
-       
         date_requested = request.GET.get('prev_date') or request.GET.get('next_date')
-
         date_today = timezone.now().date()
-
         if not date_requested:
             date_requested = date_today - timedelta(days=1)
-
         wd_date = datetime.strptime(str(date_requested), '%Y-%m-%d').date()
-
         prev_date =wd_date - timedelta(days=1)
         next_date = wd_date + timedelta(days=1)
-
         work_diaries = WorkDiary.objects.filter(date__date=wd_date).order_by('-date')
-
         context = {
             'work_diaries': work_diaries,
             'prev_date': prev_date,
@@ -86,25 +78,17 @@ class AdminView(StaffRequiredMixin, TemplateView):
             'date_today': date_today,
             'wd_date': wd_date
         }
-
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-
         the_date = request.POST.get('wd_date')
         employee = request.POST.get('employee')
-
         if not employee:
             employee = Account.objects.values_list('id', flat=True).filter(is_staff=False)
-
         project = request.POST.get('project')
-
         if not project:
             project = Project.objects.values_list('id', flat=True)
-
         the_date = datetime.strptime(the_date, '%m/%d/%Y')
-
-
         work_diaries = WorkDiary.objects.filter(
             date__date=the_date
         ).filter(
@@ -112,17 +96,14 @@ class AdminView(StaffRequiredMixin, TemplateView):
         ).filter(
             project_assignment__employee__id__in=employee
         ).order_by('-date')
-
         if type(project) is str:
             project = int(project)
-
         if type(employee) is str:
             employee = int(employee)
-
         return_data = {'work_diaries': work_diaries, 'wd_date': the_date,
             'return_today': True, 'employee_selected': employee, 'project_selected': project }
-        
         return render(request, self.template_name, return_data)
+
 
 class ConfirmAccountView(StaffRequiredMixin, TemplateView):
 
@@ -133,6 +114,7 @@ class ConfirmAccountView(StaffRequiredMixin, TemplateView):
             account = Account.objects.get(id=request.POST['id']).delete()
         return redirect('all_employees')
 
+
 class DeactivateAccountView(StaffRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
@@ -141,7 +123,6 @@ class DeactivateAccountView(StaffRequiredMixin, TemplateView):
 
 
 class AllEmployeesView(StaffRequiredMixin, TemplateView):
-
     template_name = 'management/employees.html'
 
     def get(self, request, *args, **kwargs):
@@ -151,8 +132,8 @@ class AllEmployeesView(StaffRequiredMixin, TemplateView):
             'accounts_to_confirm': accounts_to_confirm}
         return render(request, self.template_name, return_data)
 
-class EmployeeProfileView(StaffRequiredMixin, TemplateView):
 
+class EmployeeProfileView(StaffRequiredMixin, TemplateView):
     template_name = 'management/employee-profile.html'
 
     def get(self, request, *args, **kwargs):
@@ -160,8 +141,8 @@ class EmployeeProfileView(StaffRequiredMixin, TemplateView):
         return_data = {'employee': employee}
         return render(request, self.template_name, return_data)
 
-class ViewRequestsView(StaffRequiredMixin, TemplateView):
 
+class ViewRequestsView(StaffRequiredMixin, TemplateView):
     template_name = 'management/all-requests.html'
 
     def get(self, request, *args, **kwargs):
@@ -169,8 +150,8 @@ class ViewRequestsView(StaffRequiredMixin, TemplateView):
         return_data = {'all_requests': all_requests}
         return render(request, self.template_name, return_data)
 
-class ProjectManageView(StaffRequiredMixin, TemplateView):
 
+class ProjectManageView(StaffRequiredMixin, TemplateView):
     template_name = 'management/project.html'
 
     def get(self, request, *args, **kwargs):
@@ -195,18 +176,14 @@ class ProjectManageView(StaffRequiredMixin, TemplateView):
             works = paginator.page(1)
         except EmptyPage:
             works = paginator.page(paginator.num_pages)
-        ctx_data = {
-            'works': works,
-            'project': project,
-        }
+        ctx_data = {'works': works, 'project': project}
         return render(request, self.template_name, ctx_data)
 
-class ViewReportsByEmployee(StaffRequiredMixin, TemplateView):
 
+class ViewReportsByEmployee(StaffRequiredMixin, TemplateView):
     template_name = 'management/reports_by_employee.html'
 
     def get(self, request, *args, **kwargs):
-
         emp = Account.objects.get(id=kwargs['emp_id'])
         project_assignments = ProjectAssignment.objects.filter(
             employee=kwargs['emp_id'])
@@ -224,14 +201,15 @@ class ViewReportsByEmployee(StaffRequiredMixin, TemplateView):
         reports = WorkDiary.objects.filter(
             project_assignment__in=projects).order_by('-date')
         return_data = {'reports': reports, 'employee': emp,
-                       'project_assignments': project_assignments, }
+                       'project_assignments': project_assignments}
         return render(request, self.template_name, return_data)
+
 
 class ManagementPayrollView(StaffRequiredMixin, TemplateView):
     template_name = 'management/payroll.html'
 
     def get(self, request, *args, **kwargs):
-        date_now = datetime.now(pytz.utc)
+        date_now = timezone.now().date()
         date_utils = DateUtils()
         date_sep = date_utils.get_year_month_day(date_now)
         last_day = calendar.monthrange(date_sep['get_year'],
@@ -245,7 +223,7 @@ class ManagementPayrollView(StaffRequiredMixin, TemplateView):
         payroll = Payroll.objects.get(id=request.POST['id'])
         instance = payroll
         instance.paid = request.POST['status']
-        instance.date_paid = datetime.now(pytz.utc)
+        instance.date_paid = timezone.now().date()
         instance.save()
         from_email = settings.EMAIL_HOST_USER
         to_email = [payroll.employee.email,]
@@ -260,46 +238,35 @@ class ManagementPayrollView(StaffRequiredMixin, TemplateView):
         return redirect('management_payroll')
 
 class AddProjectView(StaffRequiredMixin, TemplateView):
-
-    form_class = AddProjectForm
     template_name = 'management/project-add.html'
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class(initial={'user': request.user.id})
-        ctx_data = {
-            'form': form,
-        }
+        form = AddProjectForm(initial={'user': request.user.id})
+        ctx_data = {'form': form}
         return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = AddProjectForm(request.POST)
         if form.is_valid():
             p = form.save()
             return redirect('view_projects', id=p.id)
-        ctx_data = {
-            'form': form,
-            'error': 'Can\'t add project',
-        }
+        ctx_data = {'form': form, 'error': 'Can\'t add project'}
         return render(request, self.template_name, ctx_data)
 
-class AssignEmployeeView(StaffRequiredMixin, TemplateView):
 
-    form_class = AssignEmployeeForm
-    template = 'management/project-assign-employee.html'
+class AssignEmployeeView(StaffRequiredMixin, TemplateView):
+    template_name = 'management/project-assign-employee.html'
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.get(id=kwargs.get('id'))
         proj_id = kwargs['id']
-        form = self.form_class(initial={'project': proj_id})
-        ctx_data = {
-            'form': form,
-            'proj_id': proj_id,
-            'project': project
-        }
-        return render(request, 'management/project-assign-employee.html', ctx_data)
+        form = AssignEmployeeForm(initial={'project': proj_id})
+        ctx_data = {'form': form, 'proj_id': proj_id,
+                    'project': project}
+        return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = AssignEmployeeForm(request.POST)
         if form.is_valid():
             employee = request.POST.get('employee')
             project = request.POST.get('project')
@@ -310,25 +277,19 @@ class AssignEmployeeView(StaffRequiredMixin, TemplateView):
             else:
                 form.save()
                 return redirect('view_projects', id=kwargs.get('id'))
-        ctx_data = {
-            'form': form,
-            'error': error,
-        }
-        return render(request, 'management/project-assign-employee.html', ctx_data)
+        ctx_data = {'form': form, 'error': error}
+        return render(request, self.template_name, ctx_data)
+
 
 class EditProjectView(StaffRequiredMixin, TemplateView):
-
     template_name = 'management/edit_project.html'
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.get(id=kwargs.get('id'))
         assignments = ProjectAssignment.objects.filter(project=project)
         form = EditProjectForm(request.GET or None, instance=project)
-        ctx_data = {
-            'form': form,
-            'project': project,
-            'assignments': assignments
-        }
+        ctx_data = {'form': form, 'project': project,
+                    'assignments': assignments}
         return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
@@ -338,20 +299,19 @@ class EditProjectView(StaffRequiredMixin, TemplateView):
         if form.is_valid():
             form.save()
             return redirect('edit-project', id=kwargs.get('id'))
-        ctx_data = {
-            'form': form
-        }
+        ctx_data = {'form': form}
         return render (request, self.template_name, ctx_data)
 
-class EditHoursView(StaffRequiredMixin, TemplateView):
 
+class EditHoursView(StaffRequiredMixin, TemplateView):
     template_name = 'management/edit_project_hours.html'
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.get(id=kwargs.get('project_id'))
         weekly_hours = ProjectAssignment.objects.get(id=kwargs.get('id'), project=project)
         form = EditProjectHoursForm()
-        ctx_data = {'form': form, 'weekly_hours': weekly_hours, 'project_id': project.id}
+        ctx_data = {'form': form, 'weekly_hours': weekly_hours,
+                    'project_id': project.id}
         return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
@@ -364,6 +324,7 @@ class EditHoursView(StaffRequiredMixin, TemplateView):
         ctx_data = {'form': form}
         return render(request, self.template_name, ctx_data)
 
+
 class RemoveEmployee(StaffRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
@@ -371,8 +332,9 @@ class RemoveEmployee(StaffRequiredMixin, View):
         employee_id = kwargs['employee_id']
         pa = ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id)
         pa.status = False
-        pa.save() 
+        pa.save()
         return redirect('edit-project', id=kwargs.get('project_id'))
+
 
 class ReAssignEmployee(StaffRequiredMixin, View):
 
@@ -381,5 +343,5 @@ class ReAssignEmployee(StaffRequiredMixin, View):
         employee_id = kwargs['employee_id']
         pa = ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id)
         pa.status = True
-        pa.save() 
+        pa.save()
         return redirect('edit-project', id=kwargs.get('project_id'))
