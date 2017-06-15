@@ -18,6 +18,7 @@ from django.template.defaultfilters import slugify
 from accounts.models import Account, Payroll
 from projects.models import WorkDiary, Project, ProjectAssignment
 from datetime import datetime, timedelta
+from django.utils import timezone
 from threading import Timer
 
 from .forms import RequestForm, AddProjectForm, AssignEmployeeForm, EditProjectForm, EditProjectHoursForm
@@ -63,18 +64,30 @@ class AdminView(StaffRequiredMixin, TemplateView):
     template_name = 'management/workdiaries.html'
 
     def get(self, request, *args, **kwargs):
-        day_diff = int(kwargs['day'])
-        date_today = datetime.now() - timedelta(days=day_diff)
-        previous_day = day_diff + 1
-        if day_diff is 0:
-            next_day = 0
-        next_day = day_diff - 1
-        work_diaries = WorkDiary.objects.filter(
-            date__date=date_today).order_by('-date')
-        return_data = {'work_diaries': work_diaries,
-                'date_now': date_today, 'previous_day': previous_day,
-                'next_day': next_day}
-        return render(request, self.template_name, return_data)
+       
+        date_requested = request.GET.get('prev_date') or request.GET.get('next_date')
+
+        date_today = timezone.now().date()
+
+        if not date_requested:
+            date_requested = date_today - timedelta(days=1)
+
+        wd_date = datetime.strptime(str(date_requested), '%Y-%m-%d').date()
+
+        prev_date =wd_date - timedelta(days=1)
+        next_date = wd_date + timedelta(days=1)
+
+        work_diaries = WorkDiary.objects.filter(date__date=wd_date).order_by('-date')
+
+        context = {
+            'work_diaries': work_diaries,
+            'prev_date': prev_date,
+            'next_date': next_date,
+            'date_today': date_today,
+            'wd_date': wd_date
+        }
+
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
 
@@ -106,7 +119,7 @@ class AdminView(StaffRequiredMixin, TemplateView):
         if type(employee) is str:
             employee = int(employee)
 
-        return_data = {'work_diaries': work_diaries, 'date_now': the_date,
+        return_data = {'work_diaries': work_diaries, 'wd_date': the_date,
             'return_today': True, 'employee_selected': employee, 'project_selected': project }
         
         return render(request, self.template_name, return_data)
