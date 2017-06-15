@@ -26,15 +26,15 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav list-group">
                 <li class="sidebar-brand">
-                    <a href="{% url 'admin' 0 %}" class="black-text">
+                    <a href="{% url 'admin' %}" class="black-text">
                         SWIFTTRACK
                     </a>
                 </li>
-                <form class="custom-navbar-form" method="post" action="{% url 'admin' 0 %}">
+                <form class="custom-navbar-form" method="post" action="{% url 'admin' %}">
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="white-text">Date:</label>
-                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if date_now %}{{date_now | date:'m/d/Y'}}{% else %}{% now "m/d/Y" %}{% endif %}">      
+                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'m/d/Y'}}{% endif %}">      
                     </div>
                     <div class="form-group">
                         <label class="white-text">Project:</label><br>
@@ -88,7 +88,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'admin' 0 %}">Dashboard</a></li>
+                    <li><a href="{% url 'admin' %}">Dashboard</a></li>
                     <li><a href="{% url 'management_payroll' %}">Payroll</a></li>
                     <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
                     <li><a href="{% url 'all_employees' %}">Employees</a></li>
