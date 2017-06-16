@@ -20,6 +20,7 @@ from projects.models import WorkDiary, Project, ProjectAssignment
 from datetime import datetime, timedelta
 from django.utils import timezone
 from threading import Timer
+from django.contrib.postgres.search import SearchQuery, SearchVector
 
 from .forms import RequestForm, AddProjectForm, AssignEmployeeForm, EditProjectForm, EditProjectHoursForm
 from .models import Requests
@@ -386,6 +387,69 @@ class ReAssignEmployee(StaffRequiredMixin, View):
         return redirect('edit-project', id=kwargs.get('project_id'))
 
 
+class AdminGlobalSearch(StaffRequiredMixin, TemplateView):
+
+    template_name = 'management/search.html'
+
+    def get(self, *args, **kwargs):
+        # import pdb; pdb.set_trace()
+        search_query = self.request.GET.get('q')
+
+        context = {}
+        
+        if not search_query:
+            messages.warning(self.request, 'Enter keywork to search')
+
+        else:
+
+            workdiaries = WorkDiary.objects.filter(
+                Q(finished_task__icontains=search_query)
+                | Q(todo_task__icontains=search_query)
+                | Q(issues__icontains=search_query)
+            ).order_by('-date')
+
+            employees = Account.objects.filter(
+                Q(first_name__icontains=search_query)
+                | Q(last_name__icontains=search_query)
+                | Q(email__icontains=search_query)
+                | Q(about_me__icontains=search_query)
+                | Q(address__icontains=search_query)
+                | Q(contact_number__icontains=search_query)
+            )
+
+            requests = Requests.objects.filter(
+                Q(subject__icontains=search_query)
+                | Q(content__icontains=search_query)
+            )
+
+            payroll = Payroll.objects.filter(
+                Q(description=search_query)
+                | Q(invoice_file=search_query)
+            )
+
+            if 'search_workdiaries' not in context:
+                context.update(
+                    search_workdiaries=workdiaries
+                )
+
+            if 'search_employees' not in context:
+                context.update(
+                    search_employees=employees
+                )
+
+            if 'search_requests' not in context:
+                context.update(
+                    search_requests=requests
+                )
+
+            if 'search_payroll' not in context:
+                context.update(
+                    search_payroll=payroll
+                )
+
+        return render(self.request, self.template_name, context)
+
+      
 class AttendanceView(TemplateView):
     """List attendance records"""
 
