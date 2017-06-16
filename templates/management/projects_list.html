@@ -1,0 +1,42 @@
+{% extends 'management.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-12">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                  <table class="table table-striped" id="project-table"><br />
+                  <h3><strong>PROJECTS</strong></h3><br><br>
+                    <thead>
+                      <tr>
+                          <th>PROJECT NAME</th>
+                          <th>STATUS</th>
+                      </tr>
+                    </thead>
+                    {% for project in project_list %}
+                    <tbody>
+                      <tr>
+                        <td> {{ project.name }} </td>
+                        <td>
+                        {% if project.status %}
+                        <code>Active</code>
+                            <a class="btn btn-danger btn-xs" href="{% url 'archive-project' project.id %}">Archive Project</a>
+                        {% else %}
+                        <code>Inactive Employee</code>
+                            <a class="btn btn-primary btn-xs" href="{% url 'unarchive-project' project.id %}">Unarchive Project</a>
+                        {% endif %}
+                        </td>
+                      </tr>
+                      {% empty %}
+                        <tr>
+                          <td colspan="8" class="text-center bg-warning">No Projects</td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                  </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,4 +10,4 @@ def all_employees():
 
 @register.assignment_tag
 def all_projects():
-    return Project.objects.all()
+    return Project.objects.filter(status=True)

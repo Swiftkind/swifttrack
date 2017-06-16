@@ -1,16 +1,19 @@
 from django.conf.urls import url, include
 from . import views
 from .views import (
-        ProjectManageView, 
-        AddProjectView, 
-        AssignEmployeeView, 
+        ProjectManageView,
+        AddProjectView,
+        AssignEmployeeView,
         EditProjectView,
         EditHoursView,
         RemoveEmployee,
         ReAssignEmployee,
         AdminGlobalSearch,
         AttendanceView,
-        AttendanceSearchView
+        AttendanceSearchView,
+        ProjectListView,
+        ArchiveProjectView,
+        UnArchiveProjectView,
     )
 
 urlpatterns = [
@@ -34,5 +37,9 @@ urlpatterns = [
     url(r'^edit/project/(?P<project_id>[0-9]+)/hours/(?P<id>[0-9]+)/$', EditHoursView.as_view(), name='edit-hours'),
     url(r'^edit/project/(?P<project_id>[0-9]+)/remove/employee/(?P<employee_id>[0-9]+)/$', RemoveEmployee.as_view(), name='remove-employee'),
     url(r'^edit/project/(?P<project_id>[0-9]+)/reassign/employee/(?P<employee_id>[0-9]+)/$', ReAssignEmployee.as_view(), name='reassign-employee'),
-    url(r'search/', AdminGlobalSearch.as_view(), name='global-search')
+    url(r'^projects/$', ProjectListView.as_view(), name='project-list'),
+    url(r'^projects/(?P<project_id>[0-9]+)/archive/project/$', ArchiveProjectView.as_view(), name='archive-project'),
+    url(r'^projects/(?P<project_id>[0-9]+)/unarchive/project/$', UnArchiveProjectView.as_view(), name='unarchive-project'),
+    url(r'search/', AdminGlobalSearch.as_view(), name='global-search'),
 ]
+
