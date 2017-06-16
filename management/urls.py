@@ -9,6 +9,8 @@ from .views import (
         RemoveEmployee,
         ReAssignEmployee,
         AdminGlobalSearch
+        AttendanceView,
+        AttendanceSearchView
     )
 
 urlpatterns = [
@@ -18,6 +20,8 @@ urlpatterns = [
     url(r'^account/confirm', views.ConfirmAccountView.as_view(), name='confirm_account'),
     url(r'^account/deactivate', views.DeactivateAccountView.as_view(), name='deactivate_account'),
     url(r'^employees/$', views.AllEmployeesView.as_view(), name='all_employees'),
+    url(r'^attendance/$', views.AttendanceView.as_view(), name='attendance'),
+    url(r'^attendance/search/$', views.AttendanceSearchView.as_view(), name='attendance-search'),
     url(r'^employee/(?P<id>[0-9]+)$', views.EmployeeProfileView.as_view(), name='employee_profile'),
     url(r'^requests/view$', views.ViewRequestsView.as_view(), name='view_all_requests'),
     url(r'^projects/(?P<id>[0-9]+)/$', views.ProjectManageView.as_view(), name='view_projects'),

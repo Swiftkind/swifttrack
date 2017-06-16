@@ -17,6 +17,10 @@ class DateUtils():
             date_from = datetime(the_date['get_year'], the_date['get_month'], 16)
         return date_from.date()
 
+    #convert date to yyyy-mm-dd
+    def convert_date(date_req):
+        return datetime.strptime(str(date_req), '%Y-%m-%d').date()
+
 
 class ProjectsUtils():
     def get_employee_projects_assignments(self, emp_id):
