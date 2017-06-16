@@ -74,7 +74,7 @@ class AdminView(StaffRequiredMixin, TemplateView):
         wd_date = datetime.strptime(str(date_requested), '%Y-%m-%d').date()
         prev_date =wd_date - timedelta(days=1)
         next_date = wd_date + timedelta(days=1)
-        work_diaries = WorkDiary.objects.filter(date__date=wd_date).order_by('-date')
+        work_diaries = WorkDiary.objects.filter(date__date=wd_date).exclude(project_assignment__project__status=False).order_by('-date')
         context = {
             'work_diaries': work_diaries,
             'prev_date': prev_date,
@@ -356,11 +356,10 @@ class AdminGlobalSearch(StaffRequiredMixin, TemplateView):
     template_name = 'management/search.html'
 
     def get(self, *args, **kwargs):
-        # import pdb; pdb.set_trace()
         search_query = self.request.GET.get('q')
 
         context = {}
-        
+
         if not search_query:
             messages.warning(self.request, 'Enter keywork to search')
 
@@ -413,7 +412,7 @@ class AdminGlobalSearch(StaffRequiredMixin, TemplateView):
 
         return render(self.request, self.template_name, context)
 
-      
+
 class AttendanceView(TemplateView):
     """List attendance records"""
 
@@ -489,3 +488,31 @@ class AttendanceSearchView(TemplateView):
         }
 
         return context
+
+
+class ProjectListView(TemplateView):
+    template_name = 'management/projects_list.html'
+
+    def get(self, request, *args, **kwargs):
+        project_list = Project.objects.all().order_by('name')
+        return render(request, self.template_name, {'project_list': project_list})
+
+
+class ArchiveProjectView(StaffRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        project_id = kwargs['project_id']
+        pr = Project.objects.get(id=project_id)
+        pr.status = False
+        pr.save()
+        return redirect('project-list')
+
+
+class UnArchiveProjectView(StaffRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        project_id = kwargs['project_id']
+        pr = Project.objects.get(id=project_id)
+        pr.status = True
+        pr.save()
+        return redirect('project-list')

@@ -34,7 +34,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="white-text">Date:</label>
-                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'m/d/Y'}}{% else %}{% now 'm/d/Y' %}{% endif %}">      
+                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'m/d/Y'}}{% else %}{% now 'm/d/Y' %}{% endif %}">
                     </div>
                     <div class="form-group">
                         <label class="white-text">Project:</label><br>
@@ -63,6 +63,10 @@
                 <br>
                 <li class="list-heading">
                     <span class="white-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
+                    {% all_projects as projects %}
+                    {% for project in projects %}
+                    <a href="{% url 'view_projects' project.id %}">{{ project.name }}</a>
+                    {% endfor %}
                 </li>
             </ul>
         </div>
@@ -89,6 +93,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'admin' %}">Dashboard</a></li>
+                    <li><a href="{% url 'project-list' %}">Projects</a></li>
                     <li><a href="{% url 'management_payroll' %}">Payroll</a></li>
                     <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
                     <li><a href="{% url 'all_employees' %}">Employees</a></li>
