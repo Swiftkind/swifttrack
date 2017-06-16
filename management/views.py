@@ -24,8 +24,9 @@ from .models import Requests
 from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
 from .mixins import StaffRequiredMixin
-from accounts.models import Account, Payroll
+from accounts.models import Account, AccountLog, Payroll
 from projects.models import WorkDiary, Project, ProjectAssignment
+
 
 
 class RequestView(TemplateView):
@@ -345,3 +346,80 @@ class ReAssignEmployee(StaffRequiredMixin, View):
         pa.status = True
         pa.save()
         return redirect('edit-project', id=kwargs.get('project_id'))
+
+
+class AttendanceView(TemplateView):
+    """List attendance records"""
+
+    def __init__(self, *args, **kwargs):
+        super(AttendanceView, self).__init__(*args, **kwargs)
+
+    template_name = 'management/attendance.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AttendanceView, self).get_context_data(**kwargs)
+
+        date_requested = self.request.GET.get('prev_date') or self.request.GET.get('next_date')
+
+        date_today = timezone.now().date()
+
+        if not date_requested:
+            date_requested = date_today
+
+        attendance_date = datetime.strptime(str(date_requested), '%Y-%m-%d').date()
+
+        prev_date =attendance_date - timedelta(days=1)
+        next_date = attendance_date + timedelta(days=1)
+
+        account_logs = AccountLog.objects.filter(date_created__date=attendance_date).order_by('-date_created')
+
+        context = {
+            'account_logs': account_logs,
+            'prev_date': prev_date,
+            'next_date': next_date,
+            'date_today': date_today,
+            'attendance_date': attendance_date
+        }
+
+        return context
+
+
+class AttendanceSearchView(TemplateView):
+    """AttendanceSearchView"""
+
+    template_name = 'management/attendance.html'
+
+    def __init__(self, *args, **kwargs):
+        super(AttendanceSearchView, self).__init__(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AttendanceSearchView, self).get_context_data(**kwargs)
+
+        start = self.request.GET.get('start')
+        end = self.request.GET.get('end')
+        employee = self.request.GET.get('employee')
+
+        date_today = timezone.now().date()
+
+        if not start and not end:
+            date_range = [date_today, date_today + timedelta(days=1)]
+        else:
+            date_range = [start, end]
+
+        if not employee:
+            employee = Account.objects.values_list('id', flat=True).filter(is_staff=False)
+
+        account_logs = AccountLog.objects.filter(
+            date_created__range=date_range
+        ).filter(account__id__in=employee).order_by('-date_created')
+
+        if type(employee) is str:
+            employee = int(employee)
+
+        context = {
+            'account_logs': account_logs,
+            'employee_selected': employee,
+            'go_back': True
+        }
+
+        return context

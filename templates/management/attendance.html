@@ -1,0 +1,83 @@
+{% extends 'management.html' %}
+
+{% block content%}
+
+    <div class="col-lg-12">
+        <div class="filter">
+            <div class="row">
+                <div class="col-md-3">
+                    <form action="{% url 'attendance-search' %}">
+                        <label>Date range:</label>
+                        <div class="input-daterange input-group" id="datepicker">
+                            <input type="text" class="form-control" name="start" value="{% if request.GET.start %}{{ request.GET.start }}{% else %}{% now 'Y-m-d' %}{% endif %}">
+                            <span class="input-group-addon">to</span>
+                            <input type="text" class="form-control" name="end" value="{% if request.GET.end %}{{ request.GET.end }}{% else %}{% now 'Y-m-d' %}{% endif %}">
+                        </div><br>
+                        <div class="form-group">
+                            <label class="white-text">Employee:</label><br>
+                            <select class="form-control" name="employee">
+                                <option value="">All employees</option>
+                                {% load management_custom_tags %}
+                                {% all_employees as employees %}
+                                {% for employee in employees %}
+                                    <option value="{{employee.id}}" {% if employee.id == employee_selected %}selected{% endif %}>{{employee.get_full_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button><br><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Attendance for {% if attendance_date %}{{ attendance_date }}{% else %}{{ request.GET.start }} to {{ request.GET.end }}{% endif %}</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Status</th>
+                            <th>Date created</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in account_logs %}
+                            <tr>
+                                <td> <img src="{{log.account.get_profile_pic}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;">{{log.account.get_full_name}}</td>
+                                <td>{{log.status}}</td>
+                                <td>{{log.date_created}}</td>
+                                <td>{{log.ip}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if go_back %}
+                    <ul class="pager">
+                        <li><a href="{% url 'attendance' %}">Go back</a></li>
+                    </ul>
+                {% else %}
+                    <ul class="pager">
+                        <li><a href="{% url 'attendance' %}?prev_date={{ prev_date | date:'Y-m-d' }}">Previous</a></li>{% if next_date > date_today %}{% else %}
+                        <li><a href="{% url 'attendance' %}?next_date={{ next_date | date:'Y-m-d' }}">Next</a></li>{% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        $('#datepicker').datepicker({
+            format: "yyyy-mm-dd",
+            todayBtn: "linked",
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    </script>
+{% endblock %}
