@@ -28,7 +28,7 @@ from accounts.models import Account, Payroll
 from projects.models import WorkDiary, Project, ProjectAssignment
 
 
-class RequestView(StaffRequiredMixin, TemplateView):
+class RequestView(TemplateView):
     template_name = 'management/request.html'
 
     def get(self, request, *args, **kwargs):
