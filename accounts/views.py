@@ -44,7 +44,7 @@ class LoginView(AccountTimestamp, TemplateView):
                 'form': LoginForm(),
             })
         if self.request.user.is_staff:
-            return redirect('admin', day=0)
+            return redirect('admin')
         return redirect('project')
 
     def post(self, *args, **kwargs):
