@@ -52,8 +52,8 @@
             </ul>
             {% else %}
             <ul class="pager">
-                <li><a href="{% url 'admin' %}?prev_date={{ prev_date | date:'Y-m-d' }}">Previous</a></li>{% if next_date == date_today %}{% else %}
-                <li><a href="{% url 'admin' %}?next_date={{ next_date | date:'Y-m-d' }}">Next</a></li>{% endif %}
+                <li><a href="{% url 'admin' %}?prev_date={{ prev_date | date:'Y-m-d' }}&project={{ request.GET.project }}&employee={{ request.GET.employee }}">Previous</a></li>{% if next_date == date_today %}{% else %}
+                <li><a href="{% url 'admin' %}?next_date={{ next_date | date:'Y-m-d' }}&project={{ request.GET.project }}&employee={{ request.GET.employee }}">Next</a></li>{% endif %}
             </ul>
             {% endif %}
         </div>
