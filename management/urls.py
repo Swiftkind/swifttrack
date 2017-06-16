@@ -8,7 +8,7 @@ from .views import (
         EditHoursView,
         RemoveEmployee,
         ReAssignEmployee,
-        AdminGlobalSearch
+        AdminGlobalSearch,
         AttendanceView,
         AttendanceSearchView
     )
