@@ -66,47 +66,51 @@ class AdminView(StaffRequiredMixin, TemplateView):
     permission_required = 'is_staff'
     template_name = 'management/workdiaries.html'
 
-    def get(self, request, *args, **kwargs):
-        date_requested = request.GET.get('prev_date') or request.GET.get('next_date')
+    def get_context_data(self, *args, **kwargs):
+        context = super(AdminView, self).get_context_data(*args, **kwargs)
+
+        date_requested = self.request.GET.get('prev_date') or self.request.GET.get('next_date') or self.request.GET.get('wd_date')
+
+        employee = self.request.GET.get('employee')
+        project = self.request.GET.get('project')
+
         date_today = timezone.now().date()
+
         if not date_requested:
             date_requested = date_today - timedelta(days=1)
+
+        if not employee:
+            employee = Account.objects.values_list('id', flat=True).filter(is_staff=False)
+
+        if not project:
+            project = Project.objects.values_list('id', flat=True)
+
         wd_date = datetime.strptime(str(date_requested), '%Y-%m-%d').date()
         prev_date =wd_date - timedelta(days=1)
         next_date = wd_date + timedelta(days=1)
-        work_diaries = WorkDiary.objects.filter(date__date=wd_date).exclude(project_assignment__project__status=False).order_by('-date')
+
+        work_diaries = WorkDiary.objects.filter(date__date=wd_date
+            ).filter(project_assignment__project__id__in=project
+            ).filter(project_assignment__employee__id__in=employee
+            ).order_by('-date')
+
+        if type(project) is str:
+            project = int(project)
+
+        if type(employee) is str:
+            employee = int(employee)
+
         context = {
             'work_diaries': work_diaries,
             'prev_date': prev_date,
             'next_date': next_date,
             'date_today': date_today,
-            'wd_date': wd_date
+            'wd_date': wd_date,
+            'employee_selected': employee,
+            'project_selected': project,
         }
-        return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        the_date = request.POST.get('wd_date')
-        employee = request.POST.get('employee')
-        if not employee:
-            employee = Account.objects.values_list('id', flat=True).filter(is_staff=False)
-        project = request.POST.get('project')
-        if not project:
-            project = Project.objects.values_list('id', flat=True)
-        the_date = datetime.strptime(the_date, '%m/%d/%Y')
-        work_diaries = WorkDiary.objects.filter(
-            date__date=the_date
-        ).filter(
-            project_assignment__project__id__in=project
-        ).filter(
-            project_assignment__employee__id__in=employee
-        ).order_by('-date')
-        if type(project) is str:
-            project = int(project)
-        if type(employee) is str:
-            employee = int(employee)
-        return_data = {'work_diaries': work_diaries, 'wd_date': the_date,
-            'return_today': True, 'employee_selected': employee, 'project_selected': project }
-        return render(request, self.template_name, return_data)
+        return context
 
 
 class ConfirmAccountView(StaffRequiredMixin, TemplateView):
