@@ -88,11 +88,15 @@ class AdminView(StaffRequiredMixin, TemplateView):
         wd_date = datetime.strptime(str(date_requested), '%Y-%m-%d').date()
         prev_date =wd_date - timedelta(days=1)
         next_date = wd_date + timedelta(days=1)
+        wd_hours = 0
 
         work_diaries = WorkDiary.objects.filter(date__date=wd_date
             ).filter(project_assignment__project__id__in=project
             ).filter(project_assignment__employee__id__in=employee
             ).order_by('-date')
+
+        for work_diary in work_diaries:
+            wd_hours += work_diary.hours
 
         if type(project) is str:
             project = int(project)
@@ -108,6 +112,7 @@ class AdminView(StaffRequiredMixin, TemplateView):
             'wd_date': wd_date,
             'employee_selected': employee,
             'project_selected': project,
+            'wd_hours': wd_hours,
         }
 
         return context
