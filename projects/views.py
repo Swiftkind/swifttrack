@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from management.models import Misc
 from accounts.models import Account
-from . models import Project, ProjectAssignment, WorkDiary
+from . models import Project, ProjectAssignment, WorkDiary, WorkDiaryLog
 from . forms import WorkDiaryForm
 
 
@@ -32,7 +32,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
         return render(self.request, self.template_name, ctx_data)
 
 
-class WorkDiaryView(TemplateView):
+class WorkDiaryView(LoginRequiredMixin, TemplateView):
     template_name = 'projects/work_diary.html'
 
     def get(self, request, *args, **kwargs):
@@ -73,7 +73,7 @@ class WorkDiaryView(TemplateView):
         }
         return render(self.request, self.template_name, ctx_data)
 
-class WorkDiaryEditView(TemplateView):
+class WorkDiaryEditView(LoginRequiredMixin, TemplateView):
     template_name = 'projects/edit_work_diary.html'
 
     def get(self, request, *args, **kwargs):
@@ -93,6 +93,7 @@ class WorkDiaryEditView(TemplateView):
             form.save()
         return redirect('work-diary', id=kwargs['id'])
 
+
 class EmployeesMiscView(TemplateView):
     template_name = 'projects/employees_misc.html'
 
@@ -101,3 +102,16 @@ class EmployeesMiscView(TemplateView):
         miscs = Misc.objects.filter(employees=self.request.user, status=True)
         ctx_data = {'miscs': miscs}
         return render(self.request, self.template_name, ctx_data)
+
+
+class WorkDiaryLogView(LoginRequiredMixin, TemplateView):
+    template_name = 'projects/work_diary_log.html'
+
+    def get_context_data(self, **kwargs):
+        work_diary_id = self.kwargs['work_diary_id']
+        work = WorkDiary.objects.get(id=work_diary_id)
+        logs = WorkDiaryLog.objects.filter(work_diary__id=work_diary_id, work_diary__project_assignment__employee=self.request.user)
+        kwargs['logs'] = logs
+        kwargs['work'] = work
+        return kwargs
+

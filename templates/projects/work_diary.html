@@ -7,7 +7,7 @@
         <h3>Work Diary</h3>
     </div>
 
-    <h2>{{ project_assignment.project.name }}</h2> 
+    <h2>{{ project_assignment.project.name }}</h2>
 
     <div id="accordion" role="tablist" aria-multiselectable="true">
         <div class="pull-right">
@@ -48,9 +48,9 @@
                     <th style="width: 15%;">DATE</th>
                     <th style="width: 5%;">HOURS</th>
                     <th style="width: 10%;">TODAY</th>
-                    <th style="width: 10%;">TO-DO</th>
-                    <th style="width: 10%;">ISSUES</th>
-                    <th style="width: 10%;">ACTION</th>
+                    <th style="width: 5%;">TO-DO</th>
+                    <th style="width: 5%;">ISSUES</th>
+                    <th style="width: 15%;">ACTION</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,14 +65,15 @@
                     <td style="width: 35%;">
                         {{ work.finished_task | linebreaksbr }}
                     </td>
-                    <td style="width: 30%;">
+                    <td style="width: 5%;">
                         {{ work.todo_task | linebreaksbr }}
                     </td>
                     <td style="width: 5%;">
                         {{ work.issues | linebreaksbr }}
                     </td>
-                    <td style="width: 5%;">
+                    <td style="width: 15%;">
                         <a href="{% url 'edit-work-diary' work.project_assignment.id work.id %}" class="btn btn-primary btn-xs">Edit</a>
+                        <a href="{% url 'work_diary_log' work.id %}" class="btn btn-default btn-xs">Work Log</a>
                     </td>
                 </tr>
             {% empty %}
