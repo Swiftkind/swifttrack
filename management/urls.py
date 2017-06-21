@@ -15,6 +15,7 @@ from .views import (
         ArchiveProjectView,
         UnArchiveProjectView,
         ProfileAdminView,
+        ChangePasswordView,
     )
 
 urlpatterns = [
@@ -42,6 +43,6 @@ urlpatterns = [
     url(r'^projects/(?P<project_id>[0-9]+)/archive/project/$', ArchiveProjectView.as_view(), name='archive-project'),
     url(r'^projects/(?P<project_id>[0-9]+)/unarchive/project/$', UnArchiveProjectView.as_view(), name='unarchive-project'),
     url(r'search/', AdminGlobalSearch.as_view(), name='global-search'),
-    url(r'^management/profile/$', ProfileAdminView.as_view(), name='admin_profile')
+    url(r'^management/profile/$', ProfileAdminView.as_view(), name='admin_profile'),
+    url(r'^management/change/password/$', ChangePasswordView.as_view(), name='change_password'),
 ]
-

@@ -15,6 +15,8 @@ from django.utils import timezone
 from django.views.generic import TemplateView, View
 from threading import Timer
 from django.contrib.postgres.search import SearchQuery, SearchVector
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 from .forms import (RequestForm,
@@ -540,3 +542,19 @@ class ProfileAdminView(StaffRequiredMixin, TemplateView):
         if form.is_valid():
             form.save()
         return redirect('admin')
+
+class ChangePasswordView(TemplateView):
+    template_name = 'management/change_password.html'
+
+    def get(self, *args, **kwargs):
+        form = PasswordChangeForm(user=self.request.user)
+        return render(self.request, self.template_name, {'form': form})
+
+    def post(self, *args, **kwargs):
+        form = PasswordChangeForm(data=self.request.POST, user=self.request.user)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(self.request, form.user)
+            return redirect('admin')
+        ctx_data = {'form': form}
+        return render(self.request, self.template_name, ctx_data)
