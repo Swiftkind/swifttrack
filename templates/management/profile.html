@@ -1,0 +1,62 @@
+{% extends 'management.html'%}
+{% block content %}
+<div class="container">
+    <div class="col-md-8 col-md-offset-2 well" id="profile-panel">
+        <div class="row">
+            <div class="col-md-12">
+                <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="col-md-offset-4">
+                        <div id="profile-container">
+                            <input type="file" name="profile_pic" class="image-upload">
+                            <img src="{{user.profile_pic.url}}" width="250px" height="250px" class="profile-img img-circle">
+                        </div>
+                    </div>
+                    <div class="col-md-offset-4" style="color: #999;">Click profile image to update new photo</div><br>
+                    <hr class="colorgraph">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <i class="glyphicon glyphicon-user"></i> <label><small>First Name</small></label>
+                                <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1" value="{{ user.first_name }}">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <i class="glyphicon glyphicon-user"></i> <label><small>Last Name</small></label>
+                                <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2" value="{{ user.last_name }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <i class="glyphicon glyphicon-envelope"></i> <label><small>Email Address</small></label>
+                        <input type="text" name="email" id="email" class="form-control input-lg" placeholder="Email" tabindex="4" value="{{ user.email }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <i class="glyphicon glyphicon-home"></i> <label><small>Address</small></label>
+                                <input type="text" name="address" id="address" class="form-control input-lg" placeholder="Address" tabindex="5" value="{{ user.address }}">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <i class="glyphicon glyphicon-phone-alt"></i> <label><small>Contact Number</small></label>
+                                <input type="number" name="contact_number" id="contact_number" class="form-control input-lg" placeholder="Contact Number" tabindex="6" value="{{ user.contact_number }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <i class="glyphicon glyphicon-pencil"></i> <label><small>About me</small></label>
+                        <textarea name="about_me" id="about_me" class="form-control custom-control" rows="10" style="resize: none;">{{ user.about_me }}</textarea>
+                    </div>
+                    <hr class="colorgraph">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6"></div>
+                        <div class="col-xs-12 col-md-6"><button type="submit" class="btn btn-success btn-lg pull-right">Save</button></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

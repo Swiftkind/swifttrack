@@ -28,6 +28,7 @@ from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
 from .mixins import StaffRequiredMixin
 from accounts.models import Account, AccountLog, Payroll
+from accounts.forms import UserProfileForm
 from projects.models import WorkDiary, Project, ProjectAssignment
 
 
@@ -525,3 +526,17 @@ class UnArchiveProjectView(StaffRequiredMixin, View):
         pr.status = True
         pr.save()
         return redirect('project-list')
+
+
+class ProfileAdminView(StaffRequiredMixin, TemplateView):
+    template_name = 'management/profile.html'
+
+    def get(self, *args, **kwargs):
+        form = UserProfileForm(instance=self.request.user)
+        return render(self.request, self.template_name, {'form': form})
+
+    def post(self, *args, **kwargs):
+        form = UserProfileForm(self.request.POST, self.request.FILES, instance=self.request.user)
+        if form.is_valid():
+            form.save()
+        return redirect('admin')
