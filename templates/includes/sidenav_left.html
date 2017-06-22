@@ -1,0 +1,18 @@
+{% load management_custom_tags %}
+<div id="wrapper" class="toggled">
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav list-group">
+        <li class="sidebar-brand">
+            <a href="{% url 'admin' %}" class="black-text">SWIFTTRACK</a>
+        </li>
+        <hr class="colorgraph">
+        <li class="list-heading">
+            <span class="white-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
+            {% all_projects as projects %}
+            {% for project in projects %}
+            <a href="{% url 'view_projects' project.id %}">{{ project.name }}</a>
+            {% endfor %}
+        </li>
+    </ul>
+</div>
+</div>
