@@ -1,68 +1,124 @@
 {% extends 'management.html' %}
+{% load management_custom_tags %}
 {% block content %}
-<div class="col-lg-12">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4>Work Diaries for {{ wd_date|date }}</h4>
-        </div>
-        <div class="panel-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th style="width: 20%;">Employee</th>
-                        <th style="text-align: center;">Hours</th>
-                        <th style="width: 30%;">Description</th>
-                        <th style="text-align: center;">Project</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for work_diary in work_diaries %}
-                    <tr>
-                        <td style="width: 20%;">
-                            <img src=" {{work_diary.project_assignment.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
-                            <strong> {{work_diary.project_assignment.employee.get_full_name}}</strong>
-                        </td>
-                        <td style="text-align: center;">
-                            <strong>{{work_diary.hours}}</strong>
-                        </td>
-                        <td style="width: 40%;">
-                            <strong>Finished:</strong><br /><br />
-                                {{ work_diary.finished_task | linebreaksbr }}
-                            <hr>
-                            <strong>To-Do:</strong><br /><br />
-                                {{ work_diary.todo_task | linebreaksbr }}
-                            <hr>
-                            <strong>Issues:</strong><br /><br />
-                                {{ work_diary.issues | linebreaksbr }}<br/ ><br />
-                                <small>Posted  {{ work_diary.date | timesince }} ago</small>
-                        </td>
-                        <td style="text-align: center;">
-                            <strong> {{ work_diary.project_assignment.project.name }} </strong>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    <tr>
-                        <td style="width: 20%;"></td>
-                        <td style="text-align: center;"><strong>Total Hours: {{wd_hours}} </strong></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-                </tbody>
-            </table>
-            {% if not work_diaries %}
-                <div class="alert alert-warning">No work diaries for this day.</div>
-            {% endif %}
-            {% if return_today is True %}
-            <ul class="pager">
-                <li><a href="{% url 'admin' %}">Go back</a></li>
-            </ul>
-            {% else %}
-            <ul class="pager">
-                <li><a href="{% url 'admin' %}?prev_date={{ prev_date | date:'Y-m-d' }}&project={{ request.GET.project }}&employee={{ request.GET.employee }}">Previous</a></li>{% if next_date == date_today %}{% else %}
-                <li><a href="{% url 'admin' %}?next_date={{ next_date | date:'Y-m-d' }}&project={{ request.GET.project }}&employee={{ request.GET.employee }}">Next</a></li>{% endif %}
-            </ul>
-            {% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well">
+                <form class="custom-navbar-form" method="get" action="{% url 'admin-search' %}">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group">
+                        <label>Date range:</label>
+                            <div class="input-daterange input-group" id="getDiaries">
+                                <input type="text" class="form-control" name="start" value="{% if request.GET.start %}{{ request.GET.start }}{% else %}{% now 'Y-m-d' %}{% endif %}">
+                                <span class="input-group-addon">to</span>
+                                <input type="text" class="form-control" name="end" value="{% if request.GET.end %}{{ request.GET.end }}{% else %}{% now 'Y-m-d' %}{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="white-text">Project:</label><br>
+                                <select class="form-control" name="project">
+                                    <option value="">All projects</option>
+                                    {% all_projects as projects %}
+                                    {% for project in projects %}
+                                        <option value="{{project.id}}" {% if project.id == project_selected %}selected{% endif %}>{{project.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label class="white-text">Employee:</label><br>
+                                <select class="form-control" name="employee">
+                                    <option value="">All employees</option>
+                                    {% all_employees as employees %}
+                                    {% for employee in employees %}
+                                        <option value="{{employee.id}}" {% if employee.id == employee_selected %}selected{% endif %}>{{employee.get_full_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-6"></div>
+                        <div class="col-xs-12 col-md-6"><button class="btn btn-primary pull-right" type="submit">Search</button></div>
+                    </div>
+                    </div>
+                </form>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <h4>Work diaries for {% if wd_date %}{{ wd_date }}{% else %}{{ request.GET.start }} to {{ request.GET.end }}{% endif %}</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Employee</th>
+                                <th style="text-align: center;">Hours</th>
+                                <th style="width: 20%">Date</th>
+                                <th style="width: 30%;">Description</th>
+                                <th style="text-align: center;">Project</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for work_diary in work_diaries %}
+                            <tr>
+                                <td style="width: 20%;">
+                                    <img src=" {{work_diary.project_assignment.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
+                                    <strong> {{work_diary.project_assignment.employee.get_full_name}}</strong>
+                                </td>
+                                <td style="text-align: center;">
+                                    <strong>{{work_diary.hours}}</strong>
+                                </td>
+                                <td style="width: 20;">
+                                    <strong>{{work_diary.date}}</strong>
+                                </td>
+                                <td style="width: 40%;">
+                                    <strong>Finished:</strong><br /><br />
+                                        {{ work_diary.finished_task | linebreaksbr }}
+                                    <hr class="colorgraph">
+                                    <strong>To-Do:</strong><br /><br />
+                                        {{ work_diary.todo_task | linebreaksbr }}
+                                    <hr class="colorgraph">
+                                    <strong>Issues:</strong><br /><br />
+                                        {{ work_diary.issues | linebreaksbr }}<br/ ><br />
+                                        <small>Posted  {{ work_diary.date | timesince }} ago</small>
+                                </td>
+                                <td style="text-align: center;">
+                                    <strong> {{ work_diary.project_assignment.project.name }} </strong>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td style="width: 20%;"></td>
+                                <td style="text-align: center;"><strong>Total Hours: {{wd_hours}} </strong></td>
+                                <td style="width: 10%"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                        </tbody>
+                    </table>
+                    {% if not work_diaries %}
+                        <div class="alert alert-warning">No work diaries for this day.</div>
+                    {% endif %}
+                    {% if return_today is True %}
+                    <ul class="pager">
+                        <li><a href="{% url 'admin' %}">Go back</a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="pager">
+                        <li><a href="{% url 'admin' %}?prev_date={{ prev_date | date:'Y-m-d' }}&project={{ request.GET.project }}&employee={{ request.GET.employee }}">Previous</a></li>{% if next_date == date_today %}{% else %}
+                        <li><a href="{% url 'admin' %}?next_date={{ next_date | date:'Y-m-d' }}&project={{ request.GET.project }}&employee={{ request.GET.employee }}">Next</a></li>{% endif %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

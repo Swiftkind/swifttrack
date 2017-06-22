@@ -16,12 +16,14 @@ from .views import (
         UnArchiveProjectView,
         ProfileAdminView,
         ChangePasswordView,
+        AdminSearchView,
     )
 
 urlpatterns = [
     url(r'^request/create$', views.RequestView.as_view(), name='request'),
     url(r'^request/confirm$', views.UpdateRequest.as_view(), name='update_request'),
     url(r'^dashboard/$', views.AdminView.as_view(), name='admin'),
+    url(r'^dashboard/search/$', views.AdminSearchView.as_view(), name='admin-search'),
     url(r'^account/confirm', views.ConfirmAccountView.as_view(), name='confirm_account'),
     url(r'^account/deactivate', views.DeactivateAccountView.as_view(), name='deactivate_account'),
     url(r'^employees/$', views.AllEmployeesView.as_view(), name='all_employees'),
