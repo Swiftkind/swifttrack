@@ -15,6 +15,8 @@ from django.utils import timezone
 from django.views.generic import TemplateView, View
 from threading import Timer
 from django.contrib.postgres.search import SearchQuery, SearchVector
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 from .forms import (RequestForm,
@@ -28,6 +30,7 @@ from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
 from .mixins import StaffRequiredMixin
 from accounts.models import Account, AccountLog, Payroll
+from accounts.forms import UserProfileForm
 from projects.models import WorkDiary, Project, ProjectAssignment
 
 
@@ -525,3 +528,33 @@ class UnArchiveProjectView(StaffRequiredMixin, View):
         pr.status = True
         pr.save()
         return redirect('project-list')
+
+
+class ProfileAdminView(StaffRequiredMixin, TemplateView):
+    template_name = 'management/profile.html'
+
+    def get(self, *args, **kwargs):
+        form = UserProfileForm(instance=self.request.user)
+        return render(self.request, self.template_name, {'form': form})
+
+    def post(self, *args, **kwargs):
+        form = UserProfileForm(self.request.POST, self.request.FILES, instance=self.request.user)
+        if form.is_valid():
+            form.save()
+        return redirect('admin')
+
+class ChangePasswordView(TemplateView):
+    template_name = 'management/change_password.html'
+
+    def get(self, *args, **kwargs):
+        form = PasswordChangeForm(user=self.request.user)
+        return render(self.request, self.template_name, {'form': form})
+
+    def post(self, *args, **kwargs):
+        form = PasswordChangeForm(data=self.request.POST, user=self.request.user)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(self.request, form.user)
+            return redirect('admin')
+        ctx_data = {'form': form}
+        return render(self.request, self.template_name, ctx_data)

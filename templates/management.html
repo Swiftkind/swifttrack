@@ -19,6 +19,9 @@
         height: 350px;
         overflow: auto;
     }
+    #profile-panel {
+        min-height: 415px;
+    }
 </style>
 <body>
     <div id="wrapper" class="toggled">
@@ -33,7 +36,7 @@
                 <form class="custom-navbar-form" method="get" action="{% url 'admin' %}">
                     <div class="form-group">
                         <label class="white-text">Date:</label>
-                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'Y-m-d'}}{% else %}{% now 'Y-m-d' %}{% endif %}">      
+                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'Y-m-d'}}{% else %}{% now 'Y-m-d' %}{% endif %}">
                     </div>
                     <div class="form-group">
                         <label class="white-text">Project:</label><br>
@@ -97,11 +100,14 @@
                     <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
                     <li><a href="{% url 'all_employees' %}">Employees</a></li>
                     <li><a href="{% url 'attendance' %}">Attendance</a></li>
-                    <li>
-                        <a href=""><img src="{{request.user.get_profile_pic}}" width="25px" height="25px" class="img-circle"></a>
-                    </li>
-                    <li>
-                        <a href="{% url 'logout' %}">Logout</a>
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{{request.user.get_profile_pic}}" width="25px" height="25px" class="img-circle"> Welcome {{ user.first_name }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'admin_profile' %}">Profile</a></li>
+                            <li><a href="{% url 'change_password' %}">Update Password</a></li>
+                            <li class="divider" role="separator"></li>
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
                     </li>
                     {% else %}
                     <li><a href="{% url 'login' %}">Login</a></li>
@@ -109,7 +115,8 @@
                     {% endif %}
                 </ul>
             </div>
-        </nav>{% block content %} {% endblock %}
+        </nav>
+        {% block content %} {% endblock %}
         <!-- /#page-content-wrapper -->
     </div>
     <!-- /#wrapper -->
