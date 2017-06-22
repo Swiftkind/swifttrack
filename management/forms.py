@@ -20,7 +20,7 @@ class RequestForm(ModelForm):
         self.fields['content'].widget.attrs.update({'class' : 'form-control'})
 
 class AddProjectForm(ModelForm):
- 
+
     class Meta:
         model = Project
         fields = ['name',]
@@ -31,19 +31,11 @@ class AddProjectForm(ModelForm):
 
 
 class AssignEmployeeForm(ModelForm):
- 
+
     class Meta:
         model = ProjectAssignment
-        fields = ['employee', 'project', 'weekly_hours',]
-        widgets = {
-            'project': widgets.TextInput(attrs={'type': 'hidden'}),
-        }
+        fields = ['employee', 'project', 'weekly_hours']
 
-    def __init__(self, *args, **kargs):
-        super(AssignEmployeeForm, self).__init__(*args, **kargs)
-        self.fields['employee'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['weekly_hours'].widget.attrs.update({'class' : 'form-control'})
-        self.fields['project'].label = ''
 
 class EditProjectForm(ModelForm):
 
