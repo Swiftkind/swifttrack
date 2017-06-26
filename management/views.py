@@ -275,25 +275,23 @@ class AssignEmployeeView(StaffRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         project = Project.objects.get(id=kwargs.get('id'))
-        proj_id = kwargs['id']
-        form = AssignEmployeeForm(initial={'project': proj_id})
-        ctx_data = {'form': form, 'proj_id': proj_id,
-                    'project': project}
+        assigned = ProjectAssignment.objects.filter(project=project)
+        accounts_list = assigned.values_list('employee_id', flat=True)
+        accounts = Account.objects.exclude(id__in=accounts_list)
+        form = AssignEmployeeForm()
+        ctx_data = {'form': form, 'project': project, 'accounts': accounts}
         return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
+        project = Project.objects.get(id=kwargs.get('id'))
+        assigned = ProjectAssignment.objects.filter(project=project)
+        accounts_list = assigned.values_list('employee_id', flat=True)
+        accounts = Account.objects.exclude(id__in=accounts_list)
         form = AssignEmployeeForm(request.POST)
         if form.is_valid():
-            employee = request.POST.get('employee')
-            project = request.POST.get('project')
-            assigned = ProjectAssignment.objects.filter(
-                employee=employee, project=project).exists()
-            if assigned:
-                error = 'Employee is already assigned to this project.'
-            else:
-                form.save()
-                return redirect('view_projects', id=kwargs.get('id'))
-        ctx_data = {'form': form, 'error': error}
+            form.save()
+            return redirect('view_projects', id=kwargs.get('id'))
+        ctx_data = {'form': form, 'project': project, 'accounts': accounts}
         return render(request, self.template_name, ctx_data)
 
 

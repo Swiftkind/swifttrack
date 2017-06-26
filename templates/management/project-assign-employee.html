@@ -1,24 +1,34 @@
 {% extends 'management.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<div class="container">
-    <h3><strong>{{ project.name }}</strong></h3>
-    <br><br>
-    {% if error %}
-        <div class="alert alert-danger">{{error}}</div>
-    {% endif %}
-        <form role="form" method="post">
-            {% csrf_token %}
-            {% for field in form %}
-              <div class="form-group{% if field.errors %} has-error{% endif %}">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {% render_field field class="form-control" %}
-                {% for error in field.errors %}
-                  <p class="help-block">{{ error }}</p>
-                {% endfor %}
-              </div>
-            {% endfor %}
-                <button type="submit" class="btn btn-primary btn-sm">Save</button>
-        </form>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-8 col-md-offset-2">
+            <h3><strong>{{ project.name }}</strong></h3>
+            <hr class="colorgraph">
+                <form role="form" method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="form-group">
+                        <span class="label label-danger">{{ form.employee.errors.as_text }}</span><br>
+                        <label>Employee:</label>
+                        <select class="form-control" name="employee" id="employee">
+                            <option value="" >---</option>
+                            {% for account in accounts %}
+                            <option value="{{ account.id }}" >{{ account.email }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span class="label label-danger">{{ form.weekly_hours.errors.as_text }}</span><br>
+                        <label>Hours</label>
+                        <input class="form-control" type="number" name="weekly_hours" id="weekly_hours" value="">
+                    </div>
+                        <input class="form-control" type="hidden" name="project" value="{{ project.id }}">
+                        <button type="submit" class="btn btn-success btn-lg pull-right">Save</button>
+                </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
