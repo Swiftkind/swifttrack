@@ -1,125 +1,28 @@
-<!doctype html>
-<html>
-
+{% load static %}
+{% load management_custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    {% load static %}
-    {% load management_custom_tags %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SwiftTrack</title>
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<style type="text/css">
-
-    .project-sidebar {
-        height: 350px;
-        overflow: auto;
-    }
-    .employee-sidebar {
-        height: 350px;
-        overflow: auto;
-    }
-    #profile-panel {
-        min-height: 415px;
-    }
-</style>
 <body>
     <div id="wrapper" class="toggled">
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav list-group">
-                <li class="sidebar-brand">
-                    <a href="{% url 'admin' %}" class="black-text">
-                        SWIFTTRACK
-                    </a>
-                </li>
-                <form class="custom-navbar-form" method="get" action="{% url 'admin' %}">
-                    <div class="form-group">
-                        <label class="white-text">Date:</label>
-                        <input type="" id="getDiaries" name="wd_date" class="form-control" value="{% if wd_date %}{{ wd_date | date:'Y-m-d'}}{% else %}{% now 'Y-m-d' %}{% endif %}">
-                    </div>
-                    <div class="form-group">
-                        <label class="white-text">Project:</label><br>
-                        <select class="form-control" name="project">
-                            <option value="">All projects</option>
-                            {% all_projects as projects %}
-                            {% for project in projects %}
-                                <option value="{{project.id}}" {% if project.id == project_selected %}selected{% endif %}>{{project.name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="white-text">Employee:</label><br>
-                        <select class="form-control" name="employee">
-                            <option value="">All employees</option>
-                            {% all_employees as employees %}
-                            {% for employee in employees %}
-                                <option value="{{employee.id}}" {% if employee.id == employee_selected %}selected{% endif %}>{{employee.get_full_name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary" type="submit">Search</button>
-                    </div>
-                </form>
-                <br>
-                <li class="list-heading">
-                    <span class="white-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
-                    {% all_projects as projects %}
-                    {% for project in projects %}
-                    <a href="{% url 'view_projects' project.id %}">{{ project.name }}</a>
-                    {% endfor %}
-                </li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
+        <!-- sidebar-nav -->
+        {% include 'includes/sidenav_left.html' %}
+        <!-- navbar_top -->
+        {% include 'includes/navbar_top.html' %}<!-- /#navbar-top -->
         <!-- Page Content -->
-        <nav class="navbar navbar-inverse" style="border-radius: 0px;">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <form class="navbar-form navbar-left" role="search" action="{% url 'global-search' %}">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search something here" name="q" value="{{ request.GET.q }}">
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </span>
-                    </div>
-                </form>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    {% if user.is_authenticated %}
-                    <li><a href="{% url 'admin' %}">Dashboard</a></li>
-                    <li><a href="{% url 'project-list' %}">Projects</a></li>
-                    <li><a href="{% url 'management_payroll' %}">Payroll</a></li>
-                    <li><a href="{% url 'view_all_requests' %}">Requests</a></li>
-                    <li><a href="{% url 'all_employees' %}">Employees</a></li>
-                    <li><a href="{% url 'attendance' %}">Attendance</a></li>
-                    <li class="dropdown">
-                        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{{request.user.get_profile_pic}}" width="25px" height="25px" class="img-circle"> Welcome {{ user.first_name }}<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'admin_profile' %}">Profile</a></li>
-                            <li><a href="{% url 'change_password' %}">Update Password</a></li>
-                            <li class="divider" role="separator"></li>
-                            <li><a href="{% url 'logout' %}">Logout</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li><a href="{% url 'login' %}">Login</a></li>
-                    <li><a href="{% url 'registration' %}">Register</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
         {% block content %} {% endblock %}
         <!-- /#page-content-wrapper -->
-    </div>
-    <!-- /#wrapper -->
+    </div><!-- /#wrapper -->
+    <!-- jquery/javascript -->
     <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/moment.js' %}"></script>
@@ -137,7 +40,6 @@
         });
     });
     </script>
-    {% endblock %}
+    {% endblock %}<!-- /#endscripts -->
 </body>
-
 </html>
