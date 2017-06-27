@@ -24,6 +24,7 @@ from .forms import (RequestForm,
                     AssignEmployeeForm,
                     EditProjectForm,
                     EditProjectHoursForm,
+                    AddMiscForm,
                     )
 from .models import Requests, Misc
 from .pdf import CreatePdf
@@ -598,3 +599,20 @@ class MiscView(StaffRequiredMixin, TemplateView):
         miscs = Misc.objects.filter(employees__in=employees)[:5]
         ctx_data = {'miscs': miscs}
         return render(self.request, self.template_name, ctx_data)
+
+
+class AddMiscView(StaffRequiredMixin, TemplateView):
+    permission_required = 'is_staff'
+    template_name = 'management/add_misc.html'
+
+    def get(self, *args, **kwargs):
+        form = AddMiscForm()
+        ctx_data = {'form': form}
+        return render(self.request, self.template_name, ctx_data)
+
+    def post(self, *args, **kwargs):
+        form = AddMiscForm(self.request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_misc')
+        return render(self.request, self.template_name, {'form': form})

@@ -1,7 +1,10 @@
-from django.forms import ModelForm, widgets
-from .models import Requests
-from projects.models import Project, ProjectAssignment
 from datetime import datetime
+from django import forms
+from django.forms import extras
+from django.forms import ModelForm, widgets
+
+from .models import Requests, Misc
+from projects.models import Project, ProjectAssignment
 
 
 class RequestForm(ModelForm):
@@ -18,6 +21,7 @@ class RequestForm(ModelForm):
         super(RequestForm, self).__init__(*args, **kargs)
         self.fields['subject'].widget.attrs.update({'class' : 'form-control'})
         self.fields['content'].widget.attrs.update({'class' : 'form-control'})
+
 
 class AddProjectForm(ModelForm):
 
@@ -46,6 +50,7 @@ class EditProjectForm(ModelForm):
             'name': widgets.TextInput(attrs={'class': 'form-control'}),
         }
 
+
 class EditProjectHoursForm(ModelForm):
 
     class Meta:
@@ -55,3 +60,16 @@ class EditProjectHoursForm(ModelForm):
     def __init__(self, *args, **kargs):
         super(EditProjectHoursForm, self).__init__(*args, **kargs)
         self.fields['weekly_hours'].widget.attrs.update({'class' : 'form-control'})
+
+
+class AddMiscForm(ModelForm):
+
+    date_created = forms.DateField(
+        widget=extras.SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        ),
+    )
+
+    class Meta:
+        model = Misc
+        fields = ['employees', 'name', 'types', 'total_amount', 'months', 'date_created']
