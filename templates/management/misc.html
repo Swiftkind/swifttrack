@@ -46,7 +46,7 @@
                             </td>
                             <td style="width: 15%;">
                             {% if misc.status %}
-                                <a href="#" class="btn btn-danger btn-xs">Archive</a>
+                                <a href="{% url 'archive_misc' misc.id %}" class="btn btn-danger btn-xs">Archive</a>
                                 <a href="" class="btn btn-default btn-xs">Edit</a>
                             {% else %}
                                 <a href="#" class="btn btn-success btn-xs">UnArchive</a>

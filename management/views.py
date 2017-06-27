@@ -616,3 +616,13 @@ class AddMiscView(StaffRequiredMixin, TemplateView):
             form.save()
             return redirect('admin_misc')
         return render(self.request, self.template_name, {'form': form})
+
+
+class ArchiveMiscView(StaffRequiredMixin, View):
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        ma = Misc.objects.get(id=misc_id)
+        ma.status = False
+        ma.save()
+        return redirect('admin_misc')
