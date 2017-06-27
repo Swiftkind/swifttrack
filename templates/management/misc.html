@@ -1,0 +1,68 @@
+{% extends 'management.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <div>
+        <h4><strong>Miscellaneous</strong> <a href="{% url 'add_misc' %}" class="btn btn-default btn-md pull-right">Add</a></h4>
+        </div>
+        <hr class="colorgraph">
+        </div>
+        <div class="panel-body">
+            <div class="row-fluid">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Employees</th>
+                            <th style="width: 10%;">Misc Name</th>
+                            <th style="width: 5%;">TYPES</th>
+                            <th style="width: 10%">AMOUNT</th>
+                            <th style="width: 5%;">MONTHS</th>
+                            <th style="width: 20%;">DATE CREATED</th>
+                            <th style="width: 15%;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for misc in miscs %}
+                        <tr>
+                            <td style="width: 20%;">
+                                <img src=" {{ misc.employees.get_profile_pic }} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
+                                <strong> <a href="#">{{ misc.employees.get_full_name }}</a></strong>
+                            </td>
+                            <td style="width: 10%;">
+                                <strong>{{ misc.name }}</strong>
+                            </td>
+                            <td style="width: 10%;">
+                                <strong>{{ misc.types }}</strong>
+                            </td>
+                            <td style="width: 10;">
+                                <strong>{{ misc.total_amount }}</strong>
+                            </td>
+                            <td style="width: 5%;">
+                                <strong>{{ misc.months }}</strong>
+                            </td>
+                            <td style="width: 20%;">
+                                <strong>{{ misc.date_created }}</strong>
+                            </td>
+                            <td style="width: 15%;">
+                            {% if misc.status %}
+                                <a href="{% url 'archive_misc' misc.id %}" class="btn btn-danger btn-xs">Archive</a>
+                                <a href="" class="btn btn-default btn-xs">Edit</a>
+                            {% else %}
+                                <a href="{% url 'unarchive_misc' misc.id %}" class="btn btn-success btn-xs">UnArchive</a>
+                            {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center bg-warning">No Misc</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

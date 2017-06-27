@@ -25,7 +25,7 @@ from .forms import (RequestForm,
                     EditProjectForm,
                     EditProjectHoursForm,
                     )
-from .models import Requests
+from .models import Requests, Misc
 from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
 from .mixins import StaffRequiredMixin
@@ -586,4 +586,15 @@ class ChangePasswordView(TemplateView):
             update_session_auth_hash(self.request, form.user)
             return redirect('admin')
         ctx_data = {'form': form}
+        return render(self.request, self.template_name, ctx_data)
+
+
+class MiscView(StaffRequiredMixin, TemplateView):
+    permission_required = 'is_staff'
+    template_name = 'management/misc.html'
+
+    def get(self, *args, **kwargs):
+        employees = Account.objects.all().exclude(is_staff=True)
+        miscs = Misc.objects.filter(employees__in=employees)[:5]
+        ctx_data = {'miscs': miscs}
         return render(self.request, self.template_name, ctx_data)

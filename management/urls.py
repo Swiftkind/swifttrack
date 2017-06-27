@@ -17,6 +17,7 @@ from .views import (
         ProfileAdminView,
         ChangePasswordView,
         AdminSearchView,
+        MiscView,
     )
 
 urlpatterns = [
@@ -47,4 +48,5 @@ urlpatterns = [
     url(r'search/', AdminGlobalSearch.as_view(), name='global-search'),
     url(r'^management/profile/$', ProfileAdminView.as_view(), name='admin_profile'),
     url(r'^management/change/password/$', ChangePasswordView.as_view(), name='change_password'),
+    url(r'^misc/$', MiscView.as_view(), name='admin_misc'),
 ]
