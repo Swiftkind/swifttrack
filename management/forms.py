@@ -65,7 +65,7 @@ class EditProjectHoursForm(ModelForm):
 class AddMiscForm(ModelForm):
 
     date_created = forms.DateField(
-        widget=extras.SelectDateWidget(
+        widget=forms.SelectDateWidget(
             empty_label=("Choose Year", "Choose Month", "Choose Day"),
         ),
     )
@@ -73,3 +73,11 @@ class AddMiscForm(ModelForm):
     class Meta:
         model = Misc
         fields = ['employees', 'name', 'types', 'total_amount', 'months', 'date_created']
+        widgets = {
+            'employees': widgets.Select(attrs={'class': 'form-control'}),
+            'name': widgets.TextInput(attrs={'class': 'form-control'}),
+            'types': widgets.Select(attrs={'class': 'form-control'}),
+            'total_amount': widgets.NumberInput(attrs={'class': 'form-control'}),
+            'months': widgets.NumberInput(attrs={'class': 'form-control'}),
+            'date_created': widgets.DateInput(attrs={'class': 'form-control'}),
+        }

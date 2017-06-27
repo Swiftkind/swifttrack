@@ -636,3 +636,24 @@ class UnArchiveMiscView(StaffRequiredMixin, View):
         ma.status = True
         ma.save()
         return redirect('admin_misc')
+
+
+class EditMiscView(StaffRequiredMixin, TemplateView):
+    permission_required = 'is_staff'
+    template_name = 'management/edit_misc.html'
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        miscs = Misc.objects.get(id=misc_id)
+        form = AddMiscForm(instance=miscs)
+        ctx_data = {'form': form, 'miscs': miscs}
+        return render(self.request, self.template_name, ctx_data)
+
+    def post(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        miscs = Misc.objects.get(id=misc_id)
+        form = AddMiscForm(self.request.POST, instance=miscs)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_misc')
+        return render(self.request, self.template_name, {'form': form})
