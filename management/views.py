@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.views.generic import TemplateView, View
+from django.views import generic
 from threading import Timer
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.contrib.auth.forms import PasswordChangeForm
@@ -657,3 +658,13 @@ class EditMiscView(StaffRequiredMixin, TemplateView):
             form.save()
             return redirect('admin_misc')
         return render(self.request, self.template_name, {'form': form})
+
+
+class MiscEmployeeView(StaffRequiredMixin, TemplateView):
+    template_name = 'management/employee_misc.html'
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        miscs = Misc.objects.get(id=misc_id)
+        ctx_data = {'miscs': miscs}
+        return render(self.request, self.template_name, ctx_data)
