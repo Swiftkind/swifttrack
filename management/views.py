@@ -626,3 +626,13 @@ class ArchiveMiscView(StaffRequiredMixin, View):
         ma.status = False
         ma.save()
         return redirect('admin_misc')
+
+
+class UnArchiveMiscView(StaffRequiredMixin, View):
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        ma = Misc.objects.get(id=misc_id)
+        ma.status = True
+        ma.save()
+        return redirect('admin_misc')

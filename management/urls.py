@@ -20,6 +20,7 @@ from .views import (
         MiscView,
         AddMiscView,
         ArchiveMiscView,
+        UnArchiveMiscView,
     )
 
 urlpatterns = [
@@ -53,4 +54,5 @@ urlpatterns = [
     url(r'^misc/$', MiscView.as_view(), name='admin_misc'),
     url(r'^misc/add/$', AddMiscView.as_view(), name='add_misc'),
     url(r'^misc/(?P<misc_id>[0-9]+)/archive/$', ArchiveMiscView.as_view(), name='archive_misc'),
+    url(r'^misc/(?P<misc_id>[0-9]+)/unarchive/$', UnArchiveMiscView.as_view(), name='unarchive_misc'),
 ]
