@@ -7,45 +7,46 @@
         <a href="{% url 'project' %}" class="btn btn-default btn-md">Back</a>
     </div>
     <h3>Work Diary Log</h3>
-</div>
-    <table class="table table-striped">
-        <br />
-        <thead>
-            <tr>
-                <th style="width: 10%;">DATE UPDATED</th>
-                <th style="width: 10%;">HOURS</th>
-                <th style="width: 10%;">TODAY</th>
-                <th style="width: 5%;">TO-DO</th>
-                <th style="width: 5%;">ISSUES</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for log in logs %}
-            <tr>
-                <td style="width: 10%;">
-                    {{ log.date_created }}
-                </td>
-                <td style="width: 5%;">
-                    {{ log.hours }}
-                </td>
-                <td style="width: 10%;">
-                    {{ log.finished_task | linebreaksbr }}
-                </td>
-                <td style="width: 10%;">
-                    {{ log.todo_task | linebreaksbr }}
-                </td>
-                <td style="width: 5%;">
-                    {{ log.issues | linebreaksbr }}
-                </td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="8" class="text-center bg-warning">
-                    No Logs
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    </div>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">DATE</th>
+                    <th style="width: 5%;">HOURS</th>
+                    <th style="width: 10%;">TODAY</th>
+                    <th style="width: 5%;">TO-DO</th>
+                    <th style="width: 5%;">ISSUES</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td style="width: 15%;">
+                        {{ log.date_created }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ log.hours }}
+                    </td>
+                    <td style="width: 35%;">
+                        {{ log.finished_task | linebreaksbr }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ log.todo_task | linebreaksbr }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ log.issues | linebreaksbr }}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center bg-warning">
+                        No Logs
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
