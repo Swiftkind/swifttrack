@@ -1,0 +1,46 @@
+{% extends 'dashboard.html' %}
+{% block tabs %}
+<br><br>
+<div class="container">
+    <div class="row">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'project' %}">Projects</a></li>
+        <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
+        <li role="presentation"><a href="{% url 'request' %}">Contact</a></li>
+        <li role="presentation" class="active"><a href="{% url 'employees_misc' %}">Misc</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane" id="home"></div>
+        <div role="tabpanel" class="tab-pane active" id="profile">
+            <br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>TYPES</th>
+                        <th>AMOUNT</th>
+                        <th>MONTHS</th>
+                        <th>DATE CREATED</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for misc in miscs %}
+                    <tr>
+
+                        <td>{{ misc.name }}</td>
+                        <td>{{ misc.types }}</td>
+                        <td>{{ misc.amount }}</td>
+                        <td>{{ misc.months }}</td>
+                        <td>{{ misc.date_created }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="messages"></div>
+    </div>
+
+    </div>
+</div>
+{% endblock %}

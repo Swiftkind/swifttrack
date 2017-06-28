@@ -8,6 +8,7 @@
                 <li role="presentation"><a href="{% url 'project' %}">Projects</a></li>
                 <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
                 <li role="presentation" class="active"><a href="{% url 'request' %}">Contact</a></li>
+                <li role="presentation"><a href="{% url 'employees_misc' %}">Misc</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -20,7 +21,7 @@
                         <div class="alert alert-success alert-dismissable">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> {{success}}
                         </div>
-                        {% endif %} 
+                        {% endif %}
                         <div class="col-md-4">
                             <h3>Send a request</h3>
                             <br>

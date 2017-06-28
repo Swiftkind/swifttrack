@@ -4,6 +4,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+
+from management.models import Misc
+from accounts.models import Account
 from . models import Project, ProjectAssignment, WorkDiary
 from . forms import WorkDiaryForm
 
@@ -89,3 +92,12 @@ class WorkDiaryEditView(TemplateView):
         if form.is_valid():
             form.save()
         return redirect('work-diary', id=kwargs['id'])
+
+class EmployeesMiscView(TemplateView):
+    template_name = 'projects/employees_misc.html'
+
+    def get(self, *args, **kwargs):
+        employees = Account.objects.all().exclude(is_staff=True)
+        miscs = Misc.objects.filter(employees=self.request.user, status=True)
+        ctx_data = {'miscs': miscs}
+        return render(self.request, self.template_name, ctx_data)
