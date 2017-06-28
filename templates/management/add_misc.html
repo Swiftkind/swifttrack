@@ -1,0 +1,45 @@
+{% extends 'management.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+    <h3>Add Misc</h3>
+    <hr class="colorgraph">
+        <form role="form" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="fieldWrapper">
+                {{ form.employees.errors }}
+                <label for="{{ form.employees.id_for_label }}">Employees:</label>
+                {{ form.employees }}
+            </div><br />
+            <div class="fieldWrapper">
+                {{ form.name.errors }}
+                <label for="{{ form.name.id_for_label }}">Name:</label>
+                {{ form.name }}
+            </div><br />
+            <div class="fieldWrapper">
+                {{ form.types.errors }}
+                <label for="{{ form.types.id_for_label }}">Types:</label>
+                {{ form.types }}
+            </div><br />
+            <div class="fieldWrapper">
+                {{ form.total_amount.errors }}
+                <label for="{{ form.total_amount.id_for_label }}">Total_amount:</label>
+                {{ form.total_amount }}
+            </div><br />
+            <div class="fieldWrapper">
+                {{ form.months.errors }}
+                <label for="{{ form.months.id_for_label }}">Months:</label>
+                {{ form.months }}
+            </div><br />
+            <div class="fieldWrapper">
+                {{ form.date_created.errors }}
+                <label for="{{ form.date_created.id_for_label }}">Date Created:</label>
+                {{ form.date_created }}
+            </div><br />
+            <a href="{% url 'admin_misc' %}" class="btn btn-default btn-sm">Cancel</a>
+            <button type="submit" class="btn btn-success btn-sm">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

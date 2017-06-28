@@ -17,6 +17,12 @@ from .views import (
         ProfileAdminView,
         ChangePasswordView,
         AdminSearchView,
+        MiscView,
+        AddMiscView,
+        EditMiscView,
+        ArchiveMiscView,
+        UnArchiveMiscView,
+        MiscEmployeeView,
     )
 
 urlpatterns = [
@@ -47,4 +53,10 @@ urlpatterns = [
     url(r'search/', AdminGlobalSearch.as_view(), name='global-search'),
     url(r'^management/profile/$', ProfileAdminView.as_view(), name='admin_profile'),
     url(r'^management/change/password/$', ChangePasswordView.as_view(), name='change_password'),
+    url(r'^misc/$', MiscView.as_view(), name='admin_misc'),
+    url(r'^misc/(?P<misc_id>[0-9]+)/employee/$', MiscEmployeeView.as_view(), name='employee_misc'),
+    url(r'^misc/add/$', AddMiscView.as_view(), name='add_misc'),
+    url(r'^misc/edit/(?P<misc_id>[0-9]+)/$', EditMiscView.as_view(), name='edit_misc'),
+    url(r'^misc/(?P<misc_id>[0-9]+)/archive/$', ArchiveMiscView.as_view(), name='archive_misc'),
+    url(r'^misc/(?P<misc_id>[0-9]+)/unarchive/$', UnArchiveMiscView.as_view(), name='unarchive_misc'),
 ]

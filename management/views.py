@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.views.generic import TemplateView, View
+from django.views import generic
 from threading import Timer
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.contrib.auth.forms import PasswordChangeForm
@@ -24,8 +25,9 @@ from .forms import (RequestForm,
                     AssignEmployeeForm,
                     EditProjectForm,
                     EditProjectHoursForm,
+                    AddMiscForm,
                     )
-from .models import Requests
+from .models import Requests, Misc
 from .pdf import CreatePdf
 from .utils import DateUtils, ProjectsUtils
 from .mixins import StaffRequiredMixin
@@ -586,4 +588,83 @@ class ChangePasswordView(TemplateView):
             update_session_auth_hash(self.request, form.user)
             return redirect('admin')
         ctx_data = {'form': form}
+        return render(self.request, self.template_name, ctx_data)
+
+
+class MiscView(StaffRequiredMixin, TemplateView):
+    permission_required = 'is_staff'
+    template_name = 'management/misc.html'
+
+    def get(self, *args, **kwargs):
+        employees = Account.objects.all().exclude(is_staff=True)
+        miscs = Misc.objects.filter(employees__in=employees)[:5]
+        ctx_data = {'miscs': miscs}
+        return render(self.request, self.template_name, ctx_data)
+
+
+class AddMiscView(StaffRequiredMixin, TemplateView):
+    permission_required = 'is_staff'
+    template_name = 'management/add_misc.html'
+
+    def get(self, *args, **kwargs):
+        form = AddMiscForm()
+        ctx_data = {'form': form}
+        return render(self.request, self.template_name, ctx_data)
+
+    def post(self, *args, **kwargs):
+        form = AddMiscForm(self.request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_misc')
+        return render(self.request, self.template_name, {'form': form})
+
+
+class ArchiveMiscView(StaffRequiredMixin, View):
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        ma = Misc.objects.get(id=misc_id)
+        ma.status = False
+        ma.save()
+        return redirect('admin_misc')
+
+
+class UnArchiveMiscView(StaffRequiredMixin, View):
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        ma = Misc.objects.get(id=misc_id)
+        ma.status = True
+        ma.save()
+        return redirect('admin_misc')
+
+
+class EditMiscView(StaffRequiredMixin, TemplateView):
+    permission_required = 'is_staff'
+    template_name = 'management/edit_misc.html'
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        miscs = Misc.objects.get(id=misc_id)
+        form = AddMiscForm(instance=miscs)
+        ctx_data = {'form': form, 'miscs': miscs}
+        return render(self.request, self.template_name, ctx_data)
+
+    def post(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        miscs = Misc.objects.get(id=misc_id)
+        form = AddMiscForm(self.request.POST, instance=miscs)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_misc')
+        return render(self.request, self.template_name, {'form': form})
+
+
+class MiscEmployeeView(StaffRequiredMixin, TemplateView):
+    template_name = 'management/employee_misc.html'
+
+    def get(self, *args, **kwargs):
+        misc_id = kwargs['misc_id']
+        miscs = Misc.objects.get(id=misc_id)
+        ctx_data = {'miscs': miscs}
         return render(self.request, self.template_name, ctx_data)

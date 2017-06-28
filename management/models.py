@@ -25,3 +25,25 @@ class Requests(models.Model):
 
     def __str__(self):
         return "{} : {}".format(self.subject, self.employee)
+
+
+class Misc(models.Model):
+    RECURRING = 'recurring'
+    FIXED = 'fixed'
+    TYPES = (
+        (RECURRING, 'Recurring'),
+        (FIXED, 'Fixed'),
+    )
+    employees = models.ForeignKey(Account)
+    name = models.CharField(max_length=200)
+    types = models.CharField(max_length=150, choices=TYPES, default=RECURRING)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    months  = models.PositiveIntegerField()
+    date_created = models.DateTimeField()
+    status = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name_plural = "Misc"
+
+    def __str__(self):
+        return "{} : {}".format(self.name, self.employees)
