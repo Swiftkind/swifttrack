@@ -10,7 +10,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': (
             'first_name',
-            'last_name', 
+            'last_name',
             'email',
             'address',
             'contact_number',
@@ -18,7 +18,7 @@ class CustomUserAdmin(UserAdmin):
             'about_me',
             'hourly_rate'
         )}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_admin',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
