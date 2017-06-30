@@ -7,7 +7,7 @@
         </li>
         <hr class="colorgraph">
         <li class="list-heading">
-            <span class="white-text">Projects</span><a href="{% url 'add_project' %}" class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link"></span></a>
+            <span class="white-text">Projects</span><a class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link" data-toggle="modal" data-target=".bs-example-modal-lg"></span></a>
             {% all_projects as projects %}
             {% for project in projects %}
             <a href="{% url 'view_projects' project.id %}">{{ project.name }}</a>
