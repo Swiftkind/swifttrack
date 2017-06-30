@@ -52,7 +52,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                <h4>Work diaries for {% if wd_date %}{{ wd_date }}{% else %}{{ request.GET.start }} to {{ request.GET.end }}{% endif %}</h4>
+                    <h4>Work diaries for {% if wd_date %}{{ wd_date }}{% else %}{{ request.GET.start }} to {{ request.GET.end }}{% endif %}<div class="pull-right"></h4>
                 </div>
                 <div class="panel-body">
                     <table class="table table-striped">
@@ -65,8 +65,8 @@
                                 <th style="text-align: center;">Project</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for work_diary in work_diaries %}
+                        <tbody class="search-results">
+                        {% for work_diary in work_diaries %}
                             <tr>
                                 <td style="width: 20%;">
                                     <img src=" {{work_diary.project_assignment.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
@@ -93,7 +93,7 @@
                                     <strong> {{ work_diary.project_assignment.project.name }} </strong>
                                 </td>
                             </tr>
-                            {% endfor %}
+                        {% endfor %}
                             <tr>
                                 <td style="width: 20%;"></td>
                                 <td style="text-align: center;"><strong>Total Hours: {{wd_hours}} </strong></td>
