@@ -297,10 +297,9 @@ class AddProjectView(StaffRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         form = AddProjectForm(request.POST)
         if form.is_valid():
-            p = form.save()
-            return redirect('view_projects', id=p.id)
-        ctx_data = {'form': form, 'error': 'Can\'t add project'}
-        return render(request, self.template_name, ctx_data)
+            form.save()
+            project_id = form.instance.id
+            return redirect('view_projects', project_id)
 
 
 class AssignEmployeeView(StaffRequiredMixin, TemplateView):
