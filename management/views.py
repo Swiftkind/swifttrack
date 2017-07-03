@@ -623,7 +623,7 @@ class EditMiscView(StaffRequiredMixin, TemplateView):
         return render(self.request, self.template_name, {'form': form})
 
 
-class MiscEmployeeView(StaffRequiredMixin, TemplateView):
+class MiscEmployeeView(TemplateView):
     template_name = 'management/employee_misc.html'
 
     def get(self, *args, **kwargs):
