@@ -1,0 +1,32 @@
+{% if work_diaries.count > 0 %}
+    {% for work_diary in work_diaries %}
+        <tr>
+            <td style="width: 20%;">
+                <img src=" {{work_diary.project_assignment.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
+                <strong> {{work_diary.project_assignment.employee.get_full_name}}</strong>
+            </td>
+            <td style="text-align: center;">
+                <strong>{{work_diary.hours}}</strong>
+            </td>
+            <td style="width: 20;">
+                <strong>{{work_diary.date}}</strong>
+            </td>
+            <td style="width: 40%;">
+                <strong>Finished:</strong><br /><br />
+                    {{ work_diary.finished_task | linebreaksbr }}
+                <hr class="colorgraph">
+                <strong>To-Do:</strong><br /><br />
+                    {{ work_diary.todo_task | linebreaksbr }}
+                <hr class="colorgraph">
+                <strong>Issues:</strong><br /><br />
+                    {{ work_diary.issues | linebreaksbr }}<br/ ><br />
+                    <small>Posted  {{ work_diary.date | timesince }} ago</small>
+            </td>
+            <td style="text-align: center;">
+                <strong> {{ work_diary.project_assignment.project.name }} </strong>
+            </td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <li>Nothing to show here!</li>
+{% endif %}

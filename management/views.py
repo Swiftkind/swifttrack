@@ -395,65 +395,29 @@ class ReAssignEmployee(StaffRequiredMixin, View):
 
 
 class AdminGlobalSearch(StaffRequiredMixin, TemplateView):
-
     template_name = 'management/search.html'
 
-    def get(self, *args, **kwargs):
-        search_query = self.request.GET.get('q')
+    def post(self, request, *args, **kwargs):
+        search_text = self.request.POST['search_text']
+        search_text = ''
 
-        context = {}
-
-        if not search_query:
-            messages.warning(self.request, 'Enter keywork to search')
-
-        else:
-
-            workdiaries = WorkDiary.objects.filter(
-                Q(finished_task__icontains=search_query)
-                | Q(todo_task__icontains=search_query)
-                | Q(issues__icontains=search_query)
+        work_diaries = WorkDiary.objects.filter(
+                finished_task__icontains=search_text,
+                todo_task__icontains=search_text,
+                issues__icontains=search_text,
             ).order_by('-date')
 
-            employees = Account.objects.filter(
-                Q(first_name__icontains=search_query)
-                | Q(last_name__icontains=search_query)
-                | Q(email__icontains=search_query)
-                | Q(about_me__icontains=search_query)
-                | Q(address__icontains=search_query)
-                | Q(contact_number__icontains=search_query)
+        employees = Account.objects.filter(
+                first_name__icontains=search_text,
+                last_name__icontains=search_text,
+                email__icontains=search_text,
+                about_me__icontains=search_text,
+                address__icontains=search_text,
+                contact_number__icontains=search_text,
             )
 
-            requests = Requests.objects.filter(
-                Q(subject__icontains=search_query)
-                | Q(content__icontains=search_query)
-            )
-
-            payroll = Payroll.objects.filter(
-                Q(description=search_query)
-                | Q(invoice_file=search_query)
-            )
-
-            if 'search_workdiaries' not in context:
-                context.update(
-                    search_workdiaries=workdiaries
-                )
-
-            if 'search_employees' not in context:
-                context.update(
-                    search_employees=employees
-                )
-
-            if 'search_requests' not in context:
-                context.update(
-                    search_requests=requests
-                )
-
-            if 'search_payroll' not in context:
-                context.update(
-                    search_payroll=payroll
-                )
-
-        return render(self.request, self.template_name, context)
+        ctx_data = {'work_diaries': work_diaries, 'employees': employees}
+        return render(request, 'management/ajaxsearch.html', ctx_data)
 
 
 class AttendanceView(TemplateView):

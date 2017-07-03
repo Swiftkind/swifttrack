@@ -6,12 +6,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <form class="navbar-form navbar-left" role="search" action="{% url 'global-search' %}">
+        <form class="navbar-form navbar-left global-search-form" role="search" method="post">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search something here" name="q" value="{{ request.GET.q }}">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </span>
+                {% csrf_token %}
+                <input class="form-control search" placeholder="Search" type="text" value="{{ request.GET.search_text }}" id="search" name="search">
             </div>
         </form>
     </div>
