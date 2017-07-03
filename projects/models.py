@@ -48,3 +48,15 @@ class WorkDiary(models.Model):
 
     def __str__(self):
         return "{}".format(self.id)
+
+
+class WorkDiaryLog(models.Model):
+    work_diary = models.ForeignKey(WorkDiary, on_delete=models.CASCADE)
+    finished_task = models.TextField(blank=True, null=True)
+    todo_task = models.TextField(blank=True, null=True)
+    issues = models.TextField(blank=True, null=True)
+    hours = models.FloatField(blank=True, null=True)
+    date_created = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "{}".format(self.id)

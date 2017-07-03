@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+    <div>
+    <div class="pull-right">
+        <a href="{% url 'work-diary' work.project_assignment.id %}" class="btn btn-default btn-md">Back</a>
+    </div>
+    <h3>Work Diary Log</h3>
+    </div>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">DATE</th>
+                    <th style="width: 5%;">HOURS</th>
+                    <th style="width: 10%;">TODAY</th>
+                    <th style="width: 5%;">TO-DO</th>
+                    <th style="width: 5%;">ISSUES</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td style="width: 15%;">
+                        {{ log.date_created }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ log.hours }}
+                    </td>
+                    <td style="width: 35%;">
+                        {{ log.finished_task | linebreaksbr }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ log.todo_task | linebreaksbr }}
+                    </td>
+                    <td style="width: 5%;">
+                        {{ log.issues | linebreaksbr }}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center bg-warning">
+                        No Logs
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class='paginator'>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous">{% if logs.has_previous %}<a href="?page={{ logs.previous_page_number }}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
+                </li>
+                <li>
+                <span class="current">
+                    Page {{ logs.number }} of {{ logs.paginator.num_pages }}.
+                </span>
+                </li>
+                <li class="next"> {% if logs.has_next %}<a href="?page={{ logs.next_page_number }}work-diary">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
