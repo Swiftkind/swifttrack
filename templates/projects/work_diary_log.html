@@ -4,7 +4,7 @@
 <div class="container">
     <div>
     <div class="pull-right">
-        <a href="{% url 'project' %}" class="btn btn-default btn-md">Back</a>
+        <a href="{% url 'work-diary' work.project_assignment.id %}" class="btn btn-default btn-md">Back</a>
     </div>
     <h3>Work Diary Log</h3>
     </div>
@@ -47,6 +47,21 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class='paginator'>
+        <nav aria-label="...">
+            <ul class="pager">
+                <li class="previous">{% if logs.has_previous %}<a href="?page={{ logs.previous_page_number }}"><span aria-hidden="true">&larr;</span> Newer</a>{% endif %}
+                </li>
+                <li>
+                <span class="current">
+                    Page {{ logs.number }} of {{ logs.paginator.num_pages }}.
+                </span>
+                </li>
+                <li class="next"> {% if logs.has_next %}<a href="?page={{ logs.next_page_number }}work-diary">Older <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 {% endblock %}
