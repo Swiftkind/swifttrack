@@ -1,11 +1,18 @@
- {% extends 'management.html' %} 
+ {% extends 'management.html' %}
 
  {% block content %}
 
 <div class="col-lg-12">
     <h3><strong>{{ project.name }}</strong></h3>
-    <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-md pull-right">Assign Employee</a><br /><br />
-    <a href="{% url 'edit-project' project.id %}" class="btn btn-default btn-md pull-right">Edit Project</a><br /><br />
+    <a href="{% url 'edit-project' project.id %}" class="btn btn-primary btn-sm pull-right">Edit Project</a>
+    <a href="{% url 'assign_employee' project.id %}" class="btn btn-success btn-sm pull-right">Assign Employee</a><br>&nbsp;
+    <hr class="colorgraph">
+    <div class="container">
+    {% for works in works %}
+        <img src="{{ works.project_assignment.employee.get_profile_pic }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;
+    {% endfor %}
+    </div>
+    <hr class="colorgraph">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -17,7 +24,7 @@
         <tbody>
             {% for works in works %}
             <tr>
-                <td style="width: 30%;"> 
+                <td style="width: 30%;">
                     <img src="{{ works.project_assignment.employee.get_profile_pic }}" width="50px" height="50px" class="img-circle">&nbsp;&nbsp;&nbsp;
                     <strong>{{works.project_assignment.employee.get_full_name}}</strong>
                 </td>
