@@ -44,9 +44,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% load management_custom_tags %}
                         {% for log in account_logs %}
-                            <tr>
-                                <td> <img src="{{log.account.get_profile_pic}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;">{{log.account.get_full_name}}</td>
+                            <tr class="{% check_attendance log.date_created %}">
+                                <td><img src="{{log.account.get_profile_pic}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;">{{log.account.get_full_name}}</td>
                                 <td>{{log.status}}</td>
                                 <td>{{log.date_created}}</td>
                                 <td>{{log.ip}}</td>
