@@ -30,7 +30,7 @@
                     {% csrf_token %}
                     {{form.as_p}}
                     <button type="submit" class="btn btn-lg btn-block btn-success">Login</button><br>
-                    <a href="{% url 'registration' %}">Create an account</a>
+                    <a href="{% url 'accounts:registration' %}">Create an account</a>
                 </form>
 			</div>
 		</div>

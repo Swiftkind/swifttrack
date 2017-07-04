@@ -7,7 +7,7 @@
 {% if error %}
     <div class="alert alert-danger">{{error}}</div>
 {% endif %}
-<form role="form" method="post" action="{% url 'edit-project' project.id %}">
+<form role="form" method="post" action="{% url 'management:edit-project' project.id %}">
     {% csrf_token %}
     {% for field in form %}
       <div class="form-group{% if field.errors %} has-error{% endif %}">
@@ -19,7 +19,7 @@
       </div>
     {% endfor %}
     <div>
-        <a href="{% url 'assign_employee' project.id %}" class="btn btn-default btn-xs pull-right">Add Employee</a><br><br>
+        <a href="{% url 'management:assign_employee' project.id %}" class="btn btn-default btn-xs pull-right">Add Employee</a><br><br>
     </div>
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="home">
@@ -40,15 +40,15 @@
                     {{ assignment.weekly_hours }}
                 </td>
                 <td>
-                    <a href="{% url 'edit-hours' project.id assignment.id  %}" class="btn btn-default btn-xs">Edit Hours</a>
+                    <a href="{% url 'management:edit-hours' project.id assignment.id  %}" class="btn btn-default btn-xs">Edit Hours</a>
                 </td>
                 <td>
                 {% if assignment.status %}
                 <code>Active</code>
-                    <a href="{% url 'remove-employee' project.id assignment.employee.id %}" class="btn btn-danger btn-xs"> Remove Employee</a>
+                    <a href="{% url 'management:remove-employee' project.id assignment.employee.id %}" class="btn btn-danger btn-xs"> Remove Employee</a>
                 {% else %}
                     <code>Inactive Employee</code>
-                    <a href="{% url 'reassign-employee' project.id assignment.employee.id %}" class="btn btn-primary btn-xs">Reassign Employee</a>
+                    <a href="{% url 'management:reassign-employee' project.id assignment.employee.id %}" class="btn btn-primary btn-xs">Reassign Employee</a>
                 {% endif %}
                 </td>
               </tr>

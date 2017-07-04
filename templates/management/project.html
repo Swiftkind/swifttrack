@@ -4,8 +4,8 @@
 
 <div class="col-lg-12">
     <h3><strong>{{ project.name }}</strong></h3>
-    <a href="{% url 'edit-project' project.id %}" class="btn btn-primary btn-sm pull-right">Edit Project</a>
-    <a href="{% url 'assign_employee' project.id %}" class="btn btn-success btn-sm pull-right">Assign Employee</a><br>&nbsp;
+    <a href="{% url 'management:edit-project' project.id %}" class="btn btn-primary btn-sm pull-right">Edit Project</a>
+    <a href="{% url 'management:assign_employee' project.id %}" class="btn btn-success btn-sm pull-right">Assign Employee</a><br>&nbsp;
     <hr class="colorgraph">
     <div class="container">
     {% for works in works %}

@@ -33,7 +33,7 @@
                                 <td>{{request.content}}</td>
                                 <td>
                                     {% if request.confirmed is True %} Confirmed {% else %}
-                                    <form action="{% url 'update_request' %}" method="post">
+                                    <form action="{% url 'management:update_request' %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" value="{{request.id}}" name="id">
                                         <input type="hidden" name="status" value="{% if not request.confirmed %}True{% endif %}">

@@ -54,7 +54,7 @@ class RequestView(TemplateView):
             form = RequestForm()
             requests_by_user = Requests.objects.filter(
                 employee=request.user.id)
-        return redirect('request')
+        return redirect('management:request')
 
 
 class UpdateRequest(StaffRequiredMixin, TemplateView):
@@ -64,7 +64,7 @@ class UpdateRequest(StaffRequiredMixin, TemplateView):
         status = request.POST['status']
         confirmed = status or None
         Requests.objects.filter(id=id).update(confirmed=confirmed)
-        return redirect('view_all_requests')
+        return redirect('management:view_all_requests')
 
 
 class AdminView(StaffRequiredMixin, TemplateView):
@@ -161,14 +161,14 @@ class ConfirmAccountView(StaffRequiredMixin, TemplateView):
             Account.objects.filter(id=request.POST['id']).update(is_active=True)
         if request.POST.get('decline') is not None:
             account = Account.objects.get(id=request.POST['id']).delete()
-        return redirect('all_employees')
+        return redirect('management:all_employees')
 
 
 class DeactivateAccountView(StaffRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         Account.objects.filter(id=request.POST['id']).update(is_active=False)
-        return redirect('admin', day=0)
+        return redirect('management:admin', day=0)
 
 
 class AllEmployeesView(StaffRequiredMixin, TemplateView):
@@ -284,7 +284,7 @@ class ManagementPayrollView(StaffRequiredMixin, TemplateView):
             )
         message.attach_file('media/' + request.POST['invoice_file'])
         message.send()
-        return redirect('management_payroll')
+        return redirect('management:management_payroll')
 
 class AddProjectView(StaffRequiredMixin, TemplateView):
     template_name = 'management/project-add.html'
@@ -299,7 +299,7 @@ class AddProjectView(StaffRequiredMixin, TemplateView):
         if form.is_valid():
             form.save()
             project_id = form.instance.id
-            return redirect('view_projects', project_id)
+            return redirect('management:view_projects', project_id)
 
 
 class AssignEmployeeView(StaffRequiredMixin, TemplateView):
@@ -322,7 +322,7 @@ class AssignEmployeeView(StaffRequiredMixin, TemplateView):
         form = AssignEmployeeForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('view_projects', id=kwargs.get('id'))
+            return redirect('management:view_projects', id=kwargs.get('id'))
         ctx_data = {'form': form, 'project': project, 'accounts': accounts}
         return render(request, self.template_name, ctx_data)
 
@@ -344,7 +344,7 @@ class EditProjectView(StaffRequiredMixin, TemplateView):
         form = EditProjectForm(request.POST or None, instance=project)
         if form.is_valid():
             form.save()
-            return redirect('edit-project', id=kwargs.get('id'))
+            return redirect('management:edit-project', id=kwargs.get('id'))
         ctx_data = {'form': form}
         return render (request, self.template_name, ctx_data)
 
@@ -366,7 +366,7 @@ class EditHoursView(StaffRequiredMixin, TemplateView):
         form = EditProjectHoursForm(request.POST, instance=weekly_hours)
         if form.is_valid():
             form.save()
-            return redirect('edit-project', id=kwargs.get('project_id'))
+            return redirect('management:edit-project', id=kwargs.get('project_id'))
         ctx_data = {'form': form}
         return render(request, self.template_name, ctx_data)
 
@@ -379,7 +379,7 @@ class RemoveEmployee(StaffRequiredMixin, View):
         pa = ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id)
         pa.status = False
         pa.save()
-        return redirect('edit-project', id=kwargs.get('project_id'))
+        return redirect('management:edit-project', id=kwargs.get('project_id'))
 
 
 class ReAssignEmployee(StaffRequiredMixin, View):
@@ -390,7 +390,7 @@ class ReAssignEmployee(StaffRequiredMixin, View):
         pa = ProjectAssignment.objects.get(project__id=project_id, employee__id=employee_id)
         pa.status = True
         pa.save()
-        return redirect('edit-project', id=kwargs.get('project_id'))
+        return redirect('management:edit-project', id=kwargs.get('project_id'))
 
 
 class AdminGlobalSearch(StaffRequiredMixin, TemplateView):
@@ -511,7 +511,7 @@ class ArchiveProjectView(StaffRequiredMixin, View):
         pr = Project.objects.get(id=project_id)
         pr.status = False
         pr.save()
-        return redirect('project-list')
+        return redirect('management:project-list')
 
 
 class UnArchiveProjectView(StaffRequiredMixin, View):
@@ -521,7 +521,7 @@ class UnArchiveProjectView(StaffRequiredMixin, View):
         pr = Project.objects.get(id=project_id)
         pr.status = True
         pr.save()
-        return redirect('project-list')
+        return redirect('managmement:project-list')
 
 
 class ProfileAdminView(StaffRequiredMixin, TemplateView):
@@ -535,7 +535,7 @@ class ProfileAdminView(StaffRequiredMixin, TemplateView):
         form = UserProfileForm(self.request.POST, self.request.FILES, instance=self.request.user)
         if form.is_valid():
             form.save()
-        return redirect('admin')
+        return redirect('management:admin')
 
 class ChangePasswordView(TemplateView):
     template_name = 'management/change_password.html'
@@ -549,7 +549,7 @@ class ChangePasswordView(TemplateView):
         if form.is_valid():
             form.save()
             update_session_auth_hash(self.request, form.user)
-            return redirect('admin')
+            return redirect('management:admin')
         ctx_data = {'form': form}
         return render(self.request, self.template_name, ctx_data)
 
@@ -578,7 +578,7 @@ class AddMiscView(StaffRequiredMixin, TemplateView):
         form = AddMiscForm(self.request.POST)
         if form.is_valid():
             form.save()
-            return redirect('admin_misc')
+            return redirect('management:admin_misc')
         return render(self.request, self.template_name, {'form': form})
 
 
@@ -589,7 +589,7 @@ class ArchiveMiscView(StaffRequiredMixin, View):
         ma = Misc.objects.get(id=misc_id)
         ma.status = False
         ma.save()
-        return redirect('admin_misc')
+        return redirect('management:admin_misc')
 
 
 class UnArchiveMiscView(StaffRequiredMixin, View):
@@ -599,7 +599,7 @@ class UnArchiveMiscView(StaffRequiredMixin, View):
         ma = Misc.objects.get(id=misc_id)
         ma.status = True
         ma.save()
-        return redirect('admin_misc')
+        return redirect('management:admin_misc')
 
 
 class EditMiscView(StaffRequiredMixin, TemplateView):
@@ -619,7 +619,7 @@ class EditMiscView(StaffRequiredMixin, TemplateView):
         form = AddMiscForm(self.request.POST, instance=miscs)
         if form.is_valid():
             form.save()
-            return redirect('admin_misc')
+            return redirect('management:admin_misc')
         return render(self.request, self.template_name, {'form': form})
 
 

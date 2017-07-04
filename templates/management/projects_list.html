@@ -20,10 +20,10 @@
                         <td>
                         {% if project.status %}
                         <code>Active</code>
-                            <a class="btn btn-danger btn-xs" href="{% url 'archive-project' project.id %}">Archive Project</a>
+                            <a class="btn btn-danger btn-xs" href="{% url 'management:archive-project' project.id %}">Archive Project</a>
                         {% else %}
                         <code>Inactive Employee</code>
-                            <a class="btn btn-primary btn-xs" href="{% url 'unarchive-project' project.id %}">Unarchive Project</a>
+                            <a class="btn btn-primary btn-xs" href="{% url 'management:unarchive-project' project.id %}">Unarchive Project</a>
                         {% endif %}
                         </td>
                       </tr>

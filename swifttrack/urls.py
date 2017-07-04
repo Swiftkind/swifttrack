@@ -5,8 +5,8 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('accounts.urls')),
+    url(r'^', include('accounts.urls', namespace='accounts')),
     url(r'^project/', include('projects.urls', namespace='project')),
     url(r'^timetracker/', include('timetracker.urls')),
-    url(r'^management/', include('management.urls')),
+    url(r'^management/', include('management.urls', namespace='management')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

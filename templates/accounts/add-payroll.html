@@ -5,11 +5,11 @@
 			{% if error %}
 				<div class="alert alert-danger">{{error}}</div>
 			{% endif %}
-			<form action="{% url 'add-payroll' %}" method="post">
+			<form action="{% url 'accounts:add-payroll' %}" method="post">
 				{% csrf_token %}
 				{{form.as_p}}
 				<button type="submit" class="btn btn-success">Submit</button>
-				<a href="{% url 'payroll' %}" class="btn btn-default">Cancel</a>
+				<a href="{% url 'accounts:payroll' %}" class="btn btn-default">Cancel</a>
 			</form>
 		</div>
 {% endblock %}

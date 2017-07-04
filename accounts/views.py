@@ -27,7 +27,7 @@ class RegistrationView(TemplateView):
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect('accounts:login')
         else:
             print(form.errors)
             return render(request, self.template_name, {'form': form})
@@ -44,7 +44,7 @@ class LoginView(AccountTimestamp, TemplateView):
                 'form': LoginForm(),
             })
         if self.request.user.is_staff:
-            return redirect('admin')
+            return redirect('management:admin')
         return redirect('project:project')
 
     def post(self, *args, **kwargs):
@@ -53,7 +53,7 @@ class LoginView(AccountTimestamp, TemplateView):
         if form.is_valid():
             login(self.request, form.user_cache)
             if form.user_cache.is_staff:
-                return redirect('admin')
+                return redirect('management:admin')
 
             self.record(self.request)
             return redirect('project:project')
@@ -64,7 +64,7 @@ class LogoutView(TemplateView):
 
     def get(self, request):
         logout(request)
-        return redirect('login')
+        return redirect('accounts:login')
 
 
 class AccountView(LoginRequiredMixin, TemplateView):

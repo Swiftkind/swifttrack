@@ -26,7 +26,7 @@
                                 Confirmed
                                 <a target="_blank" href="../../media/{{payroll.invoice_file}}" class="btn btn-default">Download</a>
                             {% else %}
-                                <form action="{% url 'update_payroll' %}" method="post">
+                                <form action="{% url 'management:update_payroll' %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" value="{{payroll.id}}" name="id">
                                     <input type="hidden" value="{{payroll.invoice_file}}" name="invoice_file">
