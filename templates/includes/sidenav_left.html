@@ -3,14 +3,14 @@
 <div id="sidebar-wrapper">
     <ul class="sidebar-nav list-group">
         <li class="sidebar-brand">
-            <a href="{% url 'admin' %}" class="black-text">SWIFTTRACK</a>
+            <a href="{% url 'management:admin' %}" class="black-text">SWIFTTRACK</a>
         </li>
         <hr class="colorgraph">
         <li class="list-heading">
             <span class="white-text">Projects</span><a class="pull-right"><span class="glyphicon glyphicon-plus sidebar-add-link" data-toggle="modal" data-target=".bs-example-modal-lg"></span></a>
             {% all_projects as projects %}
             {% for project in projects %}
-            <a href="{% url 'view_projects' project.id %}">{{ project.name }}</a>
+            <a href="{% url 'management:view_projects' project.id %}">{{ project.name }}</a>
             {% endfor %}
         </li>
     </ul>
