@@ -1,21 +1,14 @@
-{% extends 'base.html' %} 
-
+{% extends 'base.html' %}
 {% block content %}
 <div class="container">
     <div>
-        <div class="pull-right">
-            <a href="{% url 'project' %}" class="btn btn-default btn-md">Back</a>
-        </div>
         <h3>Edit Work Diary</h3>
     </div>
-
-    <h2>{{ project_assignment.project.name }}</h2> 
-
+    <h2>{{ works.project_assignment.project.name }}</h2>
     <div id="accordion" role="tablist" aria-multiselectable="true">
         <div class="pull-right">
-            <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" glyphicon glyphicon-circle-arrow-down aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
-        </div>
-        <br />
+            <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" glyphicon glyphicon-circle-arrow-down aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
+        </div><br>
         <div class="card">
             <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="card-block">
@@ -43,13 +36,12 @@
                             <label for="{{ form.hours.id_for_label }}">Hours:</label>
                             {{ form.hours }}
                         </div><br />
-                        <a href="{% url 'project' %}" class="btn btn-default">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a class="btn btn-default btn-sm" href="{% url 'project:project' %}">Cancel</a>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <br />
 </div>
 {% endblock %}

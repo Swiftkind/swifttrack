@@ -4,10 +4,11 @@
 <div class="container">
     <div>
     <div class="pull-right">
-        <a href="{% url 'work-diary' work.project_assignment.id %}" class="btn btn-default btn-md">Back</a>
+        <a href="{% url 'project:work-diary' work.project_assignment.id %}" class="btn btn-default btn-sm">Back</a>
     </div>
     <h3>Work Diary Log</h3>
     </div>
+    <hr class="colorgraph">
     <div>
         <table class="table table-striped">
             <thead>
