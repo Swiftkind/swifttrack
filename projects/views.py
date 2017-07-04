@@ -1,14 +1,18 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 
-from management.models import Misc
+from .forms import WorkDiaryForm
+from projects.models import (
+                            Project,
+                            ProjectAssignment,
+                            WorkDiary,
+                            WorkDiaryLog,
+                        )
 from accounts.models import Account
-from . models import Project, ProjectAssignment, WorkDiary, WorkDiaryLog
-from . forms import WorkDiaryForm
+from management.models import Misc
 
 
 class ProjectView(LoginRequiredMixin, TemplateView):
@@ -67,11 +71,12 @@ class WorkDiaryView(LoginRequiredMixin, TemplateView):
         form = WorkDiaryForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('work-diary', id=kwargs['id'])
+            return redirect('project:work-diary', id=kwargs['id'])
         ctx_data = {
             'form': form,
         }
         return render(self.request, self.template_name, ctx_data)
+
 
 class WorkDiaryEditView(LoginRequiredMixin, TemplateView):
     template_name = 'projects/edit_work_diary.html'
@@ -81,7 +86,7 @@ class WorkDiaryEditView(LoginRequiredMixin, TemplateView):
         project_assignment = ProjectAssignment.objects.get(id=kwargs['id'])
         works = WorkDiary.objects.get(id=work_diary_id, project_assignment=project_assignment)
         form = WorkDiaryForm(instance=works)
-        ctx_data = {'form': form}
+        ctx_data = {'form': form, 'works': works}
         return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
@@ -93,24 +98,14 @@ class WorkDiaryEditView(LoginRequiredMixin, TemplateView):
         form = WorkDiaryForm(request.POST, instance=works)
         if form.is_valid():
             form.save()
-        return redirect('work-diary', id=kwargs['id'])
-
-
-class EmployeesMiscView(TemplateView):
-    template_name = 'projects/employees_misc.html'
-
-    def get(self, *args, **kwargs):
-        employees = Account.objects.all().exclude(is_staff=True)
-        miscs = Misc.objects.filter(employees=self.request.user, status=True)
-        ctx_data = {'miscs': miscs}
-        return render(self.request, self.template_name, ctx_data)
+        return redirect('project:work-diary', id=kwargs['id'])
 
 
 class WorkDiaryLogView(LoginRequiredMixin, TemplateView):
     template_name = 'projects/work_diary_log.html'
 
-    def get_context_data(self, **kwargs):
-        work_diary_id = self.kwargs['work_diary_id']
+    def get_context_data(self, *args, **kwargs):
+        work_diary_id = kwargs['work_diary_id']
         work = WorkDiary.objects.get(id=work_diary_id)
         logs = WorkDiaryLog.objects.filter(work_diary__id=work_diary_id, work_diary__project_assignment__employee=self.request.user).order_by('-date_created')
         page = self.request.GET.get('page', 1)
@@ -125,3 +120,12 @@ class WorkDiaryLogView(LoginRequiredMixin, TemplateView):
         kwargs['work'] = work
         return kwargs
 
+
+class EmployeesMiscView(LoginRequiredMixin, TemplateView):
+    template_name = 'projects/employees_misc.html'
+
+    def get(self, request, *args, **kwargs):
+        employees = Account.objects.all().exclude(is_staff=True)
+        miscs = Misc.objects.filter(employees=request.user, status=True)
+        ctx_data = {'miscs': miscs}
+        return render(request, self.template_name, ctx_data)
