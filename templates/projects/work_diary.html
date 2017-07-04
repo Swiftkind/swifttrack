@@ -1,19 +1,19 @@
-{% extends 'base.html' %} {% load widget_tweaks %} {% block content %}
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
 <div class="container">
     <div>
         <div class="pull-right">
-            <a href="{% url 'project' %}" class="btn btn-default btn-md">Back</a>
+            <a href="{% url 'project:project' %}" class="btn btn-default btn-sm">Back</a>
         </div>
         <h3>Work Diary</h3>
     </div>
-
+    <hr class="colorgraph">
     <h2>{{ project_assignment.project.name }}</h2>
-
     <div id="accordion" role="tablist" aria-multiselectable="true">
         <div class="pull-right">
-            <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" glyphicon glyphicon-circle-arrow-down aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
+            <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" glyphicon glyphicon-circle-arrow-down aria-expanded="true" aria-controls="collapseOne"><span class="caret"></span> Hide Section</a>
         </div>
-        <br />
         <div class="card">
             <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="card-block">
@@ -26,65 +26,67 @@
                             {% endfor %}
                         </div>
                         {% endfor %}
-                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">Save</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
     <br />
-    <div>
-        <table class="table table-striped">
-            <br />
-            <div>
-                <form class="navbar-form" method='GET' action=''>
-                    <div class="input-group">
-                        <input type="text" name='q' class='form-control' placeholder='Search something here' value='{{ request.GET.query }}'>
-                    </div>
-                </form>
-            </div>
-            <thead>
-                <tr>
-                    <th style="width: 15%;">DATE</th>
-                    <th style="width: 5%;">HOURS</th>
-                    <th style="width: 10%;">TODAY</th>
-                    <th style="width: 5%;">TO-DO</th>
-                    <th style="width: 5%;">ISSUES</th>
-                    <th style="width: 15%;">ACTION</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for work in works %}
-                <tr>
-                    <td style="width: 15%;">
-                        {{ work.date }}
-                    </td>
-                    <td style="width: 5%;">
-                        {{ work.hours }}
-                    </td>
-                    <td style="width: 35%;">
-                        {{ work.finished_task | linebreaksbr }}
-                    </td>
-                    <td style="width: 5%;">
-                        {{ work.todo_task | linebreaksbr }}
-                    </td>
-                    <td style="width: 5%;">
-                        {{ work.issues | linebreaksbr }}
-                    </td>
-                    <td style="width: 15%;">
-                        <a href="{% url 'edit-work-diary' work.project_assignment.id work.id %}" class="btn btn-primary btn-xs">Edit</a>
-                        <a href="{% url 'work_diary_log' work.id %}" class="btn btn-default btn-xs">Work Log</a>
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="8" class="text-center bg-warning">
-                        No Logs
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <table class="table table-striped">
+                <br />
+                <div>
+                    <form class="navbar-form" method='GET' action=''>
+                        <div class="input-group">
+                            <input type="text" name='q' class='form-control' placeholder='Search something here' value='{{ request.GET.query }}'>
+                        </div>
+                    </form>
+                </div>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">DATE</th>
+                        <th style="width: 5%;">HOURS</th>
+                        <th style="width: 20%;">TODAY</th>
+                        <th style="width: 20%;">TO-DO</th>
+                        <th style="width: 5%;">ISSUES</th>
+                        <th style="width: 15%;">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for work in works %}
+                    <tr>
+                        <td style="width: 15%;">
+                            {{ work.date }}
+                        </td>
+                        <td style="width: 5%;">
+                            {{ work.hours }}
+                        </td>
+                        <td style="width: 20%;">
+                            {{ work.finished_task|linebreaksbr }}
+                        </td>
+                        <td style="width: 20%;">
+                            {{ work.todo_task|linebreaksbr }}
+                        </td>
+                        <td style="width: 5%;">
+                            {{ work.issues|linebreaksbr }}
+                        </td>
+                        <td style="width: 15%;">
+                            <a href="{% url 'project:edit-work-diary' work.project_assignment.id work.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{% url 'project:work_diary_log' work.id %}" class="btn btn-default btn-sm">Work Log</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center bg-warning">
+                            No Logs
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class='paginator'>
         <nav aria-label="...">
