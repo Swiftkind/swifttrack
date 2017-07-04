@@ -37,7 +37,7 @@
                 <label for="{{ form.date_created.id_for_label }}">Date Created:</label>
                 {{ form.date_created }}
             </div><br />
-            <a href="{% url 'admin_misc' %}" class="btn btn-default btn-sm">Cancel</a>
+            <a href="{% url 'management:admin_misc' %}" class="btn btn-default btn-sm">Cancel</a>
             <button type="submit" class="btn btn-success btn-sm">Save</button>
         </form>
     </div>
