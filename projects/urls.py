@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^work_diary/(?P<id>[0-9]+)/edit/(?P<work_diary_id>[0-9]+)/$', views.WorkDiaryEditView.as_view(), name='edit-work-diary'),
     url(r'^work_diary/(?P<work_diary_id>[0-9]+)/log/$', views.WorkDiaryLogView.as_view(), name='work_diary_log'),
     url(r'^misc/$', views.EmployeesMiscView.as_view(), name='employees_misc'),
+    url(r'^attendance/$', views.AttendanceView.as_view(), name='attendance'),
 ]
