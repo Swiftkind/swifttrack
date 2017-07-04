@@ -12,8 +12,8 @@
                 <p><strong>Contact Number:</strong> {{user.contact_number}}</p>
                 <p><strong>Address:</strong> {{user.address}}</p>
                 <p><strong>About me:</strong> {{user.about_me}}</p>
-                <a href="{% url 'update_account' %}" class="btn btn-default btn-sm">Update Profile</a>
-                <a href="{% url 'update_password' %}" class="btn btn-default btn-sm">Update Password</a>
+                <a href="{% url 'accounts:update_account' %}" class="btn btn-default btn-sm">Update Profile</a>
+                <a href="{% url 'accounts:update_password' %}" class="btn btn-default btn-sm">Update Password</a>
             </div>
         </div>
     {% endif %}
