@@ -5,7 +5,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
             <div>
-            <h4><strong>Miscellaneous</strong> <a href="{% url 'add_misc' %}" class="btn btn-default btn-md pull-right">Add</a>
+            <h4><strong>Miscellaneous</strong> <a href="{% url 'management:add_misc' %}" class="btn btn-default btn-md pull-right">Add</a>
             </h4>
             </div>
             <hr class="colorgraph">
@@ -48,10 +48,10 @@
                                 </td>
                                 <td style="width: 15%;">
                                 {% if misc.status %}
-                                    <a href="{% url 'archive_misc' misc.id %}" class="btn btn-danger btn-xs">Archive</a>
-                                    <a href="{% url 'edit_misc' misc.id %}" class="btn btn-default btn-xs">Edit</a>
+                                    <a href="{% url 'management:archive_misc' misc.id %}" class="btn btn-danger btn-xs">Archive</a>
+                                    <a href="{% url 'management:edit_misc' misc.id %}" class="btn btn-default btn-xs">Edit</a>
                                 {% else %}
-                                    <a href="{% url 'unarchive_misc' misc.id %}" class="btn btn-success btn-xs">Unarchive</a>
+                                    <a href="{% url 'management:unarchive_misc' misc.id %}" class="btn btn-success btn-xs">Unarchive</a>
                                 {% endif %}
                                 </td>
                             </tr>
