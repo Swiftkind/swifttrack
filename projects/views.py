@@ -151,7 +151,7 @@ class AttendanceView(TemplateView):
         prev_date =attendance_date - timedelta(days=1)
         next_date = attendance_date + timedelta(days=1)
 
-        account_logs = AccountLog.objects.filter(date_created__date=attendance_date).order_by('-date_created')
+        account_logs = AccountLog.objects.filter(date_created__date=attendance_date, account=self.request.user).order_by('-date_created')
 
         context = {
             'account_logs': account_logs,
