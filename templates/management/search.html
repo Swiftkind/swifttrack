@@ -20,7 +20,7 @@
                     <tbody>
                         {% for workdiary in search_workdiaries %}
                         <tr>
-                            <td style="width: 20%;"> 
+                            <td style="width: 20%;">
                                 <img src=" {{workdiary.project_assignment.employee.get_profile_pic}} " width="50px " height="50px " class="img-circle ">&nbsp;&nbsp;&nbsp;
                                 <strong> {{workdiary.project_assignment.employee.get_full_name}}</strong>
                             </td>
@@ -65,7 +65,7 @@
                         {% for employee in search_employees %}
                         <tr>
                             <td>
-                                <img src="{{employee.get_profile_pic}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;"><a href="{% url 'employee_profile' employee.id %}">{{employee.get_full_name}}</a>
+                                <img src="{{employee.get_profile_pic}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;"><a href="{% url 'management:employee_profile' employee.id %}">{{employee.get_full_name}}</a>
                             </td>
                             <td>{{employee.email}}</td>
                         </tr>
