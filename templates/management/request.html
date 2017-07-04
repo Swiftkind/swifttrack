@@ -6,8 +6,8 @@
             <br>
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation"><a href="{% url 'project:project' %}">Projects</a></li>
-                <li role="presentation"><a href="{% url 'payroll' %}">Payroll</a></li>
-                <li role="presentation" class="active"><a href="{% url 'request' %}">Contact</a></li>
+                <li role="presentation"><a href="{% url 'accounts:payroll' %}">Payroll</a></li>
+                <li role="presentation" class="active"><a href="{% url 'management:request' %}">Contact</a></li>
                 <li role="presentation"><a href="{% url 'project:employees_misc' %}">Misc</a></li>
             </ul>
             <!-- Tab panes -->
@@ -25,7 +25,7 @@
                         <div class="col-md-4">
                             <h3>Send a request</h3>
                             <br>
-                            <form action="{% url 'request' %}" method="post">
+                            <form action="{% url 'management:request' %}" method="post">
                                 {% csrf_token %} {{form.as_p}}
                                 <button type="submit" class="btn btn-primary">Submit request</button>
                             </form>
