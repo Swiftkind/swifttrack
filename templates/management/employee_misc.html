@@ -14,7 +14,7 @@
                 <p><strong>Months: {{ miscs.months }}</strong></p>
                 <p><strong>Date Created: {{ miscs.date_created }}</strong></p>
                 <p><strong>Status</strong> {% if miscs.status %} <code>Active</code>{% else %} <code>Inactive</code> {% endif %}</p>
-                <button class="btn btn-default btn-sm"><a href="{% url 'admin_misc' %}">Back</a></button>
+                <button class="btn btn-default btn-sm"><a href="{% url 'management:admin_misc' %}">Back</a></button>
             </div>
 
         </div>
