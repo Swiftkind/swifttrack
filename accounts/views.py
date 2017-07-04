@@ -45,7 +45,7 @@ class LoginView(AccountTimestamp, TemplateView):
             })
         if self.request.user.is_staff:
             return redirect('admin')
-        return redirect('project')
+        return redirect('project:project')
 
     def post(self, *args, **kwargs):
         form = LoginForm(self.request.POST)
@@ -56,7 +56,7 @@ class LoginView(AccountTimestamp, TemplateView):
                 return redirect('admin')
 
             self.record(self.request)
-            return redirect('project')
+            return redirect('project:project')
         return render(self.request, self.template_name, {'form': form})
 
 
@@ -86,7 +86,7 @@ class UpdateAccountView(TemplateView):
         form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-        return redirect('project')
+        return redirect('project:project')
 
 
 class UpdatePasswordView(TemplateView):
@@ -102,7 +102,7 @@ class UpdatePasswordView(TemplateView):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            return redirect('project')
+            return redirect('project:project')
         return_data = {'form': form}
         return render(request, self.template_name, return_data)
 
