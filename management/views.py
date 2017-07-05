@@ -420,11 +420,6 @@ class AdminGlobalSearch(StaffRequiredMixin, TemplateView):
 
 
 class AttendanceView(TemplateView):
-    """List attendance records"""
-
-    def __init__(self, *args, **kwargs):
-        super(AttendanceView, self).__init__(*args, **kwargs)
-
     template_name = 'management/attendance.html'
 
     def get_context_data(self, *args, **kwargs):

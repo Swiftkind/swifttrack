@@ -1,0 +1,45 @@
+{% extends 'dashboard.html' %}
+{% block tabs %}
+<div class="container"><br><br>
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'project:project' %}">Projects</a></li>
+        <li role="presentation"><a href="{% url 'accounts:payroll' %}">Payroll</a></li>
+        <li role="presentation"><a href="{% url 'management:request' %}">Contact</a></li>
+        <li role="presentation"><a href="{% url 'project:employees_misc' %}">Misc</a></li>
+        <li role="presentation" class="active"><a href="{% url 'project:attendance' %}">Attendance</a></li>
+    </ul>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Status</th>
+                    <th>Date created</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load management_custom_tags %}
+                {% for log in account_logs %}
+                    <tr class="{% check_attendance log.date_created %}">
+                        <td><img src="{{log.account.get_profile_pic}} " width="50px " height="50px " class="img-circle" style="margin-right: 10px;">{{log.account.get_full_name}}</td>
+                        <td>{{log.status}}</td>
+                        <td>{{log.date_created}}</td>
+                        <td>{{log.ip}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if go_back %}
+            <ul class="pager">
+                <li><a href="{% url 'management:attendance' %}">Go back</a></li>
+            </ul>
+        {% else %}
+            <ul class="pager">
+                <li><a href="{% url 'management:attendance' %}?prev_date={{ prev_date | date:'Y-m-d' }}">Previous</a></li>{% if next_date > date_today %}{% else %}
+                <li><a href="{% url 'management:attendance' %}?next_date={{ next_date | date:'Y-m-d' }}">Next</a></li>{% endif %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

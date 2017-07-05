@@ -1,7 +1,9 @@
+from datetime import datetime, timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 from .forms import WorkDiaryForm
@@ -11,7 +13,7 @@ from projects.models import (
                             WorkDiary,
                             WorkDiaryLog,
                         )
-from accounts.models import Account
+from accounts.models import Account, AccountLog
 from management.models import Misc
 
 
@@ -129,3 +131,33 @@ class EmployeesMiscView(LoginRequiredMixin, TemplateView):
         miscs = Misc.objects.filter(employees=request.user, status=True)
         ctx_data = {'miscs': miscs}
         return render(request, self.template_name, ctx_data)
+
+
+class AttendanceView(TemplateView):
+    template_name = 'projects/attendance.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AttendanceView, self).get_context_data(**kwargs)
+
+        date_requested = self.request.GET.get('prev_date') or self.request.GET.get('next_date')
+
+        date_today = timezone.now().date()
+
+        if not date_requested:
+            date_requested = date_today
+
+        attendance_date = datetime.strptime(str(date_requested), '%Y-%m-%d').date()
+
+        prev_date =attendance_date - timedelta(days=1)
+        next_date = attendance_date + timedelta(days=1)
+
+        account_logs = AccountLog.objects.filter(date_created__date=attendance_date, account=self.request.user).order_by('-date_created')
+
+        context = {
+            'account_logs': account_logs,
+            'prev_date': prev_date,
+            'next_date': next_date,
+            'date_today': date_today,
+            'attendance_date': attendance_date
+        }
+        return context
