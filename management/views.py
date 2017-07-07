@@ -208,6 +208,11 @@ class ProjectManageView(StaffRequiredMixin, TemplateView):
         assignment = ProjectAssignment.objects.filter(project=project)
         works = WorkDiary.objects.filter(
             project_assignment__in=assignment).order_by('-date')
+
+        accounts_list = assignment.values_list('employee_id', flat=True)
+        accounts = Account.objects.exclude(id__in=accounts_list)
+        form = AssignEmployeeForm()
+
         page = self.request.GET.get('page', 1)
         query = request.GET.get('q')
         if query:
@@ -225,7 +230,8 @@ class ProjectManageView(StaffRequiredMixin, TemplateView):
             works = paginator.page(1)
         except EmptyPage:
             works = paginator.page(paginator.num_pages)
-        ctx_data = {'works': works, 'project': project}
+        ctx_data = {'works': works, 'project': project,
+                    'form': form, 'accounts': accounts}
         return render(request, self.template_name, ctx_data)
 
 
@@ -304,15 +310,6 @@ class AddProjectView(StaffRequiredMixin, TemplateView):
 
 class AssignEmployeeView(StaffRequiredMixin, TemplateView):
     template_name = 'management/project-assign-employee.html'
-
-    def get(self, request, *args, **kwargs):
-        project = Project.objects.get(id=kwargs.get('id'))
-        assigned = ProjectAssignment.objects.filter(project=project)
-        accounts_list = assigned.values_list('employee_id', flat=True)
-        accounts = Account.objects.exclude(id__in=accounts_list)
-        form = AssignEmployeeForm()
-        ctx_data = {'form': form, 'project': project, 'accounts': accounts}
-        return render(request, self.template_name, ctx_data)
 
     def post(self, request, *args, **kwargs):
         project = Project.objects.get(id=kwargs.get('id'))

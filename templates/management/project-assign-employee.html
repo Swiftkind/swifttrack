@@ -1,34 +1,37 @@
-{% extends 'management.html' %}
-{% load widget_tweaks %}
-{% block content %}
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="col-md-8 col-md-offset-2">
-            <h3><strong>{{ project.name }}</strong></h3>
-            <hr class="colorgraph">
-                <form role="form" method="post">
-                    {% csrf_token %}
-                    {{ form.non_field_errors }}
-                    <div class="form-group">
-                        <span class="label label-danger">{{ form.employee.errors.as_text }}</span><br>
-                        <label>Employee:</label>
-                        <select class="form-control" name="employee" id="employee">
-                            <option value="" >---</option>
-                            {% for account in accounts %}
-                            <option value="{{ account.id }}" >{{ account.email }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <span class="label label-danger">{{ form.weekly_hours.errors.as_text }}</span><br>
-                        <label>Hours</label>
-                        <input class="form-control" type="number" name="weekly_hours" id="weekly_hours" value="">
-                    </div>
-                        <input class="form-control" type="hidden" name="project" value="{{ project.id }}">
-                        <button type="submit" class="btn btn-success btn-lg pull-right">Save</button>
-                </form>
+<div class="modal fade js-assign-employee" tabindex="-1" role="dialog" aria-labelledby="modalAssignEmployeeLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form role="form" method="post" action="{% url 'management:assign_employee' project.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3><strong>{{ project.name }}</strong></h3>
+                </div>
+                <div class="modal-body">
+                <h4 id="modalAssignEmployeeLabel">Assign Employee</h4>
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    <span class="label label-danger">{{ form.employee.errors.as_text }}</span><br>
+                    <label>Employee:</label>
+                    <select class="form-control" name="employee" id="employee">
+                        <option value="" >---</option>
+                        {% for account in accounts %}
+                        <option value="{{ account.id }}" >{{ account.email }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <span class="label label-danger">{{ form.weekly_hours.errors.as_text }}</span><br>
+                    <label>Hours</label>
+                    <input class="form-control" type="number" name="weekly_hours" id="weekly_hours" value="">
+                </div>
+                    <input class="form-control" type="hidden" name="project" value="{{ project.id }}">
+                </div>
+                <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-{% endblock %}
-
