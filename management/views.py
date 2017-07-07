@@ -516,7 +516,7 @@ class UnArchiveProjectView(StaffRequiredMixin, View):
         pr = Project.objects.get(id=project_id)
         pr.status = True
         pr.save()
-        return redirect('managmement:project-list')
+        return redirect('management:project-list')
 
 
 class ProfileAdminView(StaffRequiredMixin, TemplateView):
